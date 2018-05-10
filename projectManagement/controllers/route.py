@@ -10,10 +10,12 @@ from projectManagement.models.auth import signin
 
 @app.route('/')
 def start():
-    return render_template('base/index.html')
+
+    parsing = "tempe"
+    return render_template('content/home.html', parsing=parsing)
 
 @app.route('/opo')
 def opo():
-    return render_template('blue/index.html')
+    return render_template('base/header.html')
 
 
