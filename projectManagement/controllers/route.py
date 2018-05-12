@@ -8,14 +8,18 @@ from flask import render_template
 
 @app.route('/')
 def start():
-
-    parsing = "tempe"
-    return render_template('content/home.html', parsing=parsing)
+    return render_template('auth/login.html')
 
 #login route logic
-@app.route("/user/login")
+@app.route("/login")
 def login():
     return render_template('auth/login.html')
+
+
+#login route logic
+@app.route("/dashboard")
+def dashboard():
+    return render_template('content/home.html')
 
 #registration route logic
 @app.route("/user/registration")
@@ -26,6 +30,11 @@ def registration():
 @app.route('/user/forgot')
 def forgotPasswd():
     return render_template('auth/forgot-password.html')
+
+#forgot password route logic
+@app.route('/user/changepassword')
+def chgPasswd():
+    return render_template('content/change-password.html')
 
 #page main client
 @app.route("/user/main/client")
@@ -79,7 +88,7 @@ def projectTimesheet():
 
 #page report proyek
 @app.route("/project/report/all")
-def projectReport():
+def reportProject():
     return render_template('content/report-proyek.html')
 
 #page report task

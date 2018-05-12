@@ -24,7 +24,7 @@
 							<div class="account-logo">
 								<a href="index.html"><img src="{{ url_for('static', filename='assets/img/logo2.png') }}" alt="Project Management"></a>
 							</div>
-							<form action="index.html">
+							<form action="{{ url_for('dashboard') }}">
 								<div class="form-group form-focus">
 									<label class="control-label">Username or Email</label>
 									<input class="form-control floating" type="text">
