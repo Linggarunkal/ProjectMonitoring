@@ -41,6 +41,11 @@ def chgPasswd():
 def userMainHome():
     return render_template('content/main-client.html')
 
+#page main client
+@app.route("/user/main/clientlist")
+def userMainHomeList():
+    return render_template('content/main-clientlist.html')
+
 #page detail client
 @app.route("/user/client/detail")
 def userClientDetail():
