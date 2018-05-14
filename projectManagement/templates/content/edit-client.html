@@ -1,0 +1,235 @@
+{% extends "base/index.html" %}
+{% block title %}Main Client{% endblock %}
+{% block stylecss %}
+		<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/font-awesome.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/select2.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/style.css') }}">
+{% endblock %}
+{{ super() }}
+{% block webcontent %}
+<div class="page-wrapper">
+	<div class="content container-fluid">
+        <div class="">
+            <a href="{{ url_for('userMainHome') }}"><button type="button" class="btn btn-primary">Back</button></a>
+        </div>
+        <div class="modal-body">
+
+		    <div class="m-b-30">
+                <form>
+					<div class="row">
+						<div class="col-md-6">
+				    		<div class="form-group">
+								<label class="control-label">First Name <span class="text-danger">*</span></label>
+								<input class="form-control" value="Barry" type="text">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">Last Name</label>
+								<input class="form-control" value="Cuda" type="text">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">Username <span class="text-danger">*</span></label>
+								<input class="form-control" value="barrycuda" type="text">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+					    		<label class="control-label">Email <span class="text-danger">*</span></label>
+								<input class="form-control floating" value="barrycuda@example.com" type="email">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">Password</label>
+								<input class="form-control" value="barrycuda" type="password">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">Confirm Password</label>
+								<input class="form-control" value="barrycuda" type="password">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+						    	<label class="control-label">Client ID <span class="text-danger">*</span></label>
+								<input class="form-control floating" value="CLT-0001" type="text">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">Phone </label>
+								<input class="form-control" value="9876543210" type="text">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">Company Name</label>
+								<input class="form-control" type="text" value="Global Technologies">
+							</div>
+						</div>
+						</div>
+							<div class="table-responsive m-t-15">
+						    	<table class="table table-striped custom-table">
+									<thead>
+										<tr>
+											<th>Module Permission</th>
+											<th class="text-center">Read</th>
+											<th class="text-center">Write</th>
+											<th class="text-center">Create</th>
+											<th class="text-center">Delete</th>
+											<th class="text-center">Import</th>
+											<th class="text-center">Export</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Projects</td>
+											<td class="text-center">
+						    					<input checked="" type="checkbox">
+											</td>
+											<td class="text-center">
+												<input checked="" type="checkbox">
+											</td>
+											<td class="text-center">
+												<input checked="" type="checkbox">
+											</td>
+											<td class="text-center">
+												<input checked="" type="checkbox">
+											</td>
+											<td class="text-center">
+												<input checked="" type="checkbox">
+											</td>
+                                            <td class="text-center">
+												<input checked="" type="checkbox">
+											</td>
+											</tr>
+											<tr>
+												<td>Tasks</td>
+												<td class="text-center">
+													<input checked="" type="checkbox">
+												</td>
+												<td class="text-center">
+													<input checked="" type="checkbox">
+												</td>
+												<td class="text-center">
+													<input checked="" type="checkbox">
+												</td>
+												<td class="text-center">
+													<input checked="" type="checkbox">
+												</td>
+												<td class="text-center">
+													<input checked="" type="checkbox">
+												</td>
+												<td class="text-center">
+													<input checked="" type="checkbox">
+												</td>
+												</tr>
+												<tr>
+													<td>Chat</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+												</tr>
+												<tr>
+													<td>Estimates</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+												</tr>
+												<tr>
+													<td>Invoices</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+												</tr>
+												<tr>
+													<td>Timing Sheets</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+													<td class="text-center">
+														<input checked="" type="checkbox">
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="m-t-20 text-center">
+										<button class="btn btn-primary">Create Client</button>
+									</div>
+								</form>
+							</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-3.2.1.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.slimscroll.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/select2.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+{% endblock %}

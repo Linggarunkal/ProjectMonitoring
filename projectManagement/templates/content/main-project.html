@@ -60,11 +60,11 @@
 								<div class="dropdown profile-action">
 									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_project"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+										<li><a href="{{ url_for('editProject') }}" data-toggle="modal" ><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
 										<li><a href="#" data-toggle="modal" data-target="#delete_project"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
 									</ul>
 								</div>
-								<h4 class="project-title"><a href="project-view.html">Food and Drinks</a></h4>
+								<h4 class="project-title"><a href="{{ url_for('viewDetailProject') }}">Food and Drinks</a></h4>
 								<small class="block text-ellipsis m-b-15">
 									<span class="text-xs">1</span> <span class="text-muted">open tasks, </span>
 									<span class="text-xs">9</span> <span class="text-muted">tasks completed</span>
@@ -120,11 +120,11 @@
 								<div class="dropdown profile-action">
 									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_project"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+										<li><a href="{{ url_for('editProject') }}" data-toggle="modal" ><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
 										<li><a href="#" data-toggle="modal" data-target="#delete_project"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
 									</ul>
 								</div>
-								<h4 class="project-title"><a href="project-view.html">School Guru</a></h4>
+								<h4 class="project-title"><a href="{{ url_for('viewDetailProject') }}">School Guru</a></h4>
 								<small class="block text-ellipsis m-b-15">
 									<span class="text-xs">2</span> <span class="text-muted">open tasks, </span>
 									<span class="text-xs">5</span> <span class="text-muted">tasks completed</span>
@@ -180,11 +180,11 @@
 								<div class="dropdown profile-action">
 									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_project"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+										<li><a href="{{ url_for('editProject') }}" data-toggle="modal"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
 										<li><a href="#" data-toggle="modal" data-target="#delete_project"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
 									</ul>
 								</div>
-								<h4 class="project-title"><a href="project-view.html">Penabook</a></h4>
+								<h4 class="project-title"><a href="{{ url_for('viewDetailProject') }}">Penabook</a></h4>
 								<small class="block text-ellipsis m-b-15">
 									<span class="text-xs">3</span> <span class="text-muted">open tasks, </span>
 									<span class="text-xs">3</span> <span class="text-muted">tasks completed</span>
@@ -240,11 +240,11 @@
 								<div class="dropdown profile-action">
 									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_project"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+										<li><a href="{{ url_for('editProject') }}" data-toggle="modal" data-target="#edit_project"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
 										<li><a href="#" data-toggle="modal" data-target="#delete_project"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
 									</ul>
 								</div>
-								<h4 class="project-title"><a href="project-view.html">Harvey Clinic</a></h4>
+								<h4 class="project-title"><a href="{{ url_for('viewDetailProject') }}">Harvey Clinic</a></h4>
 								<small class="block text-ellipsis m-b-15">
 									<span class="text-xs">12</span> <span class="text-muted">open tasks, </span>
 									<span class="text-xs">4</span> <span class="text-muted">tasks completed</span>
@@ -289,9 +289,9 @@
 										</li>
 									</ul>
 								</div>
-								<p class="m-b-5">Progress <span class="text-success pull-right">40%</span></p>
+								<p class="m-b-5">Progress <span class="text-success pull-right">90%</span></p>
 								<div class="progress progress-xs m-b-0">
-									<div class="progress-bar progress-bar-success" role="progressbar" data-toggle="tooltip" title="40%" style="width: 40%"></div>
+									<div class="progress-bar progress-bar-success" role="progressbar" data-toggle="tooltip" title="90%" style="width: 90%"></div>
 								</div>
 							</div>
 						</div>
@@ -310,7 +310,7 @@
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label>Project Name</label>
+											<label>Project ID</label>
 											<input class="form-control" type="text">
 										</div>
 									</div>
@@ -321,6 +321,22 @@
 												<option>Global Technologies</option>
 												<option>Delta Infotech</option>
 											</select>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Project Name</label>
+											<input class="form-control" type="text">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<label>Project Manager</label>
+										<div class="project-members">
+											<a href="#" data-toggle="tooltip" title="Jeffery Lalor">
+												<img src="assets/img/user.jpg" class="avatar" alt="Jeffery Lalor" height="20" width="20">
+											</a>
 										</div>
 									</div>
 								</div>
@@ -341,16 +357,16 @@
 								<div class="row">
 									<div class="col-md-3">
 										<div class="form-group">
-											<label>Rate</label>
-											<input placeholder="$50" class="form-control" type="text">
+											<label>Mandays</label>
+											<input placeholder="Mandays" class="form-control" type="text">
 										</div>
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">
 											<label>&nbsp;</label>
 											<select class="select">
-												<option>Hourly</option>
-												<option>Fixed</option>
+												<option>Mandays</option>
+												<option>Hour</option>
 											</select>
 										</div>
 									</div>
@@ -368,46 +384,18 @@
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label>Add Project Leader</label>
-											<input class="form-control" type="text">
+											<label>Project Status</label>
+											<select class="select">
+												<option>Kick Off</option>
+												<option>Project Start</option>
+												<option>Closing</option>
+											</select>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label>Team Leader</label>
-											<div class="project-members">
-												<a href="#" data-toggle="tooltip" title="Jeffery Lalor">
-													<img src="assets/img/user.jpg" class="avatar" alt="Jeffery Lalor" height="20" width="20">
-												</a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>Add Team</label>
-											<input class="form-control" type="text">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>Team Members</label>
-											<div class="project-members">
-												<a href="#" data-toggle="tooltip" title="John Doe">
-													<img src="assets/img/user.jpg" class="avatar" alt="John Doe" height="20" width="20">
-												</a>
-												<a href="#" data-toggle="tooltip" title="Richard Miles">
-													<img src="assets/img/user.jpg" class="avatar" alt="Richard Miles" height="20" width="20">
-												</a>
-												<a href="#" data-toggle="tooltip" title="John Smith">
-													<img src="assets/img/user.jpg" class="avatar" alt="John Smith" height="20" width="20">
-												</a>
-												<a href="#" data-toggle="tooltip" title="Mike Litorus">
-													<img src="assets/img/user.jpg" class="avatar" alt="Mike Litorus" height="20" width="20">
-												</a>
-												<span class="all-team">+2</span>
-											</div>
+											<label>Project Document</label>
+											<input class="form-control" type="file">
 										</div>
 									</div>
 								</div>
@@ -415,10 +403,10 @@
 									<label>Description</label>
 									<textarea rows="4" cols="5" class="form-control summernote" placeholder="Enter your message here"></textarea>
 								</div>
-								<div class="form-group">
-									<label>Upload Files</label>
-									<input class="form-control" type="file">
-								</div>
+								<!--<div class="form-group">-->
+									<!--<label>Upload Files</label>-->
+									<!--<input class="form-control" type="file">-->
+								<!--</div>-->
 								<div class="m-t-20 text-center">
 									<button class="btn btn-primary">Create Project</button>
 								</div>
@@ -427,135 +415,6 @@
 					</div>
 				</div>
 		</div>
-		<div id="edit_project" class="modal custom-modal fade" role="dialog">
-				<div class="modal-dialog">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<div class="modal-content modal-lg">
-						<div class="modal-header">
-							<h4 class="modal-title">Edit Project</h4>
-						</div>
-						<div class="modal-body">
-							<form>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>Project Name</label>
-											<input class="form-control" value="School Guru" type="text">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>Client</label>
-											<select class="select">
-												<option>Global Technologies</option>
-												<option>Delta Infotech</option>
-											</select>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>Start Date</label>
-											<div class="cal-icon"><input class="form-control datetimepicker" type="text"></div>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>End Date</label>
-											<div class="cal-icon"><input class="form-control datetimepicker" style="" type="text"></div>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-3">
-										<div class="form-group">
-											<label>Rate</label>
-											<input placeholder="$50" class="form-control" value="$5000" type="text">
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="form-group">
-											<label>&nbsp;</label>
-											<select class="select">
-												<option>Hourly</option>
-												<option selected>Fixed</option>
-											</select>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>Priority</label>
-											<select class="select">
-												<option selected>High</option>
-												<option>Medium</option>
-												<option>Low</option>
-											</select>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>Add Project Leader</label>
-											<input class="form-control" type="text">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>Team Leader</label>
-											<div class="project-members">
-												<a href="#" data-toggle="tooltip" title="Jeffery Lalor">
-													<img src="assets/img/user.jpg" class="avatar" alt="Jeffery Lalor" height="20" width="20">
-												</a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>Add Team</label>
-											<input class="form-control" type="text">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>Team Members</label>
-											<div class="project-members">
-												<a href="#" data-toggle="tooltip" title="John Doe">
-													<img src="assets/img/user.jpg" class="avatar" alt="John Doe" height="20" width="20">
-												</a>
-												<a href="#" data-toggle="tooltip" title="Richard Miles">
-													<img src="assets/img/user.jpg" class="avatar" alt="Richard Miles" height="20" width="20">
-												</a>
-												<a href="#" data-toggle="tooltip" title="John Smith">
-													<img src="assets/img/user.jpg" class="avatar" alt="John Smith" height="20" width="20">
-												</a>
-												<a href="#" data-toggle="tooltip" title="Mike Litorus">
-													<img src="assets/img/user.jpg" class="avatar" alt="Mike Litorus" height="20" width="20">
-												</a>
-												<span class="all-team">+2</span>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label>Description</label>
-									<textarea rows="4" cols="5" class="form-control" placeholder="Enter your message here"></textarea>
-								</div>
-								<div class="form-group">
-									<label>Upload Files</label>
-									<input class="form-control" type="file">
-								</div>
-								<div class="m-t-20 text-center">
-									<button class="btn btn-primary">Save Changes</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
 		<div id="delete_project" class="modal custom-modal fade" role="dialog">
 				<div class="modal-dialog">
 					<div class="modal-content modal-md">

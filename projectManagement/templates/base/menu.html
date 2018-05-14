@@ -4,6 +4,13 @@
             <li>
                 <a href="{{ url_for('dashboard') }}">Dashboard</a>
             </li>
+            <li class="submenu">
+                <a href="#"><span> Employee </span> <span class="menu-arrow"></span></a>
+                <ul class="list-unstyled" style="display: none;">
+                    <li><a href="{{ url_for('reportProject') }}"> Departments </a></li>
+                    <li><a href="{{ url_for('reportTask') }}"> All Employees </a></li>
+                </ul>
+            </li>
             <li>
                 <a href="{{ url_for('userMainHome') }}">Clients</a>
             </li>

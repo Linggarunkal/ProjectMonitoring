@@ -36,10 +36,22 @@ def forgotPasswd():
 def chgPasswd():
     return render_template('content/change-password.html')
 
+
+#page all employee
+@app.route('/employees/all')
+def emplAll():
+    return render_template('content/employee.html')
+
+
 #page main client
 @app.route("/user/main/client")
 def userMainHome():
     return render_template('content/main-client.html')
+
+#page edit client
+@app.route("/user/edit/client")
+def userEditClient():
+    return render_template('content/edit-client.html')
 
 #page main client
 @app.route("/user/main/clientlist")
@@ -61,20 +73,16 @@ def userClientEdit():
 def mainProject():
     return render_template('content/main-project.html')
 
-#page add project
-@app.route("/project/add")
-def addProject():
-    return render_template('content/input-project.html')
+#page edit project
+@app.route("/project/edit/detail")
+def editProject():
+    return render_template('content/edit-project.html')
+
 
 #page view detail project
 @app.route("/project/view/detail")
 def viewDetailProject():
     return render_template('content/detail-projectview.html')
-
-#page edit detail project
-@app.route("/project/edit/detail")
-def editDetailProject():
-    return render_template('content/edit-projectview.html')
 
 #page approve project
 @app.route("/project/approve")
