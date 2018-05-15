@@ -1,0 +1,68 @@
+{% extends "base/index.html" %}
+{% block title %}Edit Client{% endblock %}
+{% block stylecss %}
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/font-awesome.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/select2.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap-datetimepicker.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/plugins/summernote/dist/summernote.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/style.css') }}">
+{% endblock %}
+{{ super() }}
+{% block webcontent %}
+<div class="page-wrapper">
+	<div class="content container-fluid">
+        <div class="">
+            <a href="{{ url_for('divAll') }}"><button type="button" class="btn btn-primary">Back</button></a>
+        </div>
+        <div class="modal-body">
+		    <div class="m-b-30">
+                <form>
+					<div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+							    <label>Department <span class="text-danger">*</span></label>
+								<select class="select">
+							    	<option>Global Technologies</option>
+									<option>Delta Infotech</option>
+								</select>
+							</div>
+                        </div>
+						<div class="col-md-6">
+						<div class="form-group">
+                            <label>Division Name <span class="text-danger">*</span></label>
+							<input class="form-control" value="School Guru" type="text">
+						</div>
+					    </div>
+					</div>
+					<div class="m-t-20 text-center">
+				    	<button class="btn btn-primary">Save Changes</button>
+					</div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-3.2.1.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.slimscroll.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/select2.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/moment.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/plugins/summernote/dist/summernote.min.js') }}"></script>
+        <script>
+		$(document).ready(function(){
+			$('.summernote').summernote({
+				height: 200,                 // set editor height
+				minHeight: null,             // set minimum height of editor
+				maxHeight: null,             // set maximum height of editor
+				focus: false                 // set focus to editable area after initializing summernote
+			});
+		});
+        </script>
+{% endblock %}

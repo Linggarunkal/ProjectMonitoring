@@ -7,21 +7,27 @@
             <li class="submenu">
                 <a href="#"><span> Employee </span> <span class="menu-arrow"></span></a>
                 <ul class="list-unstyled" style="display: none;">
-                    <li><a href="{{ url_for('reportProject') }}"> Departments </a></li>
-                    <li><a href="{{ url_for('reportTask') }}"> All Employees </a></li>
+                    <li><a href="{{ url_for('deptAll') }}"> Departments </a></li>
+                    <li><a href="{{ url_for('deptAll') }}"> Division </a></li>
+                    <li><a href="{{ url_for('reportTask') }}"> Employees </a></li>
                 </ul>
             </li>
             <li>
                 <a href="{{ url_for('userMainHome') }}">Clients</a>
             </li>
-            <li>
-                <a href="{{ url_for('mainProject') }}">Projects</a>
+            <li class="submenu">
+                <a href="#"><span> Projects </span> <span class="menu-arrow"></span></a>
+                <ul class="list-unstyled" style="display: none;">
+                    <li><a href="{{ url_for('mainProject') }}"> Project List </a></li>
+                    <li><a href="{{ url_for('projectApprove') }}"> Project Approve </a></li>
+                    <li><a href="{{ url_for('projectDoc') }}"> Project Document </a></li>
+                </ul>
             </li>
             <li>
                 <a href="{{ url_for('projectTaskList') }}">Tasks</a>
             </li>
             <li>
-                <a href="{{ url_for('dashboard') }}">Problem Log</a>
+                <a href="{{ url_for('problemAll') }}">Problem Log</a>
             </li>
             <li>
                 <a href="{{ url_for('projectTimesheet') }}">Time Sheet</a>

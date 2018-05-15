@@ -42,6 +42,30 @@ def chgPasswd():
 def emplAll():
     return render_template('content/employee.html')
 
+#page edit detail employee
+@app.route('/employees/edit/detail')
+def empEdtDet():
+    return render_template('content/edit-employee.html')
+
+#page department employee
+@app.route('/department/all')
+def deptAll():
+    return render_template('content/department.html')
+
+#page edit detail department
+@app.route('/department/edit/detail')
+def deptEditDet():
+    return render_template('content/edit-department.html')
+
+#page division
+@app.route('/division/all')
+def divAll():
+    return render_template('content/division.html')
+
+#page edit detail division
+@app.route('/division/edit/detail')
+def divEditDet():
+    return render_template('content/edit-division.html')
 
 #page main client
 @app.route("/user/main/client")
@@ -89,6 +113,12 @@ def viewDetailProject():
 def projectApprove():
     return render_template('content/approve-project.html')
 
+#page document project
+@app.route("/project/document")
+def projectDoc():
+    return render_template('content/doc-project.html')
+
+
 #page task list
 @app.route("/project/tasklist")
 def projectTaskList():
@@ -98,6 +128,11 @@ def projectTaskList():
 @app.route("/project/timesheet")
 def projectTimesheet():
     return render_template('content/time-sheet.html')
+
+#page problem
+@app.route("/problem/all")
+def problemAll():
+    return render_template('content/problem-log.html')
 
 #page report proyek
 @app.route("/project/report/all")
