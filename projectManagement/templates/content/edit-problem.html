@@ -14,7 +14,7 @@
     <div class="page-wrapper">
         <div class="content container-fluid">
 			<div class="">
-            	<a href="{{ url_for('projectTaskList') }}"><button type="button" class="btn btn-primary">Back</button></a>
+            	<a href="{{ url_for('problemAll') }}"><button type="button" class="btn btn-primary">Back</button></a>
         	</div>
 			<div class="modal-body">
 				<form>
@@ -22,7 +22,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Project Client</label>
-								<select class="select" disabled>
+								<select class="select">
 									<option>-- Select Project Client --</option>
 									<option>Bank DKI Syariah</option>
 									<option>Bank Riau</option>
@@ -32,7 +32,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Project ID</label>
-								<select class="select" disabled>
+								<select class="select">
 									<option>-- Select Project ID --</option>
 									<option>7DKI20180001</option>
 									<option>7BRU20180002</option>
@@ -43,13 +43,8 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
-								<label>Category</label>
-								<select class="select" disabled>
-									<option>Kick Off</option>
-									<option>Working</option>
-									<option>Planning</option>
-									<option>Closing</option>
-								</select>
+								<label>PRL Name</label>
+								<input type="text" class="form-control" name="taskname" id="taskname">
 							</div>
 						</div>
 
@@ -58,26 +53,32 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Start Date</label>
-								<div class="cal-icon"><input class="form-control datetimepicker" type="text" disabled></div>
+								<div class="cal-icon"><input class="form-control datetimepicker" type="text"></div>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>End Date</label>
-								<div class="cal-icon"><input class="form-control datetimepicker" style="" type="text" disabled></div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<div class="form-group">
-								<label>Task Name</label>
-								<input placeholder="Task name" class="form-control" type="text" disabled>
+								<div class="cal-icon"><input class="form-control datetimepicker" style="" type="text"></div>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-6">
+							<div class="form-group">
+								<label>Task Name</label>
+								<input placeholder="Task name" class="form-control" type="text">
+							</div>
+						</div>
+                        <div class="col-md-6">
+							<div class="form-group">
+								<label>Project Document</label>
+								<input class="form-control" type="file">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
 							<div class="form-group">
 								<label>Assign Team</label>
 								<div class="project-members">
@@ -87,16 +88,11 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>Project Document</label>
-								<input class="form-control" type="file" disabled>
-							</div>
-						</div>
+
 					</div>
 					<div class="form-group">
 						<label>Description</label>
-						<textarea rows="4" cols="5" class="form-control summernote" placeholder="Enter your message here" disabled></textarea>
+						<textarea rows="4" cols="5" class="form-control summernote" placeholder="Enter your message here"></textarea>
 					</div>
 					<div class="m-t-20 text-center">
 						<button class="btn btn-primary">Create Task</button>
