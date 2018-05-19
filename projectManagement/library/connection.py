@@ -14,7 +14,7 @@ class mysqlconnection(object):
             cls.instance = super(mysqlconnection, cls).__new__(cls, *args, **kwargs)
         return cls.instance
 
-    def __init__(self, _host='localhost', _user='root', _password='', _database='play'):
+    def __init__(self, _host='localhost', _user='root', _password='', _database='project_management'):
         self._host = _host
         self._user = _user
         self._password = _password
