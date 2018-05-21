@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/dataTables.bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/font-awesome.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/select2.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/style.css') }}">
 {% endblock %}
 {{ super() }}
@@ -13,10 +14,10 @@
         <div class="content container-fluid">
 			<div class="row">
 				<div class="col-sm-8">
-					<h4 class="page-title">Designations</h4>
+					<h4 class="page-title">Division</h4>
                 </div>
 				<div class="col-sm-4 text-right m-b-30">
-					<a href="#" class="btn btn-primary rounded" data-toggle="modal" data-target="#add_designation"><i class="fa fa-plus"></i> Add New Designation</a>
+					<a href="#" class="btn btn-primary rounded" data-toggle="modal" data-target="#add_designation"><i class="fa fa-plus"></i> Add Division</a>
                 </div>
             </div>
 		    <div class="row">
@@ -26,30 +27,19 @@
 							<thead>
 								<tr>
 									<th>#</th>
-									<th>Designation </th>
+									<th>Division Name </th>
 									<th>Department </th>
+									<th>Description</th>
 									<th class="text-right">Action</th>
                                 </tr>
                             </thead>
 							<tbody>
+								{% for list in divList %}
 								<tr>
-                                    <td>1</td>
-									<td>Web Designer</td>
-									<td>Web Development</td>
-									<td class="text-right">
-										<div class="dropdown">
-											<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-											<ul class="dropdown-menu pull-right">
-												<li><a href="{{ url_for('divEditDet') }}" dtitle="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-												<li><a href="#" data-toggle="modal" data-target="#delete_designation" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-											</ul>
-										</div>
-									</td>
-								</tr>
-								<tr>
-                                    <td>2</td>
-									<td>Web Developer</td>
-									<td>Web Development</td>
+									<td>{{ loop.index }}</td>
+									<td>{{ list.division_name }}</td>
+									<td>{{ list.department_name }}</td>
+									<td>{{ list.description }}</td>
 									<td class="text-right">
 										<div class="dropdown">
 											<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
@@ -60,48 +50,7 @@
 										</div>
 									</td>
 								</tr>
-								<tr>
-                                    <td>3</td>
-									<td>Android Developer</td>
-									<td>Application Development</td>
-									<td class="text-right">
-										<div class="dropdown">
-									    	<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-											<ul class="dropdown-menu pull-right">
-												<li><a href="{{ url_for('divEditDet') }}" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-												<li><a href="#" data-toggle="modal" data-target="#delete_designation" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-											</ul>
-										</div>
-									</td>
-								</tr>
-								<tr>
-                                    <td>4</td>
-									<td>IOS Developer</td>
-									<td>Application Development</td>
-									<td class="text-right">
-										<div class="dropdown">
-											<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-											<ul class="dropdown-menu pull-right">
-												<li><a href="{{ url_for('divEditDet') }}" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-												<li><a href="#" data-toggle="modal" data-target="#delete_designation" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-											</ul>
-										</div>
-									</td>
-								</tr>
-								<tr>
-                                    <td>5</td>
-									<td>UI Designer</td>
-									<td>Application Development</td>
-									<td class="text-right">
-										<div class="dropdown">
-											<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-											<ul class="dropdown-menu pull-right">
-												<li><a href="{{ url_for('divEditDet') }}" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-												<li><a href="#" data-toggle="modal" data-target="#delete_designation" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-											</ul>
-										</div>
-									</td>
-								</tr>
+								{% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -133,13 +82,40 @@
 							<h4 class="modal-title">Add Designation</h4>
 						</div>
 						<div class="modal-body">
-							<form>
-								<div class="form-group">
-									<label>Designation Name <span class="text-danger">*</span></label>
-									<input class="form-control" required="" type="text">
+							<form action="" method="POST">
+								<!--<div class="form-group">-->
+									<!--<label>Department Name <span class="text-danger">*</span></label>-->
+									<!--<select class="select">-->
+										<!--<option>IT</option>-->
+										<!--<option>Sales</option>-->
+									<!--</select>-->
+								<!--</div>-->
+								<!--<div class="form-group">-->
+									<!--<label>Division Name <span class="text-danger">*</span></label>-->
+									<!--<input class="form-control" required="" type="text">-->
+								<!--</div>-->
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Department Name <span class="text-danger">*</span></label>
+											<select class="select" id="deptName" name="deptName">
+												<option>-- Select Department --</option>>
+												{% for dept in deptName %}
+												<option value="{{ dept.department_id }}">  {{ dept.department_name }}</option>
+												{% endfor %}
+											</select>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Division Name <span class="text-danger">*</span></label>
+											<input class="form-control" type="text">
+										</div>
+									</div>
 								</div>
+
 								<div class="m-t-20 text-center">
-									<button class="btn btn-primary">Create Designation</button>
+									<button class="btn btn-primary" type="submit">Create Division</button>
 								</div>
 							</form>
 						</div>
@@ -152,6 +128,7 @@
     <script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.dataTables.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/dataTables.bootstrap.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/select2.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.slimscroll.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
 {% endblock %}

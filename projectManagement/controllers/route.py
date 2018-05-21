@@ -2,8 +2,8 @@
 # from [projectname] dari var yang sudah dideclare di init.py
 from projectManagement import app
 # flask adalah web server
-from flask import render_template
-
+from flask import render_template, request, redirect, url_for, json
+from projectManagement.models.employee import department, division
 
 
 @app.route('/')
@@ -21,12 +21,6 @@ def login():
 @app.route("/dashboard")
 def dashboard():
     return render_template('content/home.html')
-
-
-#registration route logic
-@app.route("/user/registration")
-def registration():
-    return render_template('auth/register.html')
 
 
 #forgot password route logic
@@ -56,19 +50,65 @@ def empEdtDet():
 #page department employee
 @app.route('/department/all')
 def deptAll():
-    return render_template('content/department.html')
+    allDept = department()
+    getDeptAll = allDept.all()
+    return render_template('content/department.html', allDeapt=getDeptAll)
 
 
-#page edit detail department
-@app.route('/department/edit/detail')
-def deptEditDet():
-    return render_template('content/edit-department.html')
+#action add department employee
+@app.route('/department/add', methods=['POST'])
+def deptAdd():
+    deptName = request.form['department_name']
+    addDept = department()
+    getAddDept = addDept.add(deptName)
+    if getAddDept:
+        return redirect(url_for('deptAll'))
+
+
+#page show detail department
+@app.route('/department/detail/edit/<deptno>')
+def deptEditDet(deptno):
+    detailDept = department()
+    getdetDept = detailDept.detail(deptno)
+    return render_template('content/edit-department.html', detailDept=json.dumps(getdetDept))
+
+
+#page show detail department
+@app.route('/department/detail/delete/<deptno>')
+def deptDeleteDet(deptno):
+    detailDept = department()
+    getdetDept = detailDept.detail(deptno)
+    return render_template('content/delete-department.html', detailDept=json.dumps(getdetDept))
+
+
+#page update edit detail department
+@app.route('/department/edit', methods=['POST'])
+def deptUpdDet():
+    deptId = request.form['deptId']
+    deptName = request.form['deptName']
+    deptDesc = request.form['deptDesc']
+    updDept = department()
+    # jika ada validasi di tambah di sini
+    updDept.update(deptId, deptName, deptDesc)
+    return redirect(url_for('deptAll'))
+
+
+#page update detail department
+@app.route('/department/delete', methods=['POST'])
+def deptDelDet():
+    deptId = request.form['deptId']
+    delDept = department()
+    delDept.deleted(deptId)
+    return redirect(url_for('deptAll'))
 
 
 #page division
 @app.route('/division/all')
 def divAll():
-    return render_template('content/division.html')
+    div = division()
+    divList = div.all()
+    deptName = div.getDeptName()
+    return render_template('content/division.html', divList=divList, deptName=deptName)
 
 
 #page edit detail division

@@ -15,18 +15,18 @@
                 <a href="{{ url_for('deptAll') }}"><button type="button" class="btn btn-primary">Back</button></a>
             </div>
             <div class="modal-body">
-				<form action="{{ url_for('deptUpdDet') }}" method="POST">
+				<form action="{{ url_for('deptDelDet') }}" method="POST">
                     <div class="form-group">
 						<label>Department Name <span class="text-danger">*</span></label>
                         <input type="hidden" class="form-control" name="deptId" id="deptId">
-						<input class="form-control" name="deptName" id="deptName" type="text">
+						<input class="form-control" name="deptName" id="deptName" type="text" disabled>
                     </div>
                     <div class="form-group">
                         <label>Department Description</label>
-                        <input class="form-control" name="deptDesc" id="deptDesc" type="text">
+                        <input class="form-control" name="deptDesc" id="deptDesc" type="text" disabled>
                     </div>
 					<div class="m-t-20 text-center">
-					    <button class="btn btn-primary" type="submit">Save Changes</button>
+					    <button class="btn btn-primary" type="submit" onclick="return delConfirm()">Delete Data</button>
                     </div>
                 </form>
             </div>
@@ -47,5 +47,11 @@
         document.getElementById('deptId').value = deptName[0]['department_id'];
         document.getElementById('deptName').value = deptName[0]['department_name'];
         document.getElementById('deptDesc').value = deptName[0]['department_desc'];
+
+        function delConfirm() {
+            if (!confirm("Are you sure want to delete this?")) {
+                return false;
+            }
+		}
     </script>
 {% endblock %}
