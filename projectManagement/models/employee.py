@@ -85,7 +85,7 @@ class division(object):
     def all(self):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            allDiv = conn.select('v_division_detail', None, '*')
+            allDiv = conn.select('v_division_detail', None, 'division_id, division_name, department_name, description')
             detailAllDiv = []
             for index, list in enumerate(allDiv):
                 i = {
@@ -114,13 +114,17 @@ class division(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
-    def add(self, deptNo, divName):
+    def add(self, deptNo, divName, divDesc):
         self.deptNo = deptNo
         self.divName = divName
+        self.divDesc = divDesc
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-
-            return "testing"
+            addDiv = conn.insert('division', department_id=self.deptNo, division_name=self.divName, description=self.divDesc)
+            if len(addDiv) == 0:
+                return True
+            else:
+                return False
         except Exception as e:
             return "Error Database: %s" % str(e)
 
@@ -140,5 +144,58 @@ class division(object):
                 }
                 detailDiv.append(i)
             return detailDiv
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def deleted(self, divNo):
+        self.divNo = divNo
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            condDelDiv = 'division_id'
+            divDelUpd = conn.update('division', condDelDiv, self.divNo, status='deleted')
+            if divDelUpd:
+                return True
+            else:
+                return False
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def updated(self, divNo, deptName, divName, divDesc):
+        self.divNo = divNo
+        self.deptName = deptName
+        self.divName = divName
+        self.divDesc = divDesc
+
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            condUpd = 'division_id = %s'
+            updDiv = conn.update('division', condUpd, self.divNo, department_id=self.deptName, division_name=self.divName, description=self.divDesc)
+            if updDiv:
+                return True
+            else:
+                return False
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+class employees(object):
+    def all(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            return
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getJobsTitle(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getTitle = conn.select('emptitle', None, 'empTitle_id,title_name')
+            detailTitle = []
+            for index, list in enumerate(getTitle):
+                i = {
+                    'empTitle_id': list[0],
+                    'title_name': list[1]
+                }
+                detailTitle.append(i)
+            return detailTitle
         except Exception as e:
             return "Error Database: %s" % str(e)

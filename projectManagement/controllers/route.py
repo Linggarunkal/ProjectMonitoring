@@ -3,7 +3,7 @@
 from projectManagement import app
 # flask adalah web server
 from flask import render_template, request, redirect, url_for, json
-from projectManagement.models.employee import department, division
+from projectManagement.models.employee import department, division, employees
 
 
 @app.route('/')
@@ -38,7 +38,11 @@ def chgPasswd():
 #page all employee
 @app.route('/employees/all')
 def emplAll():
-    return render_template('content/employee.html')
+    div = division()
+    deptName = div.getDeptName()
+    emp = employees()
+    titleName = emp.getJobsTitle()
+    return render_template('content/employee.html', deptName=deptName, titleName=titleName)
 
 
 #page edit detail employee
@@ -112,10 +116,53 @@ def divAll():
 
 
 #page edit detail division
-@app.route('/division/edit/detail')
-def divEditDet():
-    return render_template('content/edit-division.html')
+@app.route('/division/detail/edit/<divno>')
+def divEditDet(divno):
+    div = division()
+    divDetail = div.detail(divno)
+    getDept = div.getDeptName()
+    return render_template('content/edit-division.html', divDetail=json.dumps(divDetail), deptName=getDept)
 
+
+#page delete detil division
+@app.route('/division/detail/delete/<divno>')
+def divDelDet(divno):
+    div = division()
+    divDetail = div.detail(divno)
+    getDept = div.getDeptName()
+    return render_template('content/delete-division.html', divDetail=json.dumps(divDetail), deptName=getDept)
+
+#page add division
+@app.route('/division/add', methods=['POST'])
+def divAdd():
+    deptNo = request.form['deptNo']
+    divName = request.form['divName']
+    divDesc = request.form['divDesc']
+    div = division()
+    #if add alert in this command
+    div.add(deptNo, divName, divDesc)
+    return redirect(url_for('divAll'))
+
+#page delete division
+@app.route('/division/delete', methods=['POST'])
+def divDelete():
+    divNo = request.form['divNo']
+    div = division()
+    #if add alert in this command
+    div.deleted(divNo)
+    return redirect(url_for('divAll'))
+
+
+#page update division
+@app.route('/division/update', methods=['POST'])
+def divUpdate():
+    divNo = request.form['divNo']
+    dept = request.form['dept']
+    divName = request.form['divName']
+    divDesc = request.form['divDesc']
+    div = division()
+    div.updated(divNo, dept, divName, divDesc)
+    return redirect(url_for('divAll'))
 
 #page main client
 @app.route("/user/main/client")

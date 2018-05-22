@@ -18,13 +18,13 @@
         </div>
         <div class="modal-body">
 		    <div class="m-b-30">
-                <form action="{{ url_for('divUpdate') }}" method="POST">
+                <form action="{{ url_for('divDelete') }}" method="POST">
 					<div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
 							    <label>Department <span class="text-danger">*</span></label>
-								<input type="hidden" id="divNo" name="divNo" class="from-control">
-								<select class="select" name="dept" id="dept">
+								<input type="hidden" id="divNo" name="divNo" class="form-control" disabled>
+								<select class="select" name="dept" id="dept" disabled>
 									<option value="0">-- Select Department --</option>
 							    	{% for deptName in deptName %}
 									<option value="{{ deptName.department_id }}">{{ deptName.department_name }}</option>
@@ -35,20 +35,20 @@
 						<div class="col-md-6">
 						<div class="form-group">
                             <label>Division Name <span class="text-danger">*</span></label>
-							<input class="form-control" type="text" id="divName" name="divName">
+							<input class="form-control" type="text" id="divName" name="divName" disabled>
 						</div>
 					    </div>
 					</div>
-					<div class="row">
+                    <div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
 								<label>Description</label>
-								<input class="form-control" type="text" name="divDesc" id="divDesc">
+								<input class="form-control" type="text" name="divDesc" id="divDesc" disabled>
 							</div>
 						</div>
 					</div>
 					<div class="m-t-20 text-center">
-				    	<button class="btn btn-primary" type="submit">Save Changes</button>
+				    	<button class="btn btn-primary" onclick="return delConfirm()" type="submit">Delete Data</button>
 					</div>
                 </form>
             </div>
@@ -81,5 +81,11 @@
 		document.getElementById('dept').value = divDetail[0]['department_id'];
 		document.getElementById('divName').value = divDetail[0]['division_name'];
 		document.getElementById('divDesc').value = divDetail[0]['description'];
+
+		function delConfirm() {
+            if (!confirm("Are you sure want to delete this?")) {
+                return false;
+            }
+		}
         </script>
 {% endblock %}

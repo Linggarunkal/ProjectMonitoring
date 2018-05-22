@@ -44,8 +44,8 @@
 										<div class="dropdown">
 											<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 											<ul class="dropdown-menu pull-right">
-												<li><a href="{{ url_for('divEditDet') }}" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-												<li><a href="#" data-toggle="modal" data-target="#delete_designation" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+												<li><a href="{{ url_for('divEditDet', divno=list.division_id) }}" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+												<li><a href="{{ url_for('divDelDet', divno=list.division_id) }}" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
 											</ul>
 										</div>
 									</td>
@@ -82,7 +82,7 @@
 							<h4 class="modal-title">Add Designation</h4>
 						</div>
 						<div class="modal-body">
-							<form action="" method="POST">
+							<form action="{{ url_for('divAdd') }}" method="POST">
 								<!--<div class="form-group">-->
 									<!--<label>Department Name <span class="text-danger">*</span></label>-->
 									<!--<select class="select">-->
@@ -98,7 +98,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>Department Name <span class="text-danger">*</span></label>
-											<select class="select" id="deptName" name="deptName">
+											<select class="select" id="deptNo" name="deptNo">
 												<option>-- Select Department --</option>>
 												{% for dept in deptName %}
 												<option value="{{ dept.department_id }}">  {{ dept.department_name }}</option>
@@ -109,7 +109,15 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>Division Name <span class="text-danger">*</span></label>
-											<input class="form-control" type="text">
+											<input class="form-control" type="text" name="divName" id="divName">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>Description</label>
+											<input class="form-control" type="text" name="divDesc" id="divDesc">
 										</div>
 									</div>
 								</div>
