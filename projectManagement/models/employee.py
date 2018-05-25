@@ -181,7 +181,19 @@ class employees(object):
     def all(self):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            return
+            getEmpAll = conn.select('v_employees_detail', None, 'initial ,firstname, lastname, division_name ,title_name, employee_id')
+            detEmpAll = []
+            for index, list in enumerate(getEmpAll):
+                i = {
+                    'initial': list[0],
+                    'fistname': list[1],
+                    'lastname': list[2],
+                    'division_name': list[3],
+                    'position': list[4],
+                    'employee_id':list[5]
+                }
+                detEmpAll.append(i)
+            return detEmpAll
         except Exception as e:
             return "Error Database: %s" % str(e)
 
@@ -197,5 +209,92 @@ class employees(object):
                 }
                 detailTitle.append(i)
             return detailTitle
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def school(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getSchool = conn.select('school_level', None, '*')
+            detSchool = []
+            for index, list in enumerate(getSchool):
+                i = {
+                    'school_code': list[0],
+                    'school_level': list[1]
+                }
+                detSchool.append(i)
+            return detSchool
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def province(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getProvince = conn.select('province', None, '*')
+            detProvince = []
+            for index, list in enumerate(getProvince):
+                i = {
+                    'province_id': list[0],
+                    'province_name': list[1]
+                }
+                detProvince.append(i)
+            return detProvince
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def city(self, prov_id):
+        self.prov_id = prov_id
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            condCity = 'province_id = %s'
+            getCity = conn.select('city', condCity, 'city_code, city_name', province_id=self.prov_id)
+            detCity = []
+            for index, list in enumerate(getCity):
+                i = {
+                    'city_code': list[0],
+                    'city_name': list[1]
+                }
+                detCity.append(i)
+            return detCity
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def detail(self, empid):
+        self.empid = empid
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            condEmp = 'employee_id = %s'
+            getEmp = conn.select('v_employees_detail', condEmp, 'employee_id, NIK, email, firstname, lastname, birthday, gender, address, city_name, phone, division_name, title_name, join_date, school, institusi_name, start_school, completed_school, degree, grade, experience_comp, experience_location, experience_position, experience_report, experience_start, experience_completed', employee_id=self.empid)
+            detEmp = []
+            for index, list in enumerate(getEmp):
+                i = {
+                    'employee_id': list[0],
+                    'NIK': list[1],
+                    'email': list[2],
+                    'firstname': list[3],
+                    'lastname': list[4],
+                    'birtday': list[5],
+                    'gender': list[6],
+                    'address': list[7],
+                    'city_name': list[8],
+                    'phone': list[9],
+                    'division_name': list[10],
+                    'title_name': list[11],
+                    'join_date': list[12],
+                    'school': list[13],
+                    'institusi_name': list[14],
+                    'start_school': list[15],
+                    'completed_school': list[16],
+                    'degree': list[17],
+                    'grade': list[18],
+                    'experience_comp': list[19],
+                    'experience_location': list[20],
+                    'experience_position': list[21],
+                    'experience_report': list[22],
+                    'experience_start': list[23],
+                    'experience_completed': list[24]
+                }
+                detEmp.append(i)
+            return detEmp
         except Exception as e:
             return "Error Database: %s" % str(e)

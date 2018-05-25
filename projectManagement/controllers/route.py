@@ -4,6 +4,7 @@ from projectManagement import app
 # flask adalah web server
 from flask import render_template, request, redirect, url_for, json
 from projectManagement.models.employee import department, division, employees
+from projectManagement.models.client import clients
 
 
 @app.route('/')
@@ -39,16 +40,28 @@ def chgPasswd():
 @app.route('/employees/all')
 def emplAll():
     div = division()
-    deptName = div.getDeptName()
+    deptName = div.all()
     emp = employees()
     titleName = emp.getJobsTitle()
-    return render_template('content/employee.html', deptName=deptName, titleName=titleName)
+    schoolLevel = emp.school()
+    province = emp.province()
+    getAllEmp = emp.all()
+    return render_template('content/employee.html', deptName=deptName, titleName=titleName, school=schoolLevel, province=province, getAllEmp=getAllEmp)
 
+
+#page city detail
+@app.route('/city/detail/<provid>')
+def cityDet(provid):
+    emp = employees()
+    getCity = emp.city(provid)
+    return json.dumps(getCity)
 
 #page edit detail employee
-@app.route('/employees/edit/detail')
-def empEdtDet():
-    return render_template('content/edit-employee.html')
+@app.route('/employees/detail/<empno>')
+def empEdtDet(empno):
+    emp = employees()
+    getDetEmp = emp.detail(empno)
+    return render_template('content/profile.html', getDetEmp=getDetEmp)
 
 
 #page department employee
@@ -167,7 +180,11 @@ def divUpdate():
 #page main client
 @app.route("/user/main/client")
 def userMainHome():
-    return render_template('content/main-client.html')
+    client = clients()
+    clientAll = client.all()
+    emp = employees()
+    province = emp.province()
+    return render_template('content/main-client.html', pic_name=clientAll, province=province)
 
 
 #page edit client
@@ -183,9 +200,11 @@ def userMainHomeList():
 
 
 #page detail client
-@app.route("/user/client/detail")
-def userClientDetail():
-    return render_template('content/detail-client.html')
+@app.route("/user/detail/edit/<clientid>")
+def userClientDetail(clientid):
+    client_customer = clients()
+    getDetClient = client_customer.detail(clientid)
+    return render_template('content/detail-client.html', getDetClient=getDetClient)
 
 
 #page edit client

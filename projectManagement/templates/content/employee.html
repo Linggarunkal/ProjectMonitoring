@@ -54,10 +54,11 @@
                            </div>
                     </div>
 					<div class="row staff-grid-row">
+						{% for emp in getAllEmp %}
 						<div class="col-md-4 col-sm-4 col-xs-6 col-lg-3">
 							<div class="profile-widget">
 								<div class="profile-img">
-									<a href="profile.html"><img class="avatar" src="{{ url_for('static', filename='assets/img/user.jpg') }}" alt=""></a>
+									<a href="{{ url_for('empEdtDet', empno=emp.employee_id) }}" class="avatar">{{ emp.initial }}</a>
 								</div>
 								<div class="dropdown profile-action">
 									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
@@ -66,186 +67,12 @@
 										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
 									</ul>
 								</div>
-								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">John Doe</a></h4>
-								<div class="small text-muted">Web Designer</div>
+								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="{{ url_for('empEdtDet', empno=emp.employee_id) }}">{{ emp.fistname }} {{ emp.lastname }}</a></h4>
+								<div class="small text-muted">{{ emp.division_name }}</div>
+								<div class="small text-muted">{{ emp.position }}</div>
 							</div>
 						</div>
-						<div class="col-md-4 col-sm-4 col-xs-6 col-lg-3">
-							<div class="profile-widget">
-								<div class="profile-img">
-									<a href="profile.html" class="avatar">R</a>
-								</div>
-								<div class="dropdown profile-action">
-									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-									<ul class="dropdown-menu pull-right">
-										<li><a href="{{ url_for('empEdtDet') }}" data-toggle="modal"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-									</ul>
-								</div>
-								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">Richard Miles</a></h4>
-								<div class="small text-muted">Web Developer</div>
-							</div>
-						</div>
-						<div class="col-md-4 col-sm-4 col-xs-6 col-lg-3">
-							<div class="profile-widget">
-								<div class="profile-img">
-									<a href="profile.html" class="avatar">J</a>
-								</div>
-								<div class="dropdown profile-action">
-									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_employee"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-									</ul>
-								</div>
-								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">John Smith</a></h4>
-								<div class="small text-muted">Android Developer</div>
-							</div>
-						</div>
-						<div class="col-md-4 col-sm-4 col-xs-6 col-lg-3">
-							<div class="profile-widget">
-								<div class="profile-img">
-									<a href="profile.html" class="avatar">M</a>
-								</div>
-								<div class="dropdown profile-action">
-									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_employee"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-									</ul>
-								</div>
-								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">Mike Litorus</a></h4>
-								<div class="small text-muted">IOS Developer</div>
-							</div>
-						</div>
-						<div class="col-md-4 col-sm-4 col-xs-6 col-lg-3">
-							<div class="profile-widget">
-								<div class="profile-img">
-									<a href="profile.html" class="avatar">W</a>
-								</div>
-								<div class="dropdown profile-action">
-									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_employee"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-									</ul>
-								</div>
-								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">Wilmer Deluna</a></h4>
-								<div class="small text-muted">Team Leader</div>
-							</div>
-						</div>
-						<div class="col-md-4 col-sm-4 col-xs-6 col-lg-3">
-							<div class="profile-widget">
-								<div class="profile-img">
-									<a href="profile.html" class="avatar">J</a>
-								</div>
-								<div class="dropdown profile-action">
-									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_employee"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-									</ul>
-								</div>
-								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">Jeffrey Warden</a></h4>
-								<div class="small text-muted">Web Developer</div>
-							</div>
-						</div>
-						<div class="col-md-4 col-sm-4 col-xs-6 col-lg-3">
-							<div class="profile-widget">
-								<div class="profile-img">
-									<a href="profile.html" class="avatar">B</a>
-								</div>
-								<div class="dropdown profile-action">
-									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_employee"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-									</ul>
-								</div>
-								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">Bernardo Galaviz</a></h4>
-								<div class="small text-muted">Web Developer</div>
-							</div>
-						</div>
-						<div class="col-md-4 col-sm-4 col-xs-6 col-lg-3">
-							<div class="profile-widget">
-								<div class="profile-img">
-									<a href="profile.html" class="avatar">L</a>
-								</div>
-								<div class="dropdown profile-action">
-									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_employee"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-									</ul>
-								</div>
-								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">Lesley Grauer</a></h4>
-								<div class="small text-muted">Team Leader</div>
-							</div>
-						</div>
-						<div class="col-md-4 col-sm-4 col-xs-6 col-lg-3">
-							<div class="profile-widget">
-								<div class="profile-img">
-									<a href="profile.html" class="avatar">J</a>
-								</div>
-								<div class="dropdown profile-action">
-									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_employee"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-									</ul>
-								</div>
-								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">Jeffery Lalor</a></h4>
-								<div class="small text-muted">Team Leader</div>
-							</div>
-						</div>
-						<div class="col-md-4 col-sm-4 col-xs-6 col-lg-3">
-							<div class="profile-widget">
-								<div class="profile-img">
-									<a href="profile.html" class="avatar">L</a>
-								</div>
-								<div class="dropdown profile-action">
-									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_employee"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-									</ul>
-								</div>
-								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">Loren Gatlin</a></h4>
-								<div class="small text-muted">Android Developer</div>
-							</div>
-						</div>
-						<div class="col-md-4 col-sm-4 col-xs-6 col-lg-3">
-							<div class="profile-widget">
-								<div class="profile-img">
-									<a href="profile.html" class="avatar">T</a>
-								</div>
-								<div class="dropdown profile-action">
-									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_employee"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-									</ul>
-								</div>
-								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">Tarah Shropshire</a></h4>
-								<div class="small text-muted">Android Developer</div>
-							</div>
-						</div>
-						<div class="col-md-4 col-sm-4 col-xs-6 col-lg-3">
-							<div class="profile-widget">
-								<div class="profile-img">
-									<a href="profile.html" class="avatar">C</a>
-								</div>
-								<div class="dropdown profile-action">
-									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-									<ul class="dropdown-menu pull-right">
-										<li><a href="#" data-toggle="modal" data-target="#edit_employee"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-									</ul>
-								</div>
-								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="profile.html">Catherine Manseau</a></h4>
-								<div class="small text-muted">Android Developer</div>
-							</div>
-						</div>
+						{% endfor %}
 					</div>
                 </div>
             </div>
@@ -257,73 +84,245 @@
 							<h4 class="modal-title">Add Employee</h4>
 						</div>
 						<div class="modal-body">
-							<form class="m-b-30">
-								<div class="row">
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label class="control-label">NIK <span class="text-danger">*</span></label>
-											<input class="form-control" type="text">
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label class="control-label">Fullname <span class="text-danger">*</span></label>
-											<input class="form-control" type="text">
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label class="control-label">Email <span class="text-danger">*</span></label>
-											<input class="form-control" type="text">
-										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group ">
-											<label class="control-label">Join Date <span class="text-danger">*</span></label>
-											<div class="cal-icon">
-												<input class="form-control datetimepicker" type="text">
+							<form>
+								<!--basic Information-->
+								<div class="card-box">
+									<h3 class="card-title">Basic Informations</h3>
+									<div class="row">
+									<div class="col-md-12">
+										<div class="profile-img-wrap">
+											<img class="inline-block" src="{{ url_for('static', filename='assets/img/user.jpg') }}" alt="user">
+											<div class="fileupload btn btn-default">
+												<span class="btn-text">edit</span>
+												<input class="upload" type="file">
 											</div>
-
 										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label class="control-label">Password <span class="text-danger">*</span></label>
-											<input class="form-control" type="password">
+										<div class="profile-basic">
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group form-focus">
+														<label class="control-label">First Name</label>
+														<input type="text" class="form-control floating" name="fname" id="fname"/>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group form-focus">
+														<label class="control-label">Last Name</label>
+														<input type="text" class="form-control floating" name="lname" id="lname"/>
+													</div>
+												</div>
+												<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Birth Date</label>
+												<div class="cal-icon"><input class="form-control floating datetimepicker" type="text" name="birth" id="birth"/></div>
+											</div>
 										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label class="control-label">Confirm Password</label>
-											<input class="form-control" type="password">
+												<div class="col-md-6">
+													<div class="form-group form-focus select-focus">
+														<label class="control-label">Gendar</label>
+														<select class="select form-control floating" name="gender" id="gender">
+															<option value="0">Select Gendar</option>
+															<option value="male">Male</option>
+															<option value="female">Female</option>
+														</select>
+													</div>
+												</div>
+											</div>
 										</div>
-									</div>
-
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label class="control-label">Division Name <span class="text-danger">*</span></label>
-											<select class="select" name="deptName" id="deptName">
-												<option value="0">-- Select Department Name --</option>
-												{% for deptName in deptName %}
-												<option value="{{ deptName.department_id }}">{{ deptName.department_name }}</option>
-												{% endfor %}
-											</select>
+									</div></div>
+								</div>
+								<!--contact information-->
+								<div class="card-box">
+									<h3 class="card-title">Contact Informations</h3>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group form-focus">
+												<label class="control-label">Address</label>
+												<input type="text" class="form-control floating" />
+											</div>
 										</div>
-									</div>
-									<div class="col-sm-6">
-										<div class="form-group">
-											<label class="control-label">Job Title <span class="text-danger">*</span></label>
-											<select class="select" id="jobTitle" name="jobTitle">
-												<option value="0">-- Select Job Title --</option>
-												{% for jobs in titleName %}
-													<option value="{{ jobs.empTitle_id }}"> {{ jobs.title_name }}</option>
-												{% endfor %}
-											</select>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Province</label>
+												<select class="select form-control floating" name="province" id="province">
+													<option value="0">Select Province</option>
+													{% for prov in province %}
+													<option value="{{ prov.province_id }}">{{ prov.province_name }}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">City</label>
+												<select class="select from control floating" name="city" id="city">
+													<option value="0">Select City</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Pin Code</label>
+												<input type="text" class="form-control floating" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Phone Number</label>
+												<input type="text" class="form-control floating" />
+											</div>
 										</div>
 									</div>
 								</div>
-								<div class="m-t-20 text-center">
-									<button class="btn btn-primary" type="submit">Create Employee</button>
+								<!--Information Team-->
+								<div class="card-box">
+									<h3 class="card-title">Information Team</h3>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">NIK</label>
+												<input type="text" class="form-control floating" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Email</label>
+												<input type="email" class="form-control floating" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Password</label>
+												<input type="password" class="form-control floating" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Repeat Password</label>
+												<input type="password" class="form-control floating" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus select-focus">
+												<label class="control-label">Division</label>
+												<select class="select form-control floating">
+													<option value="0">Select Division</option>
+													{% for dept in deptName %}
+													<option value="{{ dept.division_id }}">{{ dept.division_name }}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus select-focus">
+												<label class="control-label">Job Title</label>
+												<select class="select form-control floating">
+													<option value="0">Select Job Title</option>
+													{% for job in titleName %}
+													<option value="{{ job.empTitle_id }}">{{ job.title_name }}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Join Date</label>
+												<div class="cal-icon"><input type="text" class="form-control floating datetimepicker" /></div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--Education-->
+								<div class="card-box">
+									<h3 class="card-title">Last Education Informations</h3>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Tingkat</label>
+												<select class="form-control floating">
+													<option value="0">Select Derajat</option>
+													{% for school in school %}
+													<option value="{{ school.school_code }}">{{ school.school_level }}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Instituti Name</label>
+												<input type="text" class="form-control floating" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Start Date</label>
+												<div class="cal-icon"><input type="text" class="form-control floating datetimepicker" /></div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Completed Date</label>
+												<div class="cal-icon"><input type="text" class="form-control floating datetimepicker" /></div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Degree</label>
+												<input type="text" class="form-control floating" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Grade</label>
+												<input type="text" class="form-control floating" />
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--experience-->
+								<div class="card-box">
+									<h3 class="card-title">Last Experience Informations</h3>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Company Name</label>
+												<input type="text" class="form-control floating" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Location</label>
+												<input type="text" class="form-control floating" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Job Position</label>
+												<input type="text" class="form-control floating" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Report To</label>
+												<input type="text" class="form-control floating" />
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Period From</label>
+												<div class="cal-icon"><input type="text" class="form-control floating" datetimepicker/></div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group form-focus">
+												<label class="control-label">Period To</label>
+												<div class="cal-icon"><input type="text" class="form-control floating" datetimepicker/></div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="text-center m-t-20">
+									<button class="btn btn-primary btn-lg" type="button">Submit</button>
 								</div>
 							</form>
 						</div>
@@ -356,4 +355,38 @@
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/moment.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap-datetimepicker.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+			$("#province").change(function(){
+				var prov = $(this).val();
+
+				$.ajax({
+					type: "GET",
+					url: "http://localhost:14045/city/detail/"+prov,
+					success: function(res){
+						data = JSON.parse(res);
+						console.log(data[0]);
+						console.log(data.length);
+
+						(function() {
+    						var elm = document.getElementById('city'),
+        						df = document.createDocumentFragment();
+        						$('#city')
+    							.find('option')
+    							.remove()
+    							.end();
+    						for (var i = 0; i < data.length; i++) {
+        						var option = document.createElement('option');
+        						option.value = data[i]['city_code'];
+        						option.appendChild(document.createTextNode(data[i]['city_name']));
+        						df.appendChild(option);
+    						}
+    						elm.appendChild(df);
+							}());
+					}
+				});
+			});
+		});
+	</script>
 {% endblock %}

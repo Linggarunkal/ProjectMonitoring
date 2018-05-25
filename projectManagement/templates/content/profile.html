@@ -1,0 +1,132 @@
+{% extends "base/index.html" %}
+{% block title %}Detail Employee{% endblock %}
+{% block stylecss %}
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/style.css') }}">
+{% endblock %}
+{{ super() }}
+{% block webcontent %}
+	<div class="page-wrapper">
+    	<div class="content container-fluid">
+			<div class="row">
+				<div class="col-sm-8">
+					<h4 class="page-title">Employee Detail Profile</h4>
+				</div>
+			{% for detEmp in getDetEmp %}
+				<div class="col-sm-4 text-right m-b-30">
+					<a href="{{ url_for('emplAll') }}" class="btn btn-primary rounded"><i class="fa fa-arrow-left"></i> Back</a>
+				</div>
+			</div>
+			<div class="card-box">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="profile-view">
+							<div class="profile-img-wrap">
+								<div class="profile-img">
+									<a href="#"><img class="avatar" src="{{ url_for('static', filename='assets/img/user.jpg') }}" alt=""></a>
+								</div>
+							</div>
+							<div class="profile-basic">
+								<div class="row">
+									<div class="col-md-5">
+										<div class="profile-info-left">
+											<br>
+											<h3 class="user-name m-t-0 m-b-5">{{ detEmp.firstname }} {{ detEmp.lastname }}</h3>
+											<small class="text-muted">{{ detEmp.division_name }}</small><br>
+											<small class="text-muted">{{ detEmp.title_name }}</small>
+											<div class="staff-id">NIK : {{ detEmp.NIK }}</div>
+
+										</div>
+									</div>
+									<div class="col-md-7">
+										<ul class="personal-info">
+											<li>
+												<span class="title">Phone:</span>
+												<span class="text"><a href="">{{ detEmp.phone }}</a></span>
+											</li>
+											<li>
+												<span class="title">Email:</span>
+												<span class="text"><a href="">{{ detEmp.email }}</a></span>
+											</li>
+											<li>
+												<span class="title">Birthday:</span>
+												<span class="text">{{ detEmp.birtday }}</span>
+											</li>
+											<li>
+												<span class="title">Address:</span>
+												<span class="text">{{ detEmp.address }}</span>
+											</li>
+											<li>
+												<span class="title">City:</span>
+												<span class="text">{{ detEmp.city_name }}</span>
+											</li>
+											<li>
+												<span class="title">Gender:</span>
+												<span class="text">{{ detEmp.gender }}</span>
+											</li>
+											<li>
+												<span class="title">Join Date:</span>
+												<span class="text">{{ detEmp.join_date }}</span>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card-box">
+						<h3 class="card-title">Last Education Informations</h3>
+						<div class="experience-box">
+							<ul class="experience-list">
+								<li>
+									<div class="experience-user">
+										<div class="before-circle"></div>
+									</div>
+									<div class="experience-content">
+										<div class="timeline-content">
+											<a href="#/" class="name">{{ detEmp.institusi_name }}</a>
+											<div>{{ detEmp.degree }}</div>
+											<div>Grade: {{ detEmp.grade }}</div>
+											<span class="time">{{ detEmp.start_school }} - {{ detEmp.completed_school }}</span>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="card-box m-b-0">
+						<h3 class="card-title">Last Experience Information</h3>
+						<div class="experience-box">
+							<ul class="experience-list">
+								<li>
+									<div class="experience-user">
+										<div class="before-circle"></div>
+									</div>
+									<div class="experience-content">
+										<div class="timeline-content">
+											<a href="#/" class="name">{{ detEmp.experience_position }} at {{ detEmp.experience_comp }}</a>
+											<span class="time">{{ detEmp.experience_start }} - {{ detEmp.experience_completed }}</span>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+    </div>
+{% endblock %}
+{% block js %}
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-3.2.1.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.slimscroll.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+{% endblock %}
