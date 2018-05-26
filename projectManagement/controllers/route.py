@@ -17,6 +17,11 @@ def start():
 def login():
     return render_template('auth/login.html')
 
+#login route logic
+@app.route("/registration")
+def registration():
+    return render_template('auth/register.html')
+
 
 #login route logic
 @app.route("/dashboard")
@@ -76,10 +81,10 @@ def deptAll():
 @app.route('/department/add', methods=['POST'])
 def deptAdd():
     deptName = request.form['department_name']
+    deptDesc = request.form['description']
     addDept = department()
-    getAddDept = addDept.add(deptName)
-    if getAddDept:
-        return redirect(url_for('deptAll'))
+    addDept.add(deptName, deptDesc)
+    return redirect(url_for('deptAll'))
 
 
 #page show detail department

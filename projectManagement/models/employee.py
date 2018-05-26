@@ -3,12 +3,12 @@ from projectManagement.library.config import HOST, USERNAME, PASSWORD, DATABASE
 
 
 class department(object):
-    def add(self, deptname):
+    def add(self, deptname, deptdesc):
         self.deptname = deptname
-
+        self.deptdesc = deptdesc
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            addDept = conn.insert('department', department_name=self.deptname)
+            addDept = conn.insert('department', department_name=self.deptname, description=self.deptdesc)
             if len(addDept) == 0:
                 return True
             else:
