@@ -84,7 +84,7 @@
 							<h4 class="modal-title">Add Client Customer</h4>
 						</div>
 						<div class="modal-body">
-							<form>
+							<form action="{{ url_for('clientAdd') }}" method="POST">
 								<!--Client Data Information-->
 								<div class="card-box">
 									<h3 class="card-title">Client Data Informations</h3>
@@ -102,19 +102,19 @@
 												<div class="col-md-6">
 													<div class="form-group form-focus">
 														<label class="control-label">Client Name</label>
-														<input type="text" class="form-control floating" name="fname" id="fname"/>
+														<input type="text" required=""  class="form-control floating" name="name" id="name"/>
 													</div>
 												</div>
 												<div class="col-md-6">
 													<div class="form-group form-focus">
 														<label class="control-label">Client Email</label>
-														<input type="text" class="form-control floating" name="lname" id="lname"/>
+														<input type="text" required=""  class="form-control floating" name="email" id="email"/>
 													</div>
 												</div>
 												<div class="col-md-12">
 													<div class="form-group form-focus">
 														<label class="control-label">Address</label>
-														<input type="text" class="form-control floating" name="address" id="address">
+														<input type="text" required=""  class="form-control floating" name="address" id="address">
 													</div>
 												</div>
 												<div class="col-md-6">
@@ -139,19 +139,19 @@
 												<div class="col-md-6">
 													<div class="form-group form-focus">
 														<label class="control-label">PIC Name</label>
-														<input type="text" class="form-control floating" name="pic_name" id="pic_name">
+														<input type="text" required=""  class="form-control floating" name="pic_name" id="pic_name">
 													</div>
 												</div>
 												<div class="col-md-6">
 													<div class="form-group form-focus">
 														<label class="control-label">PIC Email</label>
-														<input type="text" class="form-control floating" name="pic_email" id="pic_email">
+														<input type="text" required=""  class="form-control floating" name="pic_email" id="pic_email">
 													</div>
 												</div>
 												<div class="col-md-6">
 													<div class="form-group form-focus">
 														<label class="control-label">PIC Phone Number</label>
-														<input type="text" class="form-control floating" name="pic_number" id="pic_number">
+														<input type="text" required=""  class="form-control floating" name="pic_number" id="pic_number">
 													</div>
 												</div>
 
@@ -160,7 +160,7 @@
 									</div></div>
 								</div>
 								<div class="text-center m-t-20">
-									<button class="btn btn-primary btn-lg" type="button">Submit</button>
+									<button class="btn btn-primary btn-lg" type="submit">Submit</button>
 								</div>
 							</form>
 						</div>

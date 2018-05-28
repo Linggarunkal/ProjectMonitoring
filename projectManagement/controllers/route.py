@@ -87,6 +87,20 @@ def deptAdd():
     return redirect(url_for('deptAll'))
 
 
+#action add department employee
+@app.route('/clients/add', methods=['POST'])
+def clientsAdd():
+    client_name = request.form['name']
+    client_email = request.form['email']
+    client_address = request.form['address']
+    pic_name = request.form['pic_name']
+    pic_email = request.form['pic_email']
+    addClients = clients()
+    addClients.add(client_name, client_email, client_address, pic_name, pic_email)
+    return redirect(url_for('clientAll'))
+
+
+
 #page show detail department
 @app.route('/department/detail/edit/<deptno>')
 def deptEditDet(deptno):
@@ -164,12 +178,11 @@ def divAdd():
 #page delete division
 @app.route('/division/delete', methods=['POST'])
 def divDelete():
-    divNo = request.form['divNo']
+    divno = request.form['divNo']
     div = division()
     #if add alert in this command
-    div.deleted(divNo)
+    div.deleted(divno)
     return redirect(url_for('divAll'))
-
 
 #page update division
 @app.route('/division/update', methods=['POST'])

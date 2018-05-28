@@ -102,7 +102,8 @@ class division(object):
     def getDeptName(self):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            getDept = conn.select('department', None, 'department_id, department_name')
+            condDept = 'status = %s'
+            getDept = conn.select('department', condDept, 'department_id, department_name', status='added')
             detDept = []
             for index, list in enumerate(getDept):
                 i = {
@@ -147,12 +148,12 @@ class division(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
-    def deleted(self, divNo):
-        self.divNo = divNo
+    def deleted(self, divno):
+        self.divno = divno
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            condDelDiv = 'division_id'
-            divDelUpd = conn.update('division', condDelDiv, self.divNo, status='deleted')
+            condDelDiv = 'division_id = %s'
+            divDelUpd = conn.update('division', condDelDiv, self.divno, status='deleted')
             if divDelUpd:
                 return True
             else:
