@@ -5,7 +5,8 @@ from projectManagement import app
 from flask import render_template, request, redirect, url_for, json
 from projectManagement.models.employee import department, division, employees
 from projectManagement.models.client import clients
-
+from projectManagement.models.project import project_list
+from datetime import datetime
 
 @app.route('/')
 def start():
@@ -234,8 +235,56 @@ def userClientEdit():
 #page main project
 @app.route("/project/main")
 def mainProject():
-    return render_template('content/main-project.html')
+    project = project_list()
+    client = project.getClient()
+    pm = project.getProjectManager()
+    return render_template('content/main-project.html', client=client, pm=pm)
 
+
+#page get client code
+@app.route("/project/getclient/<clientcode>")
+def getClient(clientcode):
+    project = project_list()
+    clientCode = project.getClientCode(clientcode)
+    countProject = project.getCountProject(clientcode)
+    code = clientCode[0]['client_code']
+    auto_increment = countProject + 1
+    year = datetime.now().year
+    concatString = "{0:0>4}".format(auto_increment)
+    pid = "7" + code + str(year) + concatString
+    return json.dumps(pid)
+
+# #action add department employee
+# @app.route('/department/add', methods=['POST'])
+# def deptAdd():
+#     deptName = request.form['department_name']
+#     deptDesc = request.form['description']
+#     addDept = department()
+#     addDept.add(deptName, deptDesc)
+#     return redirect(url_for('deptAll'))
+# page add project to system
+@app.route('/project/add', methods=['GET','POST'])
+def addProject():
+    if request.method == 'POST':
+        pid = request.form['pid']
+        print pid
+        client_name = request.form['client_name']
+        project_name = request.form['project_name']
+        project_manager = request.form['project_manager']
+        start_project = request.form['start_project']
+        end_project =request.form ['end_project']
+        mandays = request.form['mandays']
+        priority = request.form['priority']
+        desc = request.form['desc']
+        project_doc = request.form['project_doc']
+        project = project_list()
+        createProject = project.addProject(client_name, project_name, mandays, start_project, end_project, pid, priority, project_manager, desc)
+        if createProject:
+            return "add successfully"
+        else:
+            return "Project not inserted"
+    else:
+        print "GET Process"
 
 #page edit project
 @app.route("/project/edit/detail")

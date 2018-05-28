@@ -38,7 +38,8 @@ class clients(object):
                     'city_name': list[5],
                     'pic_name': list[6],
                     'pic_number': list[7],
-                    'pic_email': list[8]
+                    'pic_email': list[8],
+                    'client_code': list[9]
                 }
                 detClient.append(i)
             return detClient
