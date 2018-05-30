@@ -2,9 +2,11 @@
 __version__ = '0.1'
 # flask adalah web server
 from flask import Flask
+import os
 
 app = Flask('projectManagement')
-app.config['SECRET_KEY'] = 'random'
+app.config['SECRET_KEY'] = os.urandom(24)
+app.config['ALLOWED_EXTENSIONS'] = set(['pdf'])
 app.debug = True
 
 from projectManagement.controllers import *

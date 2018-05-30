@@ -1,0 +1,208 @@
+{% extends "base/index.html" %}
+{% block title %}Main Project{% endblock %}
+{% block stylecss %}
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/font-awesome.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/select2.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap-datetimepicker.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/plugins/summernote/dist/summernote.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/style.css') }}">
+{% endblock %}
+{{ super() }}
+{% block webcontent %}
+        <div class="page-wrapper">
+			<div class="content container-fluid">
+
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+
+						<!--<div class="modal-header">-->
+							<!--<h4 class="modal-title">Create New Project</h4>-->
+						<!--</div>-->
+						<!--<div class="modal-body">-->
+							<!--<form role="form" enctype="multipart/form-data">-->
+								<!--<div class="row">-->
+									<!--<div class="col-md-6">-->
+										<!--<div class="form-group">-->
+											<!--<label>Project ID</label>-->
+											<!--<input class="form-control" type="text" name="pid" id="pid">-->
+										<!--</div>-->
+									<!--</div>-->
+									<!--<div class="col-md-6">-->
+										<!--<div class="form-group">-->
+											<!--<label>Client</label>-->
+											<!--<select class="select" name="client_name" id="client_name">-->
+												<!--<option value="0">&#45;&#45; Select Client &#45;&#45;</option>-->
+												<!--{% for client in client %}-->
+												<!--<option value="{{ client.client_id }}">{{ client.client_name }}</option>-->
+												<!--{% endfor %}-->
+											<!--</select>-->
+										<!--</div>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--<div class="row">-->
+									<!--<div class="col-md-6">-->
+										<!--<div class="form-group">-->
+											<!--<label>Project Name</label>-->
+											<!--<input class="form-control" type="text" name="project_name" id="project_name">-->
+										<!--</div>-->
+									<!--</div>-->
+									<!--<div class="col-md-6">-->
+										<!--<label>Project Manager</label>-->
+										<!--<div class="project-members">-->
+											<!--<select class="select" name="project_manager" id="project_manager">-->
+												<!--<option value="0">&#45;&#45; Select Project Manager &#45;&#45;</option>-->
+												<!--{% for pm in pm %}-->
+												<!--<option value="{{ pm.employee_id }}">{{ pm.firstname }} {{ pm.lastname }}</option>-->
+												<!--{% endfor %}-->
+											<!--</select>-->
+										<!--</div>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--<div class="row">-->
+									<!--<div class="col-md-6">-->
+										<!--<div class="form-group">-->
+											<!--<label>Start Date</label>-->
+											<!--<div class="cal-icon"><input class="form-control datetimepicker" type="text" name="start_project" id="start_project"></div>-->
+										<!--</div>-->
+									<!--</div>-->
+									<!--<div class="col-md-6">-->
+										<!--<div class="form-group">-->
+											<!--<label>End Date</label>-->
+											<!--<div class="cal-icon"><input class="form-control datetimepicker" style="" type="text" name="end_project" id="end_project"></div>-->
+										<!--</div>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--<div class="row">-->
+									<!--<div class="col-md-3">-->
+										<!--<div class="form-group">-->
+											<!--<label>Mandays</label>-->
+											<!--<input placeholder="Mandays" class="form-control" type="text" name="mandays" id="mandays">-->
+										<!--</div>-->
+									<!--</div>-->
+									<!--<div class="col-md-3">-->
+										<!--<div class="form-group">-->
+											<!--<label>&nbsp;</label>-->
+											<!--<select class="select">-->
+												<!--<option>Mandays</option>-->
+												<!--<option>Hour</option>-->
+											<!--</select>-->
+										<!--</div>-->
+									<!--</div>-->
+									<!--<div class="col-md-6">-->
+										<!--<div class="form-group">-->
+											<!--<label>Priority</label>-->
+											<!--<select class="select" name="priority" id="priority">-->
+												<!--<option>High</option>-->
+												<!--<option>Medium</option>-->
+												<!--<option>Low</option>-->
+											<!--</select>-->
+										<!--</div>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--<div class="row">-->
+									<!--<div class="col-md-6">-->
+										<!--<div class="form-group">-->
+											<!--<label>Project Document</label>-->
+											<!--<input class="form-control" type="file" name="project_doc" id="project_doc">-->
+										<!--</div>-->
+									<!--</div>-->
+								<!--</div>-->
+								<!--<div class="form-group">-->
+									<!--<label>Description</label>-->
+									<!--<textarea rows="4" cols="5" class="form-control summernote" placeholder="Enter your message here" name="desc" id="desc"></textarea>-->
+								<!--</div>-->
+								<!--<div class="m-t-20 text-center">-->
+									<!--<button class="btn btn-primary" type="button" id="createProject">Create Project</button>-->
+								<!--</div>-->
+							<!--</form>-->
+						<!--</div>-->
+
+				<form id="form_newProject" method="post" enctype="multipart/form-data">
+					<div id="dropbox">
+						<span class="message">Drop Images here to upload</span>
+					</div>
+					<button type="button" id="btnupload" name="btnupload">upload</button>
+
+					<p>Result Filename:&nbsp;<span id="resultFilename"> here</span></p>
+					<p>Result Filesize:&nbsp;<span id="resultFilesize">here</span></p>
+				</form>
+            </div>
+        </div>
+{% endblock %}
+{% block js %}
+        <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-3.2.1.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='assets/js/sweetalert.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.slimscroll.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/select2.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/moment.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/plugins/summernote/dist/summernote.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.filedrop.js') }}"></script>
+        <script>
+		$(document).ready(function(){
+			$('.summernote').summernote({
+				height: 200,                 // set editor height
+				minHeight: null,             // set minimum height of editor
+				maxHeight: null,             // set maximum height of editor
+				focus: false                 // set focus to editable area after initializing summernote
+			});
+		});
+
+		$(document).ready(function(){
+			$("#client_name").change(function(){
+				var clientid = $(this).val();
+				if (clientid != '0'){
+					$.ajax({
+						type: "GET",
+						url: "http://localhost:14045/project/getclient/"+clientid,
+						success: function(res){
+							data = JSON.parse(res);
+							console.log(data);
+							document.getElementById('pid').value = data;
+						},
+						error: function(err){
+							console.log(err);
+						}
+					});
+				}else{
+					document.getElementById('pid').value = "PID Project Not Found";
+				};
+			});
+		});
+		$(function(){
+			$('#btnupload').click(function(){
+				var form_data = new FormData($('#form_newProject')[0]);
+
+				$.ajax({
+					type: 'POST',
+					url: '{{ url_for('upFile') }}',
+					data: form_data,
+					contentType: false,
+					processData: false,
+					dataType: 'json'
+				}).done(function(data, textStatus, jqXHR){
+					console.log(data);
+					console.log(textStatus);
+					console.log(jqXHR);
+					console.log('success');
+					$("#resultFilename").text(data["name"]);
+					$("#resultFilesize").text(data["size"]);
+				}).fail(function(data){
+					alert('Error');
+				});
+			});
+		});
+		dropbox.filedrop({
+			 paramname: 'file',
+			 maxfiles: 10,
+			 maxfilesize: 5,
+			 url: '/upload',
+			 uploadFinished:function(i,file,response){
+        		$.data(file).addClass('done');
+    		}
+		});
+        </script>
+{% endblock %}

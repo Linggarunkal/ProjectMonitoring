@@ -2,10 +2,11 @@
 # from [projectname] dari var yang sudah dideclare di init.py
 from projectManagement import app
 # flask adalah web server
-from flask import render_template, request, redirect, url_for, json
+from flask import render_template, request, redirect, url_for, json, jsonify
 from projectManagement.models.employee import department, division, employees
 from projectManagement.models.client import clients
 from projectManagement.models.project import project_list
+from projectManagement.models.uploaded import upload
 from datetime import datetime
 
 @app.route('/')
@@ -238,7 +239,7 @@ def mainProject():
     project = project_list()
     client = project.getClient()
     pm = project.getProjectManager()
-    return render_template('content/main-project.html', client=client, pm=pm)
+    return render_template('content/main-project.html')
 
 
 #page get client code
@@ -254,38 +255,56 @@ def getClient(clientcode):
     pid = "7" + code + str(year) + concatString
     return json.dumps(pid)
 
-# #action add department employee
-# @app.route('/department/add', methods=['POST'])
-# def deptAdd():
-#     deptName = request.form['department_name']
-#     deptDesc = request.form['description']
-#     addDept = department()
-#     addDept.add(deptName, deptDesc)
-#     return redirect(url_for('deptAll'))
-# page add project to system
-@app.route('/project/add', methods=['GET','POST'])
-def addProject():
-    if request.method == 'POST':
-        pid = request.form['pid']
-        print pid
-        client_name = request.form['client_name']
-        project_name = request.form['project_name']
-        project_manager = request.form['project_manager']
-        start_project = request.form['start_project']
-        end_project =request.form ['end_project']
-        mandays = request.form['mandays']
-        priority = request.form['priority']
-        desc = request.form['desc']
-        project_doc = request.form['project_doc']
-        project = project_list()
-        createProject = project.addProject(client_name, project_name, mandays, start_project, end_project, pid, priority, project_manager, desc)
-        if createProject:
-            return "add successfully"
-        else:
-            return "Project not inserted"
-    else:
-        print "GET Process"
 
+@app.route('/project/add')
+def addProject():
+    project = project_list()
+    client = project.getClient()
+    pm = project.getProjectManager()
+    return render_template('content/add-project.html', client=client, pm=pm)
+
+
+@app.route('/project/add/post', methods=['POST'])
+def addPostProject():
+
+    pid = request.form['pid']
+    client_name = request.form['client_name']
+    project_name = request.form['project_name']
+    project_manager = request.form['project_manager']
+    start_project = request.form['start_project']
+    end_project = request.form['end_project']
+    mandays = request.form['mandays']
+    priority = request.form['priority']
+    project_doc = request.files['project_doc']
+    desc = request.form['desc']
+
+    print project_doc
+    return "tahu"
+
+
+# start testing
+from werkzeug.utils import secure_filename
+import os
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+@app.route("/upload/file", methods=['POST'])
+def upFile():
+    files = request.files['file']
+    if files and allowed_file(files.filename):
+        filename = secure_filename(files.filename)
+        app.logger.info('FileName: ' + filename)
+        updir = os.path.join(basedir, 'static/document/')
+        files.save(os.path.join(updir, filename))
+        file_size = os.path.getsize(os.path.join(updir, filename))
+        return jsonify(name=filename, size=file_size)
+
+
+
+# end testing
 #page edit project
 @app.route("/project/edit/detail")
 def editProject():
