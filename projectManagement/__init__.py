@@ -7,6 +7,7 @@ import os
 app = Flask('projectManagement')
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['ALLOWED_EXTENSIONS'] = set(['pdf'])
+app.config['UPLOAD_FOLDER'] = 'projectManagement/static/document'
 app.debug = True
 
 from projectManagement.controllers import *

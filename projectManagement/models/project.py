@@ -62,7 +62,7 @@ class project_list(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
-    def addProject(self, client_id, name, mandays, startDate, endDate, pid, priority, employee_id, description):
+    def addProject(self, client_id, name, mandays, startDate, endDate, pid, priority, employee_id, description, doc_project, doc_size):
         self.client_id = client_id
         self.name = name
         self.mandays = mandays
@@ -72,12 +72,16 @@ class project_list(object):
         self.priority = priority
         self.employee_id = employee_id
         self.description = description
+        self.doc_project = doc_project
+        self.doc_size = doc_size
+        print self.startDate
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            projectAdd = conn.insert('project', client_id=self.client_id, name=self.name, mandays=self.mandays, startDate=self.startDate, endDate=self.endDate, pid=self.pid, priority=self.priority, employee_id=self.employee_id, description=self.description)
-            if projectAdd:
-                return True
+            projectAdd = conn.insert('project', client_id=self.client_id, name=self.name, mandays=self.mandays, startDate=self.startDate, endDate=self.endDate, pid=self.pid, priority=self.priority, employee_id=self.employee_id, description=self.description, doc_project=self.doc_project, doc_size=self.doc_size)
+            print projectAdd
+            if projectAdd == 0:
+                return 0
             else:
-                return False
+                return 1
         except Exception as e:
             return "Error Database: %s" % str(e)

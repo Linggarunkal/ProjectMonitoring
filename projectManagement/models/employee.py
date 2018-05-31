@@ -85,7 +85,8 @@ class division(object):
     def all(self):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            allDiv = conn.select('v_division_detail', None, 'division_id, division_name, department_name, description')
+            condDiv = 'status = %s'
+            allDiv = conn.select('v_division_detail', condDiv, 'division_id, division_name, department_name, description', status='added')
             detailAllDiv = []
             for index, list in enumerate(allDiv):
                 i = {
@@ -297,5 +298,16 @@ class employees(object):
                 }
                 detEmp.append(i)
             return detEmp
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def add(self, nik, email, password, firstname, lastname, birthday, gender, address, city_code, pincode, phone, division_id, empTitle_id, join_date, schoollevel_id, institusi_name, start_school, completed_school, degree, grade, experience_comp, experience_location, experience_position, experience_report, experience_start, experience_completed):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            addEmp = conn.insert('employooes', nik=nik, email=email, password=password, firstname=firstname, lastname=lastname, birthday=birthday, gender=gender, address=address, city_code=city_code, pincode=pincode, phone=phone, division_id=division_id, empTitle_id=empTitle_id, join_date=join_date, schoollevel_id=schoollevel_id, institusi_name=institusi_name, start_school=start_school, completed_school=completed_school, degree=degree, grade=gender, experience_comp=experience_comp, experience_location=experience_location, experience_position=experience_position, experience_report=experience_report, experience_start=experience_start, experience_completed=experience_completed)
+            if addEmp == 0:
+                return "Employee Created to System"
+            else:
+                return "Employee Failed Created to System"
         except Exception as e:
             return "Error Database: %s" % str(e)

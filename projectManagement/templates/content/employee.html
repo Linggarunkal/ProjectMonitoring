@@ -84,7 +84,7 @@
 							<h4 class="modal-title">Add Employee</h4>
 						</div>
 						<div class="modal-body">
-							<form>
+							<form role="form" id="addEmpNew" enctype="multipart/form-data">
 								<!--basic Information-->
 								<div class="card-box">
 									<h3 class="card-title">Basic Informations</h3>
@@ -122,8 +122,8 @@
 														<label class="control-label">Gendar</label>
 														<select class="select form-control floating" name="gender" id="gender">
 															<option value="0">Select Gendar</option>
-															<option value="male">Male</option>
-															<option value="female">Female</option>
+															<option value="Male">Male</option>
+															<option value="Female">Female</option>
 														</select>
 													</div>
 												</div>
@@ -138,7 +138,7 @@
 										<div class="col-md-12">
 											<div class="form-group form-focus">
 												<label class="control-label">Address</label>
-												<input type="text" class="form-control floating" />
+												<input type="text" class="form-control floating" name="address" id="address"/>
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -163,13 +163,13 @@
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Pin Code</label>
-												<input type="text" class="form-control floating" />
+												<input type="text" class="form-control floating" id="pincode" name="pincode"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Phone Number</label>
-												<input type="text" class="form-control floating" />
+												<input type="text" class="form-control floating" name="phone" id="phone"/>
 											</div>
 										</div>
 									</div>
@@ -181,31 +181,31 @@
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">NIK</label>
-												<input type="text" class="form-control floating" />
+												<input type="text" class="form-control floating" name="nik" id="nik"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Email</label>
-												<input type="email" class="form-control floating" />
+												<input type="email" class="form-control floating" name="email" id="email"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Password</label>
-												<input type="password" class="form-control floating" />
+												<input type="password" class="form-control floating" name="password" id="password"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Repeat Password</label>
-												<input type="password" class="form-control floating" />
+												<input type="password" class="form-control floating" id="repeat_password" name="repeat_password"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus select-focus">
 												<label class="control-label">Division</label>
-												<select class="select form-control floating">
+												<select class="select form-control floating" name="division" id="division">
 													<option value="0">Select Division</option>
 													{% for dept in deptName %}
 													<option value="{{ dept.division_id }}">{{ dept.division_name }}</option>
@@ -216,7 +216,7 @@
 										<div class="col-md-6">
 											<div class="form-group form-focus select-focus">
 												<label class="control-label">Job Title</label>
-												<select class="select form-control floating">
+												<select class="select form-control floating" name="job_title" id="job_title">
 													<option value="0">Select Job Title</option>
 													{% for job in titleName %}
 													<option value="{{ job.empTitle_id }}">{{ job.title_name }}</option>
@@ -227,7 +227,7 @@
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Join Date</label>
-												<div class="cal-icon"><input type="text" class="form-control floating datetimepicker" /></div>
+												<div class="cal-icon"><input type="text" class="form-control floating datetimepicker" name="join_date" id="join_date"/></div>
 											</div>
 										</div>
 									</div>
@@ -239,7 +239,7 @@
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Tingkat</label>
-												<select class="form-control floating">
+												<select class="form-control floating" id="schoollevel" name="schoollevel">
 													<option value="0">Select Derajat</option>
 													{% for school in school %}
 													<option value="{{ school.school_code }}">{{ school.school_level }}</option>
@@ -250,31 +250,31 @@
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Instituti Name</label>
-												<input type="text" class="form-control floating" />
+												<input type="text" class="form-control floating" id="institusi" name="institusi"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Start Date</label>
-												<div class="cal-icon"><input type="text" class="form-control floating datetimepicker" /></div>
+												<div class="cal-icon"><input type="text" class="form-control floating datetimepicker" name="school_start" id="school_start"/></div>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Completed Date</label>
-												<div class="cal-icon"><input type="text" class="form-control floating datetimepicker" /></div>
+												<div class="cal-icon"><input type="text" class="form-control floating datetimepicker" name="school_end" id="school_end"/></div>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Degree</label>
-												<input type="text" class="form-control floating" />
+												<input type="text" class="form-control floating" name="degree" id="degree"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Grade</label>
-												<input type="text" class="form-control floating" />
+												<input type="text" class="form-control floating" name="grade" id="grade"/>
 											</div>
 										</div>
 									</div>
@@ -286,43 +286,43 @@
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Company Name</label>
-												<input type="text" class="form-control floating" />
+												<input type="text" class="form-control floating" name="exp_company" id="exp_company"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Location</label>
-												<input type="text" class="form-control floating" />
+												<input type="text" class="form-control floating" name="exp_location" id="exp_location"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Job Position</label>
-												<input type="text" class="form-control floating" />
+												<input type="text" class="form-control floating" name="job_position" id="job_position"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Report To</label>
-												<input type="text" class="form-control floating" />
+												<input type="text" class="form-control floating" name="report_to" id="report_to"/>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Period From</label>
-												<div class="cal-icon"><input type="text" class="form-control floating" datetimepicker/></div>
+												<div class="cal-icon"><input type="text" class="form-control floating" datetimepicker name="exp_start" id="exp_start"/></div>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
 												<label class="control-label">Period To</label>
-												<div class="cal-icon"><input type="text" class="form-control floating" datetimepicker/></div>
+												<div class="cal-icon"><input type="text" class="form-control floating" datetimepicker id="exp_end" name="exp_end"/></div>
 											</div>
 										</div>
 									</div>
 								</div>
 								<div class="text-center m-t-20">
-									<button class="btn btn-primary btn-lg" type="button">Submit</button>
+									<button class="btn btn-primary btn-lg" type="button" id="addEmployee" name="addEmployee">Submit</button>
 								</div>
 							</form>
 						</div>
@@ -349,6 +349,7 @@
 {% endblock %}
 {% block js %}
     <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-3.2.1.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/sweetalert.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.slimscroll.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/select2.min.js') }}"></script>
@@ -388,5 +389,31 @@
 				});
 			});
 		});
+
+	$(function(){
+    $('#addEmployee').click(function(){
+    	event.preventDefault();
+       	var form_data = new FormData($('#addEmpNew')[0]);
+        $.ajax({
+            url: '{{ url_for('empAdd') }}',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(data){
+                JSalert();
+                function JSalert(){
+                    swal("Congrats!", " Data Success created to System ", "success")
+                    .then(willRedirect => {
+                        if (willRedirect){
+                            window.location.href = "{{ url_for('emplAll') }}";
+                            }
+                    });
+                }
+            },
+            error: function(data){
+                console.log(data);
+            }
+        });
+    });
+});
 	</script>
 {% endblock %}

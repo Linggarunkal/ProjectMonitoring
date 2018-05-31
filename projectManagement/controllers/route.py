@@ -7,6 +7,8 @@ from projectManagement.models.employee import department, division, employees
 from projectManagement.models.client import clients
 from projectManagement.models.project import project_list
 from projectManagement.models.uploaded import upload
+from werkzeug.utils import secure_filename
+import os
 from datetime import datetime
 
 @app.route('/')
@@ -41,6 +43,41 @@ def forgotPasswd():
 @app.route('/user/changepassword')
 def chgPasswd():
     return render_template('content/change-password.html')
+
+
+# page add employees
+@app.route('/employees/add', methods=['POST'])
+def empAdd():
+    fname = request.form['fname']
+    lname = request.form['lname']
+    birth = request.form['birth']
+    gender = request.form['gender']
+    address = request.form['address']
+    city_code = request.form['city']
+    pincode = request.form['pincode']
+    phone = request.form['phone']
+    nik = request.form['nik']
+    email = request.form['email']
+    password = request.form['password']
+    division = request.form['division']
+    job_title = request.form['job_title']
+    join_date = request.form['join_date']
+    schoollevel = request.form['schoollevel']
+    institusi = request.form['institusi']
+    school_start = request.form['school_start']
+    school_end = request.form['school_end']
+    degree = request.form['degree']
+    grade = request.form['grade']
+    exp_company = request.form['exp_company']
+    exp_location = request.form['exp_location']
+    job_position = request.form['job_position']
+    report_to = request.form['report_to']
+    exp_start = request.form['exp_start']
+    exp_end = request.form['exp_end']
+
+    print fname, lname
+    return "testing"
+
 
 
 #page all employee
@@ -264,47 +301,56 @@ def addProject():
     return render_template('content/add-project.html', client=client, pm=pm)
 
 
-@app.route('/project/add/post', methods=['POST'])
-def addPostProject():
+# Parameter to upload file
+basedir = os.path.abspath(os.curdir)
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+# end parameter
 
+
+@app.route("/project/add/post", methods=['POST'])
+def upFile():
     pid = request.form['pid']
     client_name = request.form['client_name']
     project_name = request.form['project_name']
     project_manager = request.form['project_manager']
     start_project = request.form['start_project']
+    project_start = datetime.strptime(start_project, '%d/%m/%Y').strftime('%Y-%m-%d')
     end_project = request.form['end_project']
+    project_end = datetime.strptime(end_project, '%d/%m/%Y').strftime('%Y-%m-%d')
     mandays = request.form['mandays']
     priority = request.form['priority']
-    project_doc = request.files['project_doc']
+    files = request.files['file_doc']
     desc = request.form['desc']
 
-    print project_doc
-    return "tahu"
+    print start_project, end_project
 
-
-# start testing
-from werkzeug.utils import secure_filename
-import os
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
-
-@app.route("/upload/file", methods=['POST'])
-def upFile():
-    files = request.files['file']
-    if files and allowed_file(files.filename):
+    if files and allowed_file(files.filename) :
         filename = secure_filename(files.filename)
-        app.logger.info('FileName: ' + filename)
-        updir = os.path.join(basedir, 'static/document/')
-        files.save(os.path.join(updir, filename))
-        file_size = os.path.getsize(os.path.join(updir, filename))
-        return jsonify(name=filename, size=file_size)
+        fileSplit = filename.split(".")
+        nama_file = pid+"_NEW_PROJECT"
+        fileUpload = nama_file+"."+fileSplit[1]
+        updir = os.path.join(basedir, app.config['UPLOAD_FOLDER'])
+        files.save(os.path.join(updir, fileUpload))
+        fileFullPath = os.path.join(updir, fileUpload)
+        file_size = os.path.getsize(os.path.join(updir, fileUpload))
+        if os.path.exists(fileFullPath):
+            addNewProject = project_list()
+            newProject = addNewProject.addProject(client_name, project_name, mandays, project_start, project_end, pid, priority, project_manager, desc, fileUpload, file_size)
+            if newProject == 0:
+                return "Success to Database"
+            else:
+                os.remove(os.path.join(updir, fileUpload))
+                return "Failed to Database"
+    else:
+        return 'Format File Not Supported'
 
 
 
-# end testing
+
+
+
 #page edit project
 @app.route("/project/edit/detail")
 def editProject():
