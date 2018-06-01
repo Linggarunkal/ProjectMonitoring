@@ -183,7 +183,7 @@ class employees(object):
     def all(self):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            getEmpAll = conn.select('v_employees_detail', None, 'initial ,firstname, lastname, division_name ,title_name, employee_id')
+            getEmpAll = conn.select('v_employees_detail', None,  'initial,firstname, lastname, division_name ,title_name, employee_id')
             detEmpAll = []
             for index, list in enumerate(getEmpAll):
                 i = {
@@ -192,7 +192,7 @@ class employees(object):
                     'lastname': list[2],
                     'division_name': list[3],
                     'position': list[4],
-                    'employee_id':list[5]
+                    'employee_id': list[5]
                 }
                 detEmpAll.append(i)
             return detEmpAll
@@ -266,7 +266,7 @@ class employees(object):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
             condEmp = 'employee_id = %s'
-            getEmp = conn.select('v_employees_detail', condEmp, 'employee_id, NIK, email, firstname, lastname, birthday, gender, address, city_name, phone, division_name, title_name, join_date, school, institusi_name, start_school, completed_school, degree, grade, experience_comp, experience_location, experience_position, experience_report, experience_start, experience_completed', employee_id=self.empid)
+            getEmp = conn.select('v_employees_detail', condEmp, 'employee_id, NIK, email, firstname, lastname, birthday, gender, address, city_name, phone, division_name, title_name, join_date', employee_id=self.empid)
             detEmp = []
             for index, list in enumerate(getEmp):
                 i = {
@@ -283,18 +283,6 @@ class employees(object):
                     'division_name': list[10],
                     'title_name': list[11],
                     'join_date': list[12],
-                    'school': list[13],
-                    'institusi_name': list[14],
-                    'start_school': list[15],
-                    'completed_school': list[16],
-                    'degree': list[17],
-                    'grade': list[18],
-                    'experience_comp': list[19],
-                    'experience_location': list[20],
-                    'experience_position': list[21],
-                    'experience_report': list[22],
-                    'experience_start': list[23],
-                    'experience_completed': list[24]
                 }
                 detEmp.append(i)
             return detEmp

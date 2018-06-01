@@ -87,10 +87,9 @@ def emplAll():
     deptName = div.all()
     emp = employees()
     titleName = emp.getJobsTitle()
-    schoolLevel = emp.school()
     province = emp.province()
     getAllEmp = emp.all()
-    return render_template('content/employee.html', deptName=deptName, titleName=titleName, school=schoolLevel, province=province, getAllEmp=getAllEmp)
+    return render_template('content/employee.html', deptName=deptName, titleName=titleName, province=province, getAllEmp=getAllEmp)
 
 
 #page city detail
@@ -100,13 +99,18 @@ def cityDet(provid):
     getCity = emp.city(provid)
     return json.dumps(getCity)
 
-#page edit detail employee
+#page detail employee
 @app.route('/employees/detail/<empno>')
 def empEdtDet(empno):
     emp = employees()
     getDetEmp = emp.detail(empno)
     return render_template('content/profile.html', getDetEmp=getDetEmp)
 
+
+#page edit employee
+@app.route('/employees/edit')
+def empEdt():
+    return render_template('content/edit-employee.html')
 
 #page department employee
 @app.route('/department/all')
@@ -213,6 +217,16 @@ def divAdd():
     #if add alert in this command
     div.add(deptNo, divName, divDesc)
     return redirect(url_for('divAll'))
+
+
+# @app.route('/department/delete', methods=['POST'])
+# def deptDelDet():
+#     deptId = request.form['deptId']
+#     delDept = department()
+#     delDept.deleted(deptId)
+#     return redirect(url_for('deptAll'))
+
+
 
 #page delete division
 @app.route('/division/delete', methods=['POST'])
