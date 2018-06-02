@@ -450,6 +450,12 @@ def reportProblem():
 
 
 #page report audit trail
-@app.route("/project/report/audit")
-def reportAudit():
-    return render_template('content/report-audit.html')
+@app.route("/project/report/client")
+def reportClient():
+    return render_template('content/report-client.html')
+
+
+#page report employee
+@app.route("/project/report/employee")
+def reportEmp():
+    return render_template('content/report-employee.html')
