@@ -183,11 +183,11 @@ class employees(object):
     def all(self):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            getEmpAll = conn.select('v_employees_detail', None,  'initial,firstname, lastname, division_name ,title_name, employee_id')
+            getEmpAll = conn.select('v_employees_detail', None,  'Initial, firstname, lastname, division_name ,title_name, employee_id')
             detEmpAll = []
             for index, list in enumerate(getEmpAll):
                 i = {
-                    'initial': list[0],
+                    'Initial': list[0],
                     'fistname': list[1],
                     'lastname': list[2],
                     'division_name': list[3],
@@ -292,7 +292,7 @@ class employees(object):
     def add(self, nik, email, password, firstname, lastname, birthday, gender, address, city_code, pincode, phone, division_id, empTitle_id, join_date, schoollevel_id, institusi_name, start_school, completed_school, degree, grade, experience_comp, experience_location, experience_position, experience_report, experience_start, experience_completed):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            addEmp = conn.insert('employooes', nik=nik, email=email, password=password, firstname=firstname, lastname=lastname, birthday=birthday, gender=gender, address=address, city_code=city_code, pincode=pincode, phone=phone, division_id=division_id, empTitle_id=empTitle_id, join_date=join_date, schoollevel_id=schoollevel_id, institusi_name=institusi_name, start_school=start_school, completed_school=completed_school, degree=degree, grade=gender, experience_comp=experience_comp, experience_location=experience_location, experience_position=experience_position, experience_report=experience_report, experience_start=experience_start, experience_completed=experience_completed)
+            addEmp = conn.insert('employees', nik=nik, email=email, password=password, firstname=firstname, lastname=lastname, birthday=birthday, gender=gender, address=address, city_code=city_code, pincode=pincode, phone=phone, division_id=division_id, empTitle_id=empTitle_id, join_date=join_date, schoollevel_id=schoollevel_id, institusi_name=institusi_name, start_school=start_school, completed_school=completed_school, degree=degree, grade=gender, experience_comp=experience_comp, experience_location=experience_location, experience_position=experience_position, experience_report=experience_report, experience_start=experience_start, experience_completed=experience_completed)
             if addEmp == 0:
                 return "Employee Created to System"
             else:

@@ -18,19 +18,18 @@
 					<h4 class="page-title">Project Document</h4>
 				</div>
 				<div class="col-xs-4 text-right m-b-30">
-					<a href="#" class="btn btn-primary rounded pull-right" data-toggle="modal" data-target="#add_leave"><i class="fa fa-plus"></i> Add Leave</a>
                 </div>
             </div>
 			<div class="row filter-row">
                 <div class="col-sm-3 col-md-2 col-xs-6">
 					<div class="form-group form-focus">
-						<label class="control-label">Employee Name</label>
+						<label class="control-label">Client Name</label>
 						<input type="text" class="form-control floating" />
 					</div>
                 </div>
                 <div class="col-sm-3 col-md-2 col-xs-6">
 					<div class="form-group form-focus select-focus">
-						<label class="control-label">Leave Type</label>
+						<label class="control-label">Project Name</label>
 						<select class="select floating">
 							<option value=""> -- Select -- </option>
 							<option value="">Casual Leave</option>
@@ -41,7 +40,7 @@
                 </div>
                 <div class="col-sm-3 col-md-2 col-xs-6">
 					<div class="form-group form-focus select-focus">
-						<label class="control-label">Leave Status</label>
+						<label class="control-label">Doc Status</label>
 						<select class="select floating">
 							<option value=""> -- Select -- </option>
 							<option value="0"> Pending </option>
@@ -76,8 +75,8 @@
                                     <th>Client Name</th>
                                     <th>Project Name</th>
 							    	<th>Task Name</th>
-									<th>Problem Name</th>
-								    <th>Document Number</th>
+									<th>Document Number</th>
+								    <th>Document Description</th>
 									<th class="text-center">Status</th>
 									<th class="text-right">Actions</th>
 								</tr>
@@ -86,13 +85,13 @@
 								<tr>
                                     <td>1</td>
 							    	<td>
-										<a class="avatar">R</a>
-										<h2><a href="#">Richard Miles <span>Web Developer</span></a></h2>
+										<a class="avatar">X</a>
+										<h2><a href="#">Client XXXX </a></h2>
 									</td>
-									<td>Casual Leave</td>
-									<td>2 days</td>
-									<td>Going to Hospital</td>
-                                    <td>BV00001000-SRB</td>
+									<td>Project PSAK 71</td>
+									<td>Project Kick Off</td>
+									<td>BV00001000-SRB</td>
+                                    <td>Doc presentation kick off meeting </td>
 									<td class="text-center">
 										<div class="dropdown action-label">
 											<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
@@ -117,19 +116,19 @@
 											</td>
                                 </tr>
 								<tr>
-                                    <td>2</td>
-									<td>
-										<a class="avatar">J</a>
-										<h2><a>	John Doe  <span>Web Designer</span></a></h2>
+                                    <td>1</td>
+							    	<td>
+										<a class="avatar">Y</a>
+										<h2><a href="#">Client YYYY </a></h2>
 									</td>
-									<td>Medical Leave</td>
-									<td>3 days</td>
-									<td>Going to Hospital</td>
-                                    <td>BV00001000-SRR</td>
+									<td>Project PSAK 71</td>
+									<td>Project System proposal</td>
+									<td>BV00001020-SRB</td>
+                                    <td>Doc system proposal ver 1.1 </td>
 									<td class="text-center">
 										<div class="dropdown action-label">
 											<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-												<i class="fa fa-dot-circle-o text-success"></i> Approved <i class="caret"></i>
+									    		<i class="fa fa-dot-circle-o text-purple"></i> New <i class="caret"></i>
 											</a>
 											<ul class="dropdown-menu pull-right">
 												<li><a href="#"><i class="fa fa-dot-circle-o text-purple"></i> New</a></li>
@@ -139,16 +138,16 @@
 											</ul>
 										</div>
 									</td>
-									<td class="text-right">
-										<div class="dropdown">
-											<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-											<ul class="dropdown-menu pull-right">
-												<li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-												<li><a href="#" title="Decline" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-											</ul>
-										</div>
-									</td>
-								</tr>
+                                    <td class="text-right">
+												<div class="dropdown">
+													<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+													<ul class="dropdown-menu pull-right">
+														<li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+														<li><a href="#" title="Decline" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+													</ul>
+												</div>
+											</td>
+                                </tr>
 
                             </tbody>
                         </table>
@@ -197,13 +196,11 @@
 				<div class="modal-dialog">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<div class="modal-content modal-md">
-						<div class="modal-header">
-							<h4 class="modal-title">Add Leave Request</h4>
-						</div>
+
 						<div class="modal-body">
 							<form>
 								<div class="form-group">
-									<label>Leave Type <span class="text-danger">*</span></label>
+									<label>Project Name<span class="text-danger">*</span></label>
 									<select class="select">
 										<option value="">Select Leave Type</option>
 										<option value="">Casual Leave 12 Days</option>
