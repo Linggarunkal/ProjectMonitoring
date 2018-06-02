@@ -15,13 +15,13 @@
     	<div class="content container-fluid">
 			<div class="row">
 						<div class="col-sm-8">
-							<h4 class="page-title">Expense Report</h4>
+							<h4 class="page-title">Report Client</h4>
 						</div>
 					</div>
 			<div class="row filter-row">
 						<div class="col-sm-3 col-xs-6">
 							<div class="form-group form-focus select-focus">
-								<label class="control-label">Purchased By</label>
+								<label class="control-label">Client By</label>
 								<select class="select floating">
 									<option value="">Select buyer</option>
 									<option value="">Daniel Porter</option>
@@ -51,80 +51,39 @@
 								<table class="table table-striped custom-table m-b-0 datatable">
 									<thead>
 										<tr>
-											<th>Item</th>
-											<th>Purchase From</th>
-											<th>Purchase Date</th>
-											<th>Purchased By</th>
-											<th>Amount</th>
-											<th>Paid By</th>
-											<th class="text-center">Status</th>
-											<th class="text-right">Actions</th>
+											<th>No</th>
+											<th>Client Name</th>
+											<th>Client Code</th>
+											<th>Client Email</th>
+											<th>PIC Name</th>
+											<th>PIC Email</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
+											<td>1</td>
 											<td>
-												<strong>Dell Laptop</strong>
+												<strong>Bank DKI Syariah</strong>
 											</td>
-											<td>Amazon</td>
-											<td>5 May 2017</td>
-											<td>Loren Gatlin</td>
-											<td>$ 1215</td>
-											<td>Cash</td>
-											<td class="text-center">
-												<div class="dropdown action-label">
-													<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-														<i class="fa fa-dot-circle-o text-danger"></i> Pending <i class="caret"></i>
-													</a>
-													<ul class="dropdown-menu pull-right">
-														<li><a href="#"><i class="fa fa-dot-circle-o text-danger"></i> Pending</a></li>
-														<li><a href="#"><i class="fa fa-dot-circle-o text-success"></i> Approved</a></li>
-													</ul>
-												</div>
-											</td>
-											<td class="text-right">
-												<div class="dropdown">
-													<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-													<ul class="dropdown-menu pull-right">
-														<li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-														<li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-													</ul>
-												</div>
-											</td>
+											<td>DKIS</td>
+											<td>care@bankdki.co.id</td>
+											<td>Irma</td>
+											<td>irma@bankdki.co.id</td>
 										</tr>
 										<tr>
+											<td>2</td>
 											<td>
-												<strong>Mac System</strong>
+												<strong>BPD Riau Syariah</strong>
 											</td>
-											<td>Amazon</td>
-											<td>5 May 2017</td>
-											<td>Tarah Shropshire</td>
-											<td>$ 1215</td>
-											<td>Cheque</td>
-											<td class="text-center">
-												<div class="dropdown action-label">
-													<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-														<i class="fa fa-dot-circle-o text-success"></i> Approved <i class="caret"></i>
-													</a>
-													<ul class="dropdown-menu pull-right">
-														<li><a href="#"><i class="fa fa-dot-circle-o text-danger"></i> Pending</a></li>
-														<li><a href="#"><i class="fa fa-dot-circle-o text-success"></i> Approved</a></li>
-													</ul>
-												</div>
-											</td>
-											<td class="text-right">
-												<div class="dropdown">
-													<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-													<ul class="dropdown-menu pull-right">
-														<li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-														<li><a href="#" title="Delete" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-													</ul>
-												</div>
-											</td>
+											<td>BRUS</td>
+											<td>care@bpdriau.co.id</td>
+											<td>Nanang</td>
+											<td>nanang@bpdriau.co.id</td>
 										</tr>
 									</tbody>
 								</table>
 							</div>
+							<img src="{{ url_for('static', filename='assets/img/exel.png') }}" width="20px" height="20px"/>
 						</div>
 					</div>
 		</div>
