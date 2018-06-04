@@ -71,86 +71,48 @@
 						<table class="table table-striped custom-table m-b-0 datatable">
 							<thead>
 										<tr>
+											<th>No.</th>
 											<th>Client</th>
 											<th>Project Name</th>
 											<th>Project ID</th>
 											<th>Start Date</th>
 											<th>End Date</th>
-											<th>Mandays</th>
+											<th class="text-center">Mandays</th>
 											<th class="text-center">Status</th>
 											<th class="text-right">Actions</th>
 										</tr>
 									</thead>
 							<tbody>
+							{% for project in listNewProject %}
 							<tr>
+								<td>{{ loop.index }}</td>
 								<td>
-									<a class="avatar">X</a>
-									<h2><a>	DKI7281727</a></h2>
+									<h2><a>{{ project.client_name }}</a></h2>
 								</td>
-								<td>Project PSAK 71</td>
-								<td>Client XXX</td>
-								<td>8-01-2018</td>
-								<td>8-04-2018</td>
-								<td>100</td>
+								<td>{{ project.project_name }}</td>
+								<td>{{ project.pid }}</td>
+								<td>{{ project.startDate }}</td>
+								<td>{{ project.endDate }}</td>
+								<td class="text-center">{{ project.mandays }}</td>
 								<td class="text-center">
 									<div class="dropdown action-label">
-													<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-														<i class="fa fa-dot-circle-o text-purple"></i> New <i class="caret"></i>
-													</a>
-													<ul class="dropdown-menu pull-right">
-														<li><a href="#"><i class="fa fa-dot-circle-o text-purple"></i> New</a></li>
-														<li><a href="#"><i class="fa fa-dot-circle-o text-info"></i> Pending</a></li>
-														<li><a href="#"><i class="fa fa-dot-circle-o text-success"></i> Approved</a></li>
-														<li><a href="#"><i class="fa fa-dot-circle-o text-danger"></i> Declined</a></li>
-													</ul>
-												</div>
-											</td>
-											<td class="text-right">
-												<div class="dropdown">
-													<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-													<ul class="dropdown-menu pull-right">
-														<li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-														<li><a href="#" title="Decline" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-													</ul>
-												</div>
-											</td>
-										</tr>
-										<tr>
-								<td>
-									<a class="avatar">Y</a>
-									<h2><a>	DKI72817348</a></h2>
+										<a class="btn btn-white btn-sm rounded" aria-expanded="false">
+											<i class="fa fa-dot-circle-o text-purple"></i> {{ project.status_name }}
+										</a>
+									</div>
 								</td>
-								<td>Project PSAK 71</td>
-								<td>Client YYYY</td>
-								<td>8-01-2018</td>
-								<td>8-04-2018</td>
-								<td>80</td>
-								<td class="text-center">
-									<div class="dropdown action-label">
-													<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-														<i class="fa fa-dot-circle-o text-purple"></i> New <i class="caret"></i>
-													</a>
-													<ul class="dropdown-menu pull-right">
-														<li><a href="#"><i class="fa fa-dot-circle-o text-purple"></i> New</a></li>
-														<li><a href="#"><i class="fa fa-dot-circle-o text-info"></i> Pending</a></li>
-														<li><a href="#"><i class="fa fa-dot-circle-o text-success"></i> Approved</a></li>
-														<li><a href="#"><i class="fa fa-dot-circle-o text-danger"></i> Declined</a></li>
-													</ul>
-												</div>
-											</td>
-											<td class="text-right">
-												<div class="dropdown">
-													<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-													<ul class="dropdown-menu pull-right">
-														<li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-														<li><a href="#" title="Decline" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-													</ul>
-												</div>
-											</td>
-										</tr>
-
-									</tbody>
-								</table>
+								<td class="text-right">
+									<div class="dropdown">
+										<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+										<ul class="dropdown-menu pull-right">
+											<li><a href="{{ url_for('projectApproveDet', projectid=project.project_id) }}" title="Edit"><i class="fa fa-check m-r-5"></i> Approve</a></li>
+										</ul>
+									</div>
+								</td>
+							</tr>
+							{% endfor %}
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>

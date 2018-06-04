@@ -1,5 +1,6 @@
 from projectManagement.library.connection import mysqlconnection
 from projectManagement.library.config import HOST, USERNAME, PASSWORD, DATABASE
+from datetime import datetime
 
 
 class project_list(object):
@@ -83,5 +84,71 @@ class project_list(object):
                 return 0
             else:
                 return 1
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+class projectApp(object):
+    def new_project(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            status_code = 'PRST00001'
+            condNewProject = 'status_id = %s'
+            getNewProject = conn.select('v_project_detail', condNewProject, 'project_id, client_name, project_name, pid, startDate, endDate, mandays, status_name', status_id=status_code)
+            detNewProject = []
+            for index, list in enumerate(getNewProject):
+                i = {
+                    'project_id': list[0],
+                    'client_name': list[1],
+                    'project_name': list[2],
+                    'pid': list[3],
+                    'startDate': list[4],
+                    'endDate': list[5],
+                    'mandays': list[6],
+                    'status_name': list[7]
+                }
+                detNewProject.append(i)
+            return detNewProject
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def projectApproveDet(self, project_id):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            condProject = 'project_id = %s'
+            getDetProject = conn.select('v_project_detail', condProject, '*', project_id=project_id)
+            detProject = []
+            for index, list in enumerate(getDetProject):
+
+                i = {
+                    'project_id': list[0],
+                    'client_id': list[1],
+                    'client_name': list[2],
+                    'project_name': list[3],
+                    'mandays': list[4],
+                    'startDate': list[5],
+                    'endDate': list[6],
+                    'status_id': list[7],
+                    'status_name': list[8],
+                    'pid': list[10],
+                    'project_manager': list[11],
+                    'description': list[16],
+                    'doc_project': list[17],
+                    'doc_size': list[18],
+                    'priority': list[19]
+                }
+                detProject.append(i)
+            return detProject
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def projectApproveUpd(self, project_id, startDate, endDate, priority, status_id):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            condProject = 'project_id = %s'
+            updProject = conn.update('project', condProject, project_id, startDate=startDate, endDate=endDate, priority=priority, status_id=status_id)
+            if updProject:
+                return True
+            else:
+                return False
         except Exception as e:
             return "Error Database: %s" % str(e)

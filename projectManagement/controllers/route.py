@@ -5,11 +5,13 @@ from projectManagement import app
 from flask import render_template, request, redirect, url_for, json, jsonify
 from projectManagement.models.employee import department, division, employees
 from projectManagement.models.client import clients
-from projectManagement.models.project import project_list
+from projectManagement.models.project import project_list, projectApp
 from projectManagement.models.uploaded import upload
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
+from flask_restful import reqparse
+
 
 @app.route('/')
 def start():
@@ -74,7 +76,6 @@ def empAdd():
     report_to = request.form['report_to']
     exp_start = request.form['exp_start']
     exp_end = request.form['exp_end']
-
     print fname, lname
     return "testing"
 
@@ -290,7 +291,7 @@ def mainProject():
     project = project_list()
     client = project.getClient()
     pm = project.getProjectManager()
-    return render_template('content/main-project.html')
+    return render_template('content/main-project.html', client=client, pm=pm)
 
 
 #page get client code
@@ -361,10 +362,6 @@ def upFile():
         return 'Format File Not Supported'
 
 
-
-
-
-
 #page edit project
 @app.route("/project/edit/detail")
 def editProject():
@@ -380,8 +377,53 @@ def viewDetailProject():
 #page approve project
 @app.route("/project/approve")
 def projectApprove():
-    return render_template('content/approve-project.html')
+    project = projectApp()
+    listNewProject = project.new_project()
+    return render_template('content/approve-project.html', listNewProject=listNewProject)
 
+
+# page approve project Detail
+@app.route("/project/approve/detail/<projectid>")
+def projectApproveDet(projectid):
+    project = project_list()
+    client = project.getClient()
+    pm = project.getProjectManager()
+    detProject = projectApp()
+    listDetProject = detProject.projectApproveDet(projectid)
+    return render_template('content/approve-project-detail.html', listDetProject=json.dumps(listDetProject), client=client, pm=pm)
+
+
+# page approval project
+@app.route("/project/approve/data", methods=['POST'])
+def projectApproveData():
+    parse = reqparse.RequestParser()
+    parse.add_argument('project_id', type=str, help='project_id')
+    parse.add_argument('startDate', type=str, help='Start Project')
+    parse.add_argument('endDate', type=str, help='End Project')
+    parse.add_argument('priority', type=str, help='Project Priority')
+    parse.add_argument('project_status', type=str, help='project_status')
+    args = parse.parse_args()
+
+    project_id = args['project_id']
+    startDate = args['startDate']
+    endDate = args['endDate']
+    priority = args['priority']
+    project_status = args['project_status']
+
+    projectUpd = projectApp()
+    approve = projectUpd.projectApproveUpd(project_id, startDate, endDate, priority, project_status)
+    if approve:
+        response = {
+            'code': 200,
+            'Message': 'Data Updated to System'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'Message': 'Data Failed Update to System'
+        }
+        return json.dumps(response)
 
 #page document project
 @app.route("/project/document")
