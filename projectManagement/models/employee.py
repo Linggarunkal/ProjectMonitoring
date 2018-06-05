@@ -214,21 +214,6 @@ class employees(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
-    def school(self):
-        try:
-            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            getSchool = conn.select('school_level', None, '*')
-            detSchool = []
-            for index, list in enumerate(getSchool):
-                i = {
-                    'school_code': list[0],
-                    'school_level': list[1]
-                }
-                detSchool.append(i)
-            return detSchool
-        except Exception as e:
-            return "Error Database: %s" % str(e)
-
     def province(self):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
@@ -289,13 +274,24 @@ class employees(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
-    def add(self, nik, email, password, firstname, lastname, birthday, gender, address, city_code, pincode, phone, division_id, empTitle_id, join_date, schoollevel_id, institusi_name, start_school, completed_school, degree, grade, experience_comp, experience_location, experience_position, experience_report, experience_start, experience_completed):
+    def add(self, nik, email, password, firstname, lastname, birthday, gender, address, city_code, phone, division_id, empTitle_id, join_date):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            addEmp = conn.insert('employees', nik=nik, email=email, password=password, firstname=firstname, lastname=lastname, birthday=birthday, gender=gender, address=address, city_code=city_code, pincode=pincode, phone=phone, division_id=division_id, empTitle_id=empTitle_id, join_date=join_date, schoollevel_id=schoollevel_id, institusi_name=institusi_name, start_school=start_school, completed_school=completed_school, degree=degree, grade=gender, experience_comp=experience_comp, experience_location=experience_location, experience_position=experience_position, experience_report=experience_report, experience_start=experience_start, experience_completed=experience_completed)
+            addEmp = conn.insert('employees', nik=nik, email=email, password=password, firstname=firstname, lastname=lastname, birthday=birthday, gender=gender, address=address, city_code=city_code, phone=phone, division_id=division_id, empTitle_id=empTitle_id, join_date=join_date)
             if addEmp == 0:
-                return "Employee Created to System"
+                return True
             else:
-                return "Employee Failed Created to System"
+                return False
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def checkEmp(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getAll = conn.select('employees', None, 'employee_id')
+            if len(getAll) > 0:
+                return len(getAll)
+            else:
+                return False
         except Exception as e:
             return "Error Database: %s" % str(e)

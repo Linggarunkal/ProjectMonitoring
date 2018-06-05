@@ -11,7 +11,12 @@ from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
 from flask_restful import reqparse
+from passlib.hash import sha256_crypt
 
+
+# generate password encrypt
+def generate_passwd(passwd):
+    return sha256_crypt.encrypt(passwd)
 
 @app.route('/')
 def start():
@@ -46,39 +51,71 @@ def forgotPasswd():
 def chgPasswd():
     return render_template('content/change-password.html')
 
+# concatString = "{0:0>4}".format(auto_increment)
+
+# page to check emp count
+@app.route('/employees/count')
+def empCount():
+    employee = employees()
+    countEmp = employee.checkEmp()
+    concatString = "{0:0>4}".format(countEmp+1)
+    response = {
+        'code': 200,
+        'data': concatString
+    }
+    return json.dumps(response)
+
 
 # page add employees
 @app.route('/employees/add', methods=['POST'])
 def empAdd():
-    fname = request.form['fname']
-    lname = request.form['lname']
-    birth = request.form['birth']
-    gender = request.form['gender']
-    address = request.form['address']
-    city_code = request.form['city']
-    pincode = request.form['pincode']
-    phone = request.form['phone']
-    nik = request.form['nik']
-    email = request.form['email']
-    password = request.form['password']
-    division = request.form['division']
-    job_title = request.form['job_title']
-    join_date = request.form['join_date']
-    schoollevel = request.form['schoollevel']
-    institusi = request.form['institusi']
-    school_start = request.form['school_start']
-    school_end = request.form['school_end']
-    degree = request.form['degree']
-    grade = request.form['grade']
-    exp_company = request.form['exp_company']
-    exp_location = request.form['exp_location']
-    job_position = request.form['job_position']
-    report_to = request.form['report_to']
-    exp_start = request.form['exp_start']
-    exp_end = request.form['exp_end']
-    print fname, lname
-    return "testing"
+    parse = reqparse.RequestParser()
+    parse.add_argument('fname', type=str, help='fname')
+    parse.add_argument('lname', type=str, help='lname')
+    parse.add_argument('birth', type=str, help='birth')
+    parse.add_argument('gender', type=str, help='gender')
+    parse.add_argument('address', type=str, help='address')
+    parse.add_argument('city', type=str, help='city')
+    parse.add_argument('phone', type=str, help='phone')
+    parse.add_argument('nik', type=str, help='nik')
+    parse.add_argument('password', type=str, help='password')
+    parse.add_argument('division', type=str, help='division')
+    parse.add_argument('title', type=str, help='title')
+    parse.add_argument('email', type=str, help='email')
+    parse.add_argument('join_date', type=str, help='join_date')
 
+    args = parse.parse_args()
+    fname = args['fname']
+    lname = args['lname']
+    birth = args['birth']
+    gender = args['gender']
+    address = args['address']
+    city = args['city']
+    phone = args['phone']
+    nik = args['nik']
+    password = args['password']
+    division = args['division']
+    title = args['title']
+    email = args['email']
+    join_date = args['join_date']
+    birthday = datetime.strptime(birth, '%d/%m/%Y').strftime('%Y-%m-%d')
+    passhash = generate_passwd(password)
+    joinDate = datetime.strptime(join_date, '%d/%m/%Y').strftime('%Y-%m-%d')
+
+    employee = employees()
+    addEmployee = employee.add(nik, email, passhash, fname, lname, birthday, gender, address, city, phone, division, title, joinDate)
+    if addEmployee:
+        response = {
+            'code': 200,
+            'message': 'Data Success Add to System'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': 'Data Failed add to System'
+        }
+        return json.dumps(response)
 
 
 #page all employee
@@ -289,9 +326,10 @@ def userClientEdit():
 @app.route("/project/main")
 def mainProject():
     project = project_list()
+    listProject = project.listAllProject()
     client = project.getClient()
     pm = project.getProjectManager()
-    return render_template('content/main-project.html', client=client, pm=pm)
+    return render_template('content/main-project.html', client=client, pm=pm, listProject=listProject)
 
 
 #page get client code
@@ -369,9 +407,13 @@ def editProject():
 
 
 #page view detail project
-@app.route("/project/view/detail")
-def viewDetailProject():
-    return render_template('content/detail-projectview.html')
+@app.route("/project/view/detail/<projectid>")
+def viewDetailProject(projectid):
+    project = project_list()
+    titleNdesc = project.titleNdesc(projectid)
+    detailProject = project.projectDetail(projectid)
+    project_manager = project.getPM(projectid)
+    return render_template('content/detail-projectview.html', titleNdesc=titleNdesc, detailProject=detailProject, project_manager=project_manager)
 
 
 #page approve project
@@ -406,12 +448,14 @@ def projectApproveData():
 
     project_id = args['project_id']
     startDate = args['startDate']
+    dateStart = datetime.strptime(startDate, '%d/%m/%Y').strftime('%Y-%m-%d')
     endDate = args['endDate']
+    dateEnd = datetime.strptime(endDate, '%d/%m/%Y').strftime('%Y-%m-%d')
     priority = args['priority']
     project_status = args['project_status']
 
     projectUpd = projectApp()
-    approve = projectUpd.projectApproveUpd(project_id, startDate, endDate, priority, project_status)
+    approve = projectUpd.projectApproveUpd(project_id, dateStart, dateEnd, priority, project_status)
     if approve:
         response = {
             'code': 200,

@@ -1,6 +1,5 @@
 from projectManagement.library.connection import mysqlconnection
 from projectManagement.library.config import HOST, USERNAME, PASSWORD, DATABASE
-from datetime import datetime
 
 
 class project_list(object):
@@ -84,6 +83,80 @@ class project_list(object):
                 return 0
             else:
                 return 1
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def listAllProject(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getAllProject = conn.select('v_project_detail', None, 'left(project_name, 15), client_name, status_name, left(description, 40), enddate, firstname, lastname, project_id')
+            detAllProject = []
+            for index, list in enumerate(getAllProject):
+                i = {
+                    'project_name': list[0],
+                    'client_name': list[1],
+                    'status_name': list[2],
+                    'desc': list[3],
+                    'deadline': list[4],
+                    'firstname': list[5],
+                    'lastname': list[6],
+                    'project_id': list[7]
+                }
+                detAllProject.append(i)
+            return detAllProject
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def titleNdesc(self, project_id):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'project_id = %s'
+            detail = conn.select('v_project_detail', cond, 'project_name, description', project_id=project_id)
+            getDetail = []
+            for index, list in enumerate(detail):
+                i = {
+                    'project_name': list[0],
+                    'desc': list[1]
+                }
+                getDetail.append(i)
+                return getDetail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def projectDetail(self, project_id):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'project_id = %s'
+            detail = conn.select('v_project_detail', cond, 'client_name, pid, mandays, startDate, endDate, priority', project_id=project_id)
+            getDetail = []
+            for index, list in enumerate(detail):
+                i = {
+                    'client_name': list[0],
+                    'pid': list[1],
+                    'mandays': list[2],
+                    'startDate': list[3],
+                    'endDate': list[4],
+                    'priotiry': list[5],
+                }
+                getDetail.append(i)
+            return getDetail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getPM(self, project_id):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'project_id = %s'
+            detail = conn.select('v_project_detail', cond, 'project_manager, firstname, lastname', project_id=project_id)
+            getDetail = []
+            for index, list in enumerate(detail):
+                i = {
+                    'project_manager': list[0],
+                    'firstname': list[1],
+                    'lastname': list[2]
+                }
+                getDetail.append(i)
+            return getDetail
         except Exception as e:
             return "Error Database: %s" % str(e)
 
