@@ -127,7 +127,7 @@ class project_list(object):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
             cond = 'project_id = %s'
-            detail = conn.select('v_project_detail', cond, 'client_name, pid, mandays, startDate, endDate, priority', project_id=project_id)
+            detail = conn.select('v_project_detail', cond, 'client_name, pid, mandays, startDate, endDate, priority, project_id', project_id=project_id)
             getDetail = []
             for index, list in enumerate(detail):
                 i = {
@@ -137,6 +137,7 @@ class project_list(object):
                     'startDate': list[3],
                     'endDate': list[4],
                     'priotiry': list[5],
+                    'project_id': list[6]
                 }
                 getDetail.append(i)
             return getDetail
@@ -154,6 +155,46 @@ class project_list(object):
                     'project_manager': list[0],
                     'firstname': list[1],
                     'lastname': list[2]
+                }
+                getDetail.append(i)
+            return getDetail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getTeamProject(self, project_id):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'project_id = %s'
+            detail = conn.select('v_employee_team_project', cond, 'employee_id, firstname, lastname, email, title_name, initial', project_id=project_id)
+            getDetail = []
+            for index, list in enumerate(detail):
+                i = {
+                    'employee_id': list[0],
+                    'firstname': list[1],
+                    'lastname': list[2],
+                    'email': list[3],
+                    'title_name': list[4],
+                    'initial': list[5]
+                }
+                getDetail.append(i)
+            return getDetail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getAllTeamProject(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            detail = conn.select('v_employee_team_project', None, 'employee_id, firstname, lastname, email, title_name, initial, assign_project_user')
+            getDetail = []
+            for index, list in enumerate(detail):
+                i = {
+                    'employee_id': list[0],
+                    'firstname': list[1],
+                    'lastname': list[2],
+                    'email': list[3],
+                    'title_name': list[4],
+                    'initial': list[5],
+                    'assign_project_user': list[6]
                 }
                 getDetail.append(i)
             return getDetail
@@ -223,5 +264,24 @@ class projectApp(object):
                 return True
             else:
                 return False
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def assign_teamProject(self, project_id, assign_user, unassign_user):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            condProject = 'project_id = %s'
+            getListExisting = conn.select('v_employee_team_project', condProject, 'employee_id, TeamProject_ID', project_id=project_id)
+            print getListExisting
+            print project_id, len(assign_user), len(unassign_user)
+            start = 0
+            while (start < len(getListExisting)):
+                print "testing"
+                start = start + 1
+            if 'EMPY00028' in unassign_user:
+                print "ya"
+            else:
+                print "gak"
+            return "testing"
         except Exception as e:
             return "Error Database: %s" % str(e)

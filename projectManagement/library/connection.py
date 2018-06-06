@@ -123,3 +123,11 @@ class mysqlconnection(object):
 
         return rownum
 
+    def execquery(self, query):
+        self.__open()
+        self.session.execute(query)
+        self.connection.commit()
+        rows = self.session.rowcount
+        self.__close()
+        return rows
+

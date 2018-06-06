@@ -235,7 +235,10 @@
 											{% for detail in detailProject %}
 											<tr>
 												<td>Client:</td>
-													<td class="text-right">{{ detail.client_name }}</td>
+												<td class="text-right">
+													{{ detail.client_name }}
+													<input type="hidden" name="project_id" id="project_id" value="{{ detail.project_id }}">
+												</td>
 											</tr>
 											<tr>
 												<td>PID:</td>
@@ -305,34 +308,22 @@
 								</div>
 								<div class="panel-body">
 									<ul class="list-box">
+										{% for team in project_team %}
 										<li>
 											<a href="profile.html">
 												<div class="list-item">
 													<div class="list-left">
-														<span class="avatar">J</span>
+														<span class="avatar">{{ team.initial }}</span>
 													</div>
 													<div class="list-body">
-														<span class="message-author">John Doe</span>
+														<span class="message-author">{{ team.firstname }} {{ team.lastname }}</span>
 														<div class="clearfix"></div>
-														<span class="message-content">Web Designer</span>
+														<span class="message-content">{{ team.title_name }}</span>
 													</div>
 												</div>
 											</a>
 										</li>
-										<li>
-											<a href="profile.html">
-												<div class="list-item">
-													<div class="list-left">
-														<span class="avatar">V</span>
-													</div>
-													<div class="list-body">
-														<span class="message-author">Richard Miles</span>
-														<div class="clearfix"></div>
-														<span class="message-content">Web Developer</span>
-													</div>
-												</div>
-											</a>
-										</li>
+										{% endfor %}
 									</ul>
 								</div>
 							</div>
@@ -357,44 +348,33 @@
 							</div>
 							<div>
 								<ul class="media-list media-list-linked chat-user-list">
-									<li class="media">
-										<a href="#" class="media-link">
-											<div class="media-left"><input type="checkbox"></div>
-											<div class="media-body media-middle text-nowrap">
-
-												<div class="user-name">Richard Miles</div>
-												<span class="designation">Web Developer</span>
-
-
-											</div>
-										</a>
-									</li>
-									<li class="media">
-										<a href="#" class="media-link">
-											<div class="media-left"><span class="avatar">J</span></div>
-											<div class="media-body media-middle text-nowrap">
-												<div class="user-name">John Smith</div>
-												<span class="designation">Android Developer</span>
-											</div>
-										</a>
-									</li>
+									{% for team in all_team %}
 									<li class="media">
 										<a href="#" class="media-link">
 											<div class="media-left">
-												<span class="avatar">
-													<img src="{{ url_for('static', filename='assets/img/user.jpg') }}" alt="John Doe">
-												</span>
+
+												<input type="checkbox" value="{{ team.employee_id }}" onchange="checkValue();" class="team_project" name="team{{ team.employee_id }}" id="team{{ team.employee_id }}"
+												{% if team.assign_project_user != '0' %}
+												checked
+												{% endif %}
+												>
+
 											</div>
+											<div class="media-left"><span class="avatar">{{ team.initial }}</span></div>
 											<div class="media-body media-middle text-nowrap">
-												<div class="user-name">Jeffery Lalor</div>
-												<span class="designation">Team Leader</span>
+												<div class="user-name">{{ team.firstname }} {{ team.lastname }}</div>
+												<span class="designation">{{ team.title_name }} | </span>
+												<span class="designation">{{ team.email }}</span>
 											</div>
 										</a>
 									</li>
+									{% endfor %}
 								</ul>
 							</div>
 							<div class="m-t-50 text-center">
-								<button class="btn btn-primary btn-lg">Add User</button>
+								<input class="form-control" id="employee_seleted" type="hidden" name="employee_seleted">
+								<input class="form-control" id="employee_unseleted" type="hidden" name="employee_unseleted">
+								<button class="btn btn-primary btn-lg" id="addTeamProject">Add User</button>
 							</div>
 						</div>
 					</div>
@@ -431,4 +411,55 @@
 			</li>
 		</script>
 		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/task.js') }}"></script>
+		<script type="text/javascript">
+
+			function checkValue(elm){
+				var checkboxes = document.getElementsByClassName("team_project");
+				var employee_check = []
+				var employee_uncheck = []
+				for (var i = 0; i < checkboxes.length; ++i){
+					if (checkboxes[i].checked){
+						employee_check.push(checkboxes[i].value);
+					}else{
+						employee_uncheck.push(checkboxes[i].value);
+					}
+				}
+				document.getElementById('employee_seleted').value = employee_check.join();
+				document.getElementById('employee_unseleted').value = employee_uncheck.join();
+			}
+			$(document).ready(function(){
+				$('#addTeamProject').click(function(){
+					var selectemp = document.getElementById('employee_seleted').value;
+					var unselectemp = document.getElementById('employee_unseleted').value;
+					if (selectemp == "" || unselectemp == ""){
+						alert("Tidak ada perubahan data");
+					}else{
+						var data_select = selectemp.split(',');
+						var data_unselect = unselectemp.split(',');
+						console.log(data_select);
+						console.log(data_unselect);
+
+						var project_id = document.getElementById('project_id').value;
+						data = {
+							'project_id': project_id,
+							'assign_user': JSON.stringify(data_select),
+							'unassign_user': JSON.stringify(data_unselect)
+						}
+						data_json = JSON.stringify(data);
+						$.ajax({
+							url: '{{ url_for('projectMembers') }}',
+							type: 'POST',
+							contentType: 'application/json;charset=UTF-8',
+							data: data_json,
+							success: function(data){
+								console.log(data);
+							},
+							error: function(data){
+								console.log(data);
+							}
+						});
+					}
+				});
+			});
+		</script>
 {% endblock %}

@@ -413,8 +413,28 @@ def viewDetailProject(projectid):
     titleNdesc = project.titleNdesc(projectid)
     detailProject = project.projectDetail(projectid)
     project_manager = project.getPM(projectid)
-    return render_template('content/detail-projectview.html', titleNdesc=titleNdesc, detailProject=detailProject, project_manager=project_manager)
+    project_team = project.getTeamProject(projectid)
+    all_team = project.getAllTeamProject()
+    return render_template('content/detail-projectview.html', titleNdesc=titleNdesc, detailProject=detailProject, project_manager=project_manager, project_team=project_team, all_team=all_team)
 
+
+# page to get assign_team_project
+@app.route("/project/assign/members", methods=['POST'])
+def projectMembers():
+    parse = reqparse.RequestParser()
+    parse.add_argument('project_id', type=str, help='project_id')
+    parse.add_argument('assign_user', type=str, help='assign_user')
+    parse.add_argument('unassign_user', type=str, help="unassign_user")
+    args = parse.parse_args()
+
+    project_id = args['project_id']
+    assign_user = args['assign_user']
+    unassign_user = args['unassign_user']
+    to_jsonAssignUser = json.loads(assign_user)
+    to_jsonUnassignUser = json.loads(unassign_user)
+    project = projectApp()
+    teamProject = project.assign_teamProject(project_id, to_jsonAssignUser, to_jsonUnassignUser)
+    return teamProject
 
 #page approve project
 @app.route("/project/approve")
