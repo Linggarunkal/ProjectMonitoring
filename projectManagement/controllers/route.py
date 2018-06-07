@@ -436,6 +436,47 @@ def projectMembers():
     teamProject = project.assign_teamProject(project_id, to_jsonAssignUser, to_jsonUnassignUser)
     return teamProject
 
+
+#page delete team_project
+@app.route("/project/remove/teamproject", methods=['POST'])
+def removeTeamProject():
+    parse = reqparse.RequestParser()
+    parse.add_argument('project_id', type=str, help='project_id')
+    parse.add_argument('employee_id', type=str, help='employee_id')
+
+    args = parse.parse_args()
+    project_id = args['project_id']
+    employee_id = args['employee_id']
+
+    print project_id, employee_id
+    project = projectApp()
+    removeUser = project.removeTeam(project_id, employee_id)
+    if removeUser == 0:
+        return "Success"
+    else:
+        return "Failed"
+
+
+#page add team_project
+@app.route("/project/add/teamproject", methods=['POST'])
+def addTeamProject():
+    parse = reqparse.RequestParser()
+    parse.add_argument('project_id', type=str, help='project_id')
+    parse.add_argument('employee_id', type=str, help='employee_id')
+
+    args = parse.parse_args()
+    project_id = args['project_id']
+    employee_id = args['employee_id']
+
+
+    project = projectApp()
+    addUser = project.addTeam(project_id, employee_id)
+    if addUser == 0:
+        return "Success"
+    else:
+        return "Failed"
+
+
 #page approve project
 @app.route("/project/approve")
 def projectApprove():

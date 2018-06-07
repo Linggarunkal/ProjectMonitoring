@@ -269,19 +269,79 @@ class projectApp(object):
 
     def assign_teamProject(self, project_id, assign_user, unassign_user):
         try:
+            add = self.addTeamProject(project_id, assign_user)
+            remove = self.decreaseTeamProject(project_id, assign_user)
+            print add, remove
+            return "testing"
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def decreaseTeamProject(self, project_id, unassign_user):
+        try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
             condProject = 'project_id = %s'
             getListExisting = conn.select('v_employee_team_project', condProject, 'employee_id, TeamProject_ID', project_id=project_id)
-            print getListExisting
-            print project_id, len(assign_user), len(unassign_user)
-            start = 0
-            while (start < len(getListExisting)):
-                print "testing"
-                start = start + 1
-            if 'EMPY00028' in unassign_user:
-                print "ya"
+
+            # from assign to unassign
+            x = 0
+            while (x < len(getListExisting)):
+                if getListExisting[x][0] not in unassign_user:
+                    decrease = conn.execquery('delete from team_project where project_id = "'+project_id+'" and employee_id = "'+getListExisting[x][0]+'"')
+                    print decrease
+                    if decrease > 0:
+                        return 0
+                    else:
+                        return 1
+                x += 1
+        except Exception:
+            return 1
+
+    def addTeamProject(self, project_id, assign_user):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            condProject = 'project_id = %s'
+            getListExisting = conn.select('v_employee_team_project', condProject, 'employee_id, TeamProject_ID',project_id=project_id)
+            # from unasign to assign
+            y = 0
+            while (y < len(assign_user)):
+                x = 0
+                userinSystem = []
+                while (x < len(getListExisting)):
+                    userinSystem.append(getListExisting[x][0])
+                    x += 1
+                if assign_user[y] not in userinSystem:
+                    addMember = conn.insert('team_project', project_id=project_id, employee_id=assign_user[y])
+                    if addMember == 0:
+                        return 0
+                    else:
+                        return 1
+                y += 1
+        except Exception:
+            return 1
+
+    def removeTeam(self, project_id, employee_id):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            delete = conn.execquery('delete from team_project where project_id = "'+project_id+'" and employee_id="'+employee_id+'";')
+            if delete > 0:
+                return 0
             else:
-                print "gak"
-            return "testing"
+                return 1
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def addTeam(self, project_id, employee_id):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            checkUser = conn.execquery('select project_id, employee_id from team_project where project_id = "'+project_id+'" and employee_id = "'+employee_id+'";')
+            print employee_id
+            if len(checkUser) != 0:
+                add = conn.insert('team_project', project_id=project_id, employee_id=employee_id)
+                if add == 0:
+                    return 0
+                else:
+                    return 1
+            else:
+                return 1
         except Exception as e:
             return "Error Database: %s" % str(e)
