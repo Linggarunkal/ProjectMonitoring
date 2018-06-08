@@ -168,20 +168,6 @@ def deptAdd():
     return redirect(url_for('deptAll'))
 
 
-#action add department employee
-@app.route('/clients/add', methods=['POST'])
-def clientsAdd():
-    client_name = request.form['name']
-    client_email = request.form['email']
-    client_address = request.form['address']
-    pic_name = request.form['pic_name']
-    pic_email = request.form['pic_email']
-    addClients = clients()
-    addClients.add(client_name, client_email, client_address, pic_name, pic_email)
-    return redirect(url_for('clientAll'))
-
-
-
 #page show detail department
 @app.route('/department/detail/edit/<deptno>')
 def deptEditDet(deptno):
@@ -287,7 +273,7 @@ def divUpdate():
     return redirect(url_for('divAll'))
 
 #page main client
-@app.route("/user/main/client")
+@app.route("/user/main/client", methods=['POST', 'GET'])
 def userMainHome():
     client = clients()
     clientAll = client.all()
@@ -295,6 +281,31 @@ def userMainHome():
     province = emp.province()
     return render_template('content/main-client.html', pic_name=clientAll, province=province)
 
+
+#page post new client
+@app.route('/user/main/project/add', methods=['POST'])
+def clientAddProject():
+    parse = reqparse.RequestParser()
+    parse.add_argument('client_name', type=str, help='client_name')
+    parse.add_argument('client_email', type=str, help='client_email')
+    parse.add_argument('client_address', type=str, help='client_address')
+    parse.add_argument('city', type=str, help='client city')
+    parse.add_argument('client_code', type=str, help='client_code')
+    parse.add_argument('pic_name', type=str, help='pic_name')
+    parse.add_argument('pic_email', type=str, help='pic_email')
+    parse.add_argument('pic_phone', type=str, help='pic_phone')
+
+    args = parse.parse_args()
+    project_id = args['project_id']
+    client_email = args['client_email']
+    client_address = args['client_address']
+    city = args['city']
+    client_code = args['client_code']
+    pic_name = args['pic_name']
+    pic_email = args['pic_email']
+    pic_phone = args['pic_phone']
+
+    return "Success"
 
 #page edit client
 @app.route("/user/edit/client")
@@ -329,7 +340,8 @@ def mainProject():
     listProject = project.listAllProject()
     client = project.getClient()
     pm = project.getProjectManager()
-    return render_template('content/main-project.html', client=client, pm=pm, listProject=listProject)
+    member = project.getMember()
+    return render_template('content/main-project.html', client=client, pm=pm, listProject=listProject, member=member)
 
 
 #page get client code
@@ -414,7 +426,7 @@ def viewDetailProject(projectid):
     detailProject = project.projectDetail(projectid)
     project_manager = project.getPM(projectid)
     project_team = project.getTeamProject(projectid)
-    all_team = project.getAllTeamProject()
+    all_team = project.getAllTeamProject(projectid)
     return render_template('content/detail-projectview.html', titleNdesc=titleNdesc, detailProject=detailProject, project_manager=project_manager, project_team=project_team, all_team=all_team)
 
 
@@ -448,7 +460,6 @@ def removeTeamProject():
     project_id = args['project_id']
     employee_id = args['employee_id']
 
-    print project_id, employee_id
     project = projectApp()
     removeUser = project.removeTeam(project_id, employee_id)
     if removeUser == 0:
@@ -467,8 +478,7 @@ def addTeamProject():
     args = parse.parse_args()
     project_id = args['project_id']
     employee_id = args['employee_id']
-
-
+    print project_id, employee_id
     project = projectApp()
     addUser = project.addTeam(project_id, employee_id)
     if addUser == 0:

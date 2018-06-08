@@ -353,7 +353,7 @@
 										<a href="#" class="media-link">
 											<div class="media-left">
 
-												<input type="checkbox" value="{{ team.employee_id }}" onchange="checkValue();" class="team_project" name="team{{ team.employee_id }}" id="team{{ team.employee_id }}"
+												<input type="checkbox" value="{{ team.employee_id }}" class="team_project" name="team{{ team.employee_id }}" id="team{{ team.employee_id }}"
 												{% if team.assign_project_user != '0' %}
 												checked
 												{% endif %}
@@ -416,39 +416,47 @@
 		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/task.js') }}"></script>
 		<script type="text/javascript">
 
-			function checkValue(){
-				var checkboxes = document.getElementsByClassName("team_project");
-				var employee_check = []
-				var employee_uncheck = []
-				for (var i = 0; i < checkboxes.length; ++i){
-					if (checkboxes[i].checked){
-					var employee_id = checkboxes[i].value;
-					var project_id = document.getElementById('project_id').value;
+			var checkMember = new Array();
+			var uncheckMember = new Array();
+			var project_id = document.getElementById('project_id').value;
+			$("input:checkbox").change(function(){
+				if ($(this).is(":checked")){
+					var employee_id = document.getElementById($(this).attr("id")).value;
+					checkMember.push(employee_id);
+					document.getElementById('employee_seleted').value = checkMember.join();
+					employee_id = document.getElementById('employee_seleted').value;
+					console.log(employee_id);
 					data_user = {
 						'project_id': project_id,
 						'employee_id': employee_id
 					}
 					json_data_user = JSON.stringify(data_user);
-						$.ajax({
+					$.ajax({
 							url: '{{ url_for('addTeamProject') }}',
 							type: 'POST',
 							contentType: 'application/json;charset=UTF-8',
 							data: json_data_user,
 							success: function(data){
 								console.log("Success Delete");
+								checkMember = [];
 							},
 							error: function(data){
 								console.log("Failed Delete");
+								checkMember = [];
 							}
 						});
-					}else{
-						var employee_id = checkboxes[i].value;
-						var project_id = document.getElementById('project_id').value;
-						data_user = {
+
+				}else{
+					var employee_id = document.getElementById($(this).attr("id")).value;
+					uncheckMember.push(employee_id);
+					document.getElementById('employee_unseleted').value = uncheckMember.join();
+					employee_id = document.getElementById('employee_unseleted').value;
+					console.log(employee_id);
+					data_user = {
 							'project_id': project_id,
 							'employee_id': employee_id
 						}
-						json_data_user = JSON.stringify(data_user);
+					json_data_user = JSON.stringify(data_user);
 						$.ajax({
 							url: '{{ url_for('removeTeamProject') }}',
 							type: 'POST',
@@ -456,17 +464,30 @@
 							data: json_data_user,
 							success: function(data){
 								console.log("Success Delete");
+								uncheckMember = [];
 							},
 							error: function(data){
 								console.log("Failed Delete");
+								uncheckMember = [];
 							}
 						});
-						employee_uncheck.push(checkboxes[i].value);
-					}
 				}
-				document.getElementById('employee_seleted').value = employee_check.join();
-				document.getElementById('employee_unseleted').value = employee_uncheck.join();
-			}
+			});
 
+			$(document).ready(function(){
+				$('#addTeamProject').click(function(){
+					swal({
+    					title: 'Information',
+    					text: 'Update Team Project Member',
+    					type: 'info',
+    					allowOutsideClick: true,
+    					html: true
+						},
+						function () {
+    						$('#assign_user').modal('hide');
+    						location.reload(true);
+					});
+				});
+			});
 		</script>
 {% endblock %}

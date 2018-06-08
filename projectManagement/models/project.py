@@ -161,6 +161,25 @@ class project_list(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
+    def getMember(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            detail = conn.select('v_employee_team_project', None, 'initial, employee_id, email, firstname, lastname, project_id')
+            getDetail = []
+            for index, list in enumerate(detail):
+                i = {
+                    'initial': list[0],
+                    'employee_id': list[1],
+                    'email': list[2],
+                    'firstname': list[3],
+                    'lastname': list[4],
+                    'project_id': list[5]
+                }
+                getDetail.append(i)
+            return getDetail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
     def getTeamProject(self, project_id):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
@@ -181,10 +200,11 @@ class project_list(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
-    def getAllTeamProject(self):
+    def getAllTeamProject(self, project_id):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            detail = conn.select('v_employee_team_project', None, 'employee_id, firstname, lastname, email, title_name, initial, assign_project_user')
+            cond = 'assign_project_user = %s'
+            detail = conn.select('v_employee_team_project', cond, 'employee_id, firstname, lastname, email, title_name, initial, assign_project_user', assign_project_user='0')
             getDetail = []
             for index, list in enumerate(detail):
                 i = {
@@ -334,8 +354,8 @@ class projectApp(object):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
             checkUser = conn.execquery('select project_id, employee_id from team_project where project_id = "'+project_id+'" and employee_id = "'+employee_id+'";')
-            print employee_id
-            if len(checkUser) != 0:
+            print checkUser
+            if checkUser == 0:
                 add = conn.insert('team_project', project_id=project_id, employee_id=employee_id)
                 if add == 0:
                     return 0
