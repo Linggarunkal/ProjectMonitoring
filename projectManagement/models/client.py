@@ -45,3 +45,14 @@ class clients(object):
             return detClient
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def addClient(self, name, email, address, city_code, pic_name, pic_number, pic_email, client_code):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            add = conn.insert('client', name=name, email=email, address=address, city_code=city_code, pic_name=pic_name, pic_number=pic_number, pic_email=pic_email, client_code=client_code)
+            if add == 0:
+                return 0
+            else:
+                return 1
+        except Exception as e:
+            return "Error Database: %s" % str(e)

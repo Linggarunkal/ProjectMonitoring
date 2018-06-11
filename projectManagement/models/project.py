@@ -200,11 +200,10 @@ class project_list(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
-    def getAllTeamProject(self, project_id):
+    def getAllTeamProject(self):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            cond = 'assign_project_user = %s'
-            detail = conn.select('v_employee_team_project', cond, 'employee_id, firstname, lastname, email, title_name, initial, assign_project_user', assign_project_user='0')
+            detail = conn.select('v_employee_team_project', None, 'employee_id, firstname, lastname, email, title_name, initial, assign_project_user, project_id')
             getDetail = []
             for index, list in enumerate(detail):
                 i = {
@@ -214,7 +213,8 @@ class project_list(object):
                     'email': list[3],
                     'title_name': list[4],
                     'initial': list[5],
-                    'assign_project_user': list[6]
+                    'assign_project_user': list[6],
+                    'project_id': list[7]
                 }
                 getDetail.append(i)
             return getDetail

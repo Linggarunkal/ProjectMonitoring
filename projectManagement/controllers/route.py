@@ -6,6 +6,7 @@ from flask import render_template, request, redirect, url_for, json, jsonify
 from projectManagement.models.employee import department, division, employees
 from projectManagement.models.client import clients
 from projectManagement.models.project import project_list, projectApp
+from projectManagement.models.task import tasks
 from projectManagement.models.uploaded import upload
 from werkzeug.utils import secure_filename
 import os
@@ -296,7 +297,7 @@ def clientAddProject():
     parse.add_argument('pic_phone', type=str, help='pic_phone')
 
     args = parse.parse_args()
-    project_id = args['project_id']
+    client_name = args['client_name']
     client_email = args['client_email']
     client_address = args['client_address']
     city = args['city']
@@ -305,7 +306,21 @@ def clientAddProject():
     pic_email = args['pic_email']
     pic_phone = args['pic_phone']
 
-    return "Success"
+    client = clients()
+    clientAdd = client.addClient(client_name, client_email, client_address, city, pic_name, pic_phone, pic_email, client_code)
+    if clientAdd == 0:
+        response = {
+            'code': 200,
+            'message': "Succes add data to System"
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': 'Failed add data to System'
+        }
+        return json.dumps(response)
+
 
 #page edit client
 @app.route("/user/edit/client")
@@ -426,8 +441,8 @@ def viewDetailProject(projectid):
     detailProject = project.projectDetail(projectid)
     project_manager = project.getPM(projectid)
     project_team = project.getTeamProject(projectid)
-    all_team = project.getAllTeamProject(projectid)
-    return render_template('content/detail-projectview.html', titleNdesc=titleNdesc, detailProject=detailProject, project_manager=project_manager, project_team=project_team, all_team=all_team)
+    all_team = project.getAllTeamProject()
+    return render_template('content/detail-projectview.html', titleNdesc=titleNdesc, detailProject=detailProject, project_manager=project_manager, project_team=project_team, all_team=all_team, project_id=projectid)
 
 
 # page to get assign_team_project
@@ -551,6 +566,30 @@ def projectDoc():
 def projectTaskList():
     return render_template('content/list-task.html')
 
+
+#page add task
+@app.route("/project/task/add")
+def projectTaskAdd():
+    task = tasks()
+    allClient = task.getClient()
+    status = task.getProjectStatus()
+    return render_template('content/add-task.html', allClient=allClient, status=status)
+
+
+#page detail get pid
+@app.route("/projectid/detail/<pid>")
+def projectPid(pid):
+    task = tasks()
+    allPid = task.getPid(pid)
+    return json.dumps(allPid)
+
+
+#Page get detail task name
+@app.route("/task/project/<projectid>/<categoryid>")
+def taskProjectAdd(projectid, categoryid):
+    task = tasks()
+    getTask = task.getTaskName(projectid, categoryid)
+    return json.dumps(getTask)
 
 #page edit task
 @app.route("/project/task/edit")

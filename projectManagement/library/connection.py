@@ -131,3 +131,15 @@ class mysqlconnection(object):
         self.__close()
         return rows
 
+    def customquery(self, query):
+        self.__open()
+        self.session.execute(query)
+
+        number_rows = self.session.rowcount
+        number_columns = len(self.session.description)
+        if number_rows >= 1 and number_columns > 1:
+            result = [item for item in self.session.fetchall()]
+        else:
+            result = [item[0] for item in self.session.fetchall()]
+        self.__close()
+        return result

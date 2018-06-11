@@ -354,7 +354,7 @@
 											<div class="media-left">
 
 												<input type="checkbox" value="{{ team.employee_id }}" class="team_project" name="team{{ team.employee_id }}" id="team{{ team.employee_id }}"
-												{% if team.assign_project_user != '0' %}
+												{% if team.project_id == project_id %}
 												checked
 												{% endif %}
 												>
