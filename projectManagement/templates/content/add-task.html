@@ -82,14 +82,15 @@
 						<div class="form-group">
 							<label>Assign Team</label>
 
-							<div class="project-members">
-								<a href="#" data-toggle="modal" data-target="#assign_user">
-									<img src="{{ url_for('static', filename='assets/img/add2.png') }}" class="avatar" height="20" width="20">
-								</a>
+							<div class="project-members" id="memberAdd">
+								<!--<a href="#" data-toggle="modal" data-target="#assign_user">-->
+									<!--<img src="{{ url_for('static', filename='assets/img/add2.png') }}" class="avatar" height="20" width="20">-->
+								<!--</a>-->
+								<button class="btn btn-primary" type="button" id="addAssignMember" name="addAssignMember"><span class="fa fa-plus"></span></button>
 							</div>
 						</div>
 					</div>
-					
+
 				</div>
 				<div class="form-group">
 					<label>Description</label>
@@ -117,23 +118,11 @@
 					</span>
 				</div>
 					<div>
-						<ul class="media-list media-list-linked chat-user-list">
-							{% for team in all_team %}
-							<li class="media">
-								<a href="#" class="media-link">
-									<div class="media-left">
-										<input type="checkbox" value="{{ team.employee_id }}" class="team_project" name="team{{ team.employee_id }}" id="team{{ team.employee_id }}">
-
-									</div>
-									<div class="media-left"><span class="avatar">{{ team.initial }}</span></div>
-									<div class="media-body media-middle text-nowrap">
-									<div class="user-name">{{ team.firstname }} {{ team.lastname }}</div>
-										<span class="designation">{{ team.title_name }} | </span>
-										<span class="designation">{{ team.email }}</span>
-									</div>
-								</a>
-							</li>
-							{% endfor %}
+						<ul class="media-list media-list-linked chat-user-list" id="elementAdd">
+							<!--start show all member-->
+							<!--this content to looping data-->
+							<!--end show all member-->
+							<input type="hidden" id="saveAdd" name="saveAdd">
 						</ul>
 					</div>
 				<div class="m-t-50 text-center">
@@ -266,6 +255,150 @@
 				});
 			});
 		});
+
+		$(document).ready(function(){
+			$('#addAssignMember').click(function(){
+				var id_project = document.getElementById('pid').value;
+
+				$.ajax({
+					type: 'GET',
+					url: 'http://localhost:14045/project/team/'+id_project,
+					success: function(data){
+						data_tojson = JSON.parse(data);
+						var length_data = data_tojson.length;
+						var checkName = "check";
+
+						for (var i = 0; i < data_tojson.length; i++){
+							var teamproject_id = data_tojson[i]['teamproject_id'];
+							var employee_id = data_tojson[i]['employee_id'];
+							var email = data_tojson[i]['email'];
+							var firstname = data_tojson[i]['firstname'];
+							var lastname = data_tojson[i]['lastname'];
+							var title_name = data_tojson[i]['title_name'];
+							var project_id = data_tojson[i]['project_id'];
+							var initial = data_tojson[i]['initial'];
+
+							var newItem = document.createElement("LI");
+							newItem.className = "media";
+
+							var atag = document.createElement('a');
+							atag.className = "media-link";
+
+							var divLeft = document.createElement('div');
+							divLeft.className = "media-left";
+							var checkbox = document.createElement("input");
+							checkbox.setAttribute("type", "checkbox");
+							checkbox.setAttribute("name", checkName+length_data);
+							checkbox.setAttribute("id", checkName+length_data);
+							checkbox.setAttribute("value", teamproject_id);
+							checkbox.setAttribute("class", "team_project");
+							divLeft.appendChild(checkbox);
+
+
+							var divAvatar = document.createElement('div');
+							divAvatar.className = "media-left";
+
+							var spanAvatar = document.createElement('span');
+							spanAvatar.className = "avatar";
+							spanAvatar.appendChild(document.createTextNode(initial));
+
+							var divBody = document.createElement('div');
+							divBody.className += "media-body";
+							divBody.className += " media-middle";
+							divBody.className += " text-nowrap";
+
+							var divBodyName = document.createElement('div');
+							divBodyName.className = "user-name";
+							divBodyName.appendChild(document.createTextNode(firstname+" "+lastname));
+
+							var spanTitle = document.createElement('span');
+							spanTitle.className = "designation";
+							spanTitle.appendChild(document.createTextNode(title_name+" |"));
+
+							var spanEmail = document.createElement('span');
+							spanEmail.className = "designation";
+							spanEmail.appendChild(document.createTextNode(" "+email));
+
+							divAvatar.appendChild(spanAvatar);
+							divBody.appendChild(divBodyName);
+							divBody.appendChild(spanTitle);
+							divBody.appendChild(spanEmail);
+
+							var append1 = newItem.appendChild(atag);
+							var append2 = append1.appendChild(divLeft);
+							var append4 = append1.appendChild(divAvatar);
+							var append5 = append1.appendChild(divBody);
+
+							var list = document.getElementById('elementAdd');
+							list.insertBefore(newItem, list.childNodes[0]);
+						}
+						$('#assign_user').modal('show');
+					},
+					error: function(data){
+						alert(data);
+					}
+				});
+
+
+
+
+			});
+		});
+
+		$(document).ready(function(){
+			$('#addTeamProject').click(function(){
+				var check = []
+				var inputElements = document.getElementsByClassName('team_project');
+				for (var i = 0; inputElements[i]; i++){
+					if(inputElements[i].checked){
+						valueChecked = inputElements[i].value;
+						check.push(valueChecked);
+						document.getElementById('saveAdd').value = check.join(",");
+					}
+				}
+
+
+				for (var i = 0; i < check.length; i++){
+
+					var teamproject = check[i];
+
+					$.ajax({
+						type: 'GET',
+						url: 'http://localhost:14045/project/detailteam/'+teamproject,
+						success: function(data){
+							data_json = JSON.parse(data);
+							var firstname = data_json[0]['firstname'];
+							var lastname = data_json[0]['lastname']
+
+							var itemA = document.createElement("a");
+							itemA.setAttribute("href", "#");
+							itemA.setAttribute("data-toggle", "dropdown");
+							itemA.setAttribute("title", firstname+" "+lastname);
+
+
+							var itemImg = document.createElement("img");
+							itemImg.className = "avatar";
+							itemImg.setAttribute("src", "{{ url_for('static', filename='assets/img/user.jpg') }}");
+							itemImg.setAttribute("alt", firstname+" "+lastname);
+							itemImg.setAttribute("width", "20");
+							itemImg.setAttribute("height", "20");
+
+
+							itemA.appendChild(itemImg);
+
+
+							var list = document.getElementById('memberAdd');
+							list.insertBefore(itemA, list.childNodes[0]);
+
+
+						}
+					});
+				}
+
+
+			});
+		});
+
 
 </script>
 {% endblock %}

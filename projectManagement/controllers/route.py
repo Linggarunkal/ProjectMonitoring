@@ -591,6 +591,23 @@ def taskProjectAdd(projectid, categoryid):
     getTask = task.getTaskName(projectid, categoryid)
     return json.dumps(getTask)
 
+
+#page get team project assign
+@app.route("/project/team/<projectid>")
+def projectTeam(projectid):
+    task = tasks()
+    getTeamProject = task.getTeamProject(projectid)
+    return json.dumps(getTeamProject)
+
+
+#page detail team project
+@app.route("/project/detailteam/<teamproject_id>")
+def projectTeamDetail(teamproject_id):
+    task = tasks()
+    getTeamDetail = task.teamProjectDetail(teamproject_id)
+    return json.dumps(getTeamDetail)
+
+
 #page edit task
 @app.route("/project/task/edit")
 def projectTaskEdit():

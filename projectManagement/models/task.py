@@ -64,3 +64,48 @@ class tasks(object):
             return detail
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def getTeamProject(self, project_id):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'project_id = %s'
+            getTeam = conn.select('v_employee_assign_project', cond, '*', project_id=project_id)
+            detail = []
+            for index, list in enumerate(getTeam):
+                i = {
+                    'teamproject_id': list[0],
+                    'employee_id': list[1],
+                    'email': list[2],
+                    'firstname': list[3],
+                    'lastname': list[4],
+                    'title_name': list[5],
+                    'project_id': list[6],
+                    'initial': list[7]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def teamProjectDetail(self, teamproject_id):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'teamproject_id = %s'
+            getTeamDetail = conn.select('v_employee_assign_project', cond, '*', teamproject_id=teamproject_id)
+            detail = []
+            for index, list in enumerate(getTeamDetail):
+                i = {
+                    'teamproject_id': list[0],
+                    'employee_id': list[1],
+                    'email': list[2],
+                    'firstname': list[3],
+                    'lastname': list[4],
+                    'title_name': list[5],
+                    'project_id': list[6],
+                    'initial': list[7]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+        return "testing"
