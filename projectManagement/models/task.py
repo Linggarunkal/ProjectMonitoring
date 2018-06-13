@@ -108,4 +108,25 @@ class tasks(object):
             return detail
         except Exception as e:
             return "Error Database: %s" % str(e)
-        return "testing"
+
+    def taskAdd(self, project_id, task_startDate, task_endDate, task_target, task_id, task_description, member_split):
+        taskstatus = 'STAT00001'
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            addTask = conn.customquery("call sp_add_task('"+project_id+"','"+task_startDate+"','"+task_endDate+"','"+task_target+"','"+task_id+"','"+taskstatus+"','"+task_description+"')")
+
+            if len(addTask) > 0:
+                start = 0
+                taskCode = addTask[0][0]
+                insertStatus = []
+                while (start < len(member_split)):
+                    taskAssign = member_split[start]
+                    addAssignTask = conn.insert('task_assign', task_id=taskCode, teamproject_id=taskAssign)
+                    insertStatus.append(addAssignTask)
+                    start += 1
+                if 0 in insertStatus:
+                    return 0
+            else:
+                return 1
+        except Exception as e:
+            return "Error Database: %s" % str(e)

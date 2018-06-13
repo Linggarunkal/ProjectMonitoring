@@ -567,6 +567,48 @@ def projectTaskList():
     return render_template('content/list-task.html')
 
 
+# page insert task to system
+@app.route("/project/task/insert", methods=['POST'])
+def taskInsert():
+    parse = reqparse.RequestParser()
+    parse.add_argument('project_id', type=str, help='project_id')
+    parse.add_argument('task_startDate', type=str, help='task_startDate')
+    parse.add_argument('task_endDate', type=str, help='task_endDate')
+    parse.add_argument('task_target', type=str, help='task_target')
+    parse.add_argument('task_id', type=str, help='task_id')
+    parse.add_argument('task_description', type=str, help='task_description')
+    parse.add_argument('assign_array', type=str, help='assign_array')
+    args = parse.parse_args()
+
+    project_id = args['project_id']
+    task_startDate = args['task_startDate']
+    task_endDate = args['task_endDate']
+    task_target = args['task_target']
+    task_id = args['task_id']
+    task_description = args['task_description']
+    assign_array = args['assign_array']
+    member_split = assign_array.split(',')
+
+    start_date = datetime.strptime(task_startDate, '%d/%m/%Y').strftime('%Y-%m-%d')
+    end_date = datetime.strptime(task_endDate, '%d/%m/%Y').strftime('%Y-%m-%d')
+    target_date = datetime.strptime(task_target, '%d/%m/%Y').strftime('%Y-%m-%d')
+
+
+    task = tasks()
+    addTask = task.taskAdd(project_id, start_date, end_date, target_date, task_id, task_description, member_split)
+    if addTask == 0:
+        response = {
+            'code': 200,
+            'message': "Success add to System"
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': "Failed add to System"
+        }
+        return json.dumps(response)
+
 #page add task
 @app.route("/project/task/add")
 def projectTaskAdd():
