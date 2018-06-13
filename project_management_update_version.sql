@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 04 Jun 2018 pada 11.29
+-- Generation Time: 13 Jun 2018 pada 11.39
 -- Versi Server: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -20,12 +20,34 @@ SET time_zone = "+00:00";
 -- Database: `project_management`
 --
 
+DELIMITER $$
+--
+-- Prosedur
+--
+DROP PROCEDURE IF EXISTS `sp_add_task`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_task` (IN `p_project_id` VARCHAR(20), `p_start_date` DATE, `p_end_date` DATE, `p_target_date` DATE, `p_task_id` VARCHAR(20), `p_task_status_id` VARCHAR(20), `p_task_description` TEXT)  begin
+	start transaction;
+	insert into task (project_id, Task_StartDate, Task_EndDate, Task_Target, master_task_id, taskstatus_id,task_description)
+    values (p_project_id, p_start_date, p_end_date, p_target_date, p_task_id, p_task_status_id, p_task_description);
+    select task_id, project_id from task where increment_proses = LAST_INSERT_ID();
+    commit;
+end$$
+
+DROP PROCEDURE IF EXISTS `sp_add_testing`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_testing` (IN `nama` VARCHAR(255), `alamat` VARCHAR(50))  begin
+	insert into testing (nama, alamat) values (nama, alamat);
+    select * from testing where no = LAST_INSERT_ID();
+end$$
+
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
 -- Struktur dari tabel `audit_trail`
 --
 
+DROP TABLE IF EXISTS `audit_trail`;
 CREATE TABLE `audit_trail` (
   `AuditTrail_ID` varchar(10) NOT NULL,
   `Audit_Activity` varchar(50) NOT NULL,
@@ -43,6 +65,7 @@ CREATE TABLE `audit_trail` (
 -- Struktur dari tabel `city`
 --
 
+DROP TABLE IF EXISTS `city`;
 CREATE TABLE `city` (
   `city_code` varchar(20) NOT NULL DEFAULT '0',
   `city_name` varchar(50) NOT NULL,
@@ -572,6 +595,7 @@ INSERT INTO `city` (`city_code`, `city_name`, `province_id`) VALUES
 --
 -- Trigger `city`
 --
+DROP TRIGGER IF EXISTS `tg_city`;
 DELIMITER $$
 CREATE TRIGGER `tg_city` BEFORE INSERT ON `city` FOR EACH ROW begin
  declare x int;
@@ -592,6 +616,7 @@ DELIMITER ;
 -- Struktur dari tabel `client`
 --
 
+DROP TABLE IF EXISTS `client`;
 CREATE TABLE `client` (
   `client_id` varchar(20) NOT NULL DEFAULT '0',
   `name` varchar(50) NOT NULL,
@@ -615,11 +640,13 @@ CREATE TABLE `client` (
 
 INSERT INTO `client` (`client_id`, `name`, `email`, `address`, `city_code`, `pic_name`, `pic_number`, `pic_email`, `created_by`, `created_date`, `modify_by`, `modify_date`, `status`, `client_code`) VALUES
 ('CLNT00001', 'Bank DKI Syariah', 'care@bankdki.co.id', 'Jl. Batu Tulis No. 1 Jakarta', 'CITY00158', 'Irma', '085312345432', 'irma@bankdki.co.id', 'system', '2018-05-25 10:31:00', 'system', '2018-05-25 10:31:00', 'added', 'DKIS'),
-('CLNT00002', 'BPD Riau Syariah', 'care@bpdriau.co.id', 'Jl. Pusat Riau', 'CITY00378', 'Nanang', '081254320987', 'nanang@bpdriau.co.id', 'system', '2018-05-25 10:33:07', 'system', '2018-05-25 10:33:07', 'added', 'BRUS');
+('CLNT00002', 'BPD Riau Syariah', 'care@bpdriau.co.id', 'Jl. Pusat Riau', 'CITY00378', 'Nanang', '081254320987', 'nanang@bpdriau.co.id', 'system', '2018-05-25 10:33:07', 'system', '2018-05-25 10:33:07', 'added', 'BRUS'),
+('CLNT00003', 'Bank Mandiri Syariah', 'care@mandirisyariah.co.id', 'Jl. MH. Thamrin No. 5. Jakarta', 'CITY00158', 'Aris Munandar', '081234566543', 'aris.munandar@mandirisyariah.co.id', 'system', '2018-06-11 09:53:43', 'system', '2018-06-11 09:53:43', 'added', 'BMIS');
 
 --
 -- Trigger `client`
 --
+DROP TRIGGER IF EXISTS `tg_client`;
 DELIMITER $$
 CREATE TRIGGER `tg_client` BEFORE INSERT ON `client` FOR EACH ROW begin
  declare x int;
@@ -640,6 +667,7 @@ DELIMITER ;
 -- Struktur dari tabel `department`
 --
 
+DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
   `department_id` varchar(20) NOT NULL DEFAULT '0',
   `department_name` varchar(50) NOT NULL,
@@ -668,6 +696,7 @@ INSERT INTO `department` (`department_id`, `department_name`, `description`, `cr
 --
 -- Trigger `department`
 --
+DROP TRIGGER IF EXISTS `tg_department`;
 DELIMITER $$
 CREATE TRIGGER `tg_department` BEFORE INSERT ON `department` FOR EACH ROW begin
 declare x int;
@@ -686,6 +715,7 @@ DELIMITER ;
 -- Struktur dari tabel `division`
 --
 
+DROP TABLE IF EXISTS `division`;
 CREATE TABLE `division` (
   `division_id` varchar(20) NOT NULL DEFAULT '0',
   `department_id` varchar(20) NOT NULL,
@@ -703,12 +733,13 @@ CREATE TABLE `division` (
 --
 
 INSERT INTO `division` (`division_id`, `department_id`, `division_name`, `description`, `created_date`, `created_by`, `modify_date`, `modify_by`, `status`) VALUES
-('DIVS00001', 'DEPT00003', 'Product Manager 01', 'testing aja', '2018-05-21 15:57:31', 'system', '2018-05-21 15:57:31', 'system', 'added'),
+('DIVS00001', 'DEPT00003', 'Bank Vision Solution', 'Bank Vision Solution Divisi', '2018-05-21 15:57:31', 'system', '2018-05-21 15:57:31', 'system', 'added'),
 ('DIVS00002', 'DEPT00004', 'Accounting testing', 'Accounting Division', '2018-05-31 13:31:55', 'system', '2018-05-31 13:31:55', 'system', 'deleted');
 
 --
 -- Trigger `division`
 --
+DROP TRIGGER IF EXISTS `tg_division`;
 DELIMITER $$
 CREATE TRIGGER `tg_division` BEFORE INSERT ON `division` FOR EACH ROW begin
  declare x int;
@@ -729,6 +760,7 @@ DELIMITER ;
 -- Struktur dari tabel `document`
 --
 
+DROP TABLE IF EXISTS `document`;
 CREATE TABLE `document` (
   `Document_No` varchar(20) NOT NULL,
   `Document_Name` varchar(50) NOT NULL,
@@ -743,6 +775,7 @@ CREATE TABLE `document` (
 -- Struktur dari tabel `employees`
 --
 
+DROP TABLE IF EXISTS `employees`;
 CREATE TABLE `employees` (
   `employee_id` varchar(20) NOT NULL DEFAULT '0',
   `NIK` varchar(10) NOT NULL,
@@ -757,7 +790,7 @@ CREATE TABLE `employees` (
   `phone` varchar(15) DEFAULT NULL,
   `division_id` varchar(20) DEFAULT NULL,
   `empTitle_id` varchar(20) DEFAULT NULL,
-  `join_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `join_date` date DEFAULT NULL,
   `created_by` varchar(20) NOT NULL DEFAULT 'system',
   `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modify_by` varchar(20) NOT NULL DEFAULT 'system',
@@ -770,13 +803,19 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`employee_id`, `NIK`, `email`, `password`, `firstname`, `lastname`, `birthday`, `gender`, `address`, `city_code`, `phone`, `division_id`, `empTitle_id`, `join_date`, `created_by`, `created_date`, `modify_by`, `modify_date`, `status`) VALUES
-('EMPY00021', '201905001', '14linggar@gmail.com', 'password123', 'Linggar', 'Dedi Kurniawan', '0000-00-00', 'Male', 'Karawaci Tangerang Banten', 'CITY00270', '085280034936', 'DIVS00001', 'EMTL00001', '2018-05-24 16:15:24', 'system', '2018-05-24 16:15:24', 'system', '2018-05-24 16:15:24', 'added'),
-('EMPY00022', '201905002', 'simulfa@gmail.com', 'password123', 'Siti', 'Maria Ulfa', '2018-05-24', 'Female', 'Harapan Kita', 'CITY00270', '085280034936', 'DIVS00001', 'EMTL00002', '2018-05-24 16:18:10', 'system', '2018-05-24 16:18:10', 'system', '2018-05-24 16:18:10', 'added'),
-('EMPY00023', '201905003', 'akbar.wijayanto@gmail.com', 'password123', 'Akbar', 'Wijayanto', '0000-00-00', 'Male', 'Karawaci Cibodasari Tangerang Banten', 'CITY00270', '085280034936', 'DIVS00001', 'EMTL00003', '2018-05-24 16:18:10', 'system', '2018-05-28 11:41:43', 'system', '2018-05-28 11:41:43', 'added');
+('EMPY00021', '201905001', '14linggar@gmail.com', 'password123', 'Linggar', 'Dedi Kurniawan', '0000-00-00', 'Male', 'Karawaci Tangerang Banten', 'CITY00270', '085280034936', 'DIVS00001', 'EMTL00001', '2018-05-24', 'system', '2018-05-24 16:15:24', 'system', '2018-05-24 16:15:24', 'added'),
+('EMPY00022', '201905002', 'simulfa@gmail.com', 'password123', 'Siti', 'Maria Ulfa', '2018-05-24', 'Female', 'Harapan Kita', 'CITY00270', '085280034936', 'DIVS00001', 'EMTL00002', '2018-05-24', 'system', '2018-05-24 16:18:10', 'system', '2018-05-24 16:18:10', 'added'),
+('EMPY00023', '201905003', 'akbar.wijayanto@gmail.com', 'password123', 'Akbar', 'Wijayanto', '0000-00-00', 'Male', 'Karawaci Cibodasari Tangerang Banten', 'CITY00270', '085280034936', 'DIVS00001', 'EMTL00003', '2018-05-24', 'system', '2018-05-28 11:41:43', 'system', '2018-05-28 11:41:43', 'added'),
+('EMPY00024', '4000004', 'fajar@mail.com', 'testing', 'Fajar', 'Ardyanto', '0000-00-00', 'Male', 'jl Bango 1 No. 119', 'CITY00270', '081290049887', 'DIVS00001', 'EMTL00004', '0000-00-00', 'system', '2018-06-05 16:13:53', 'system', '2018-06-05 16:13:53', 'added'),
+('EMPY00025', '4000005', 'fajarwc@mail.com', '$5$rounds=535000$yueCYPCi0RVy5pNv$VE4DhPads14X0cjo/YX1igTIYK1EaBtobiJGg4uPov2', 'Fajar', 'Wahyu', '1996-02-13', 'Male', 'jl Bango 1 No. 119', 'CITY00270', '081290049880', 'DIVS00001', 'EMTL00004', '0000-00-00', 'system', '2018-06-05 16:20:21', 'system', '2018-06-05 16:20:21', 'added'),
+('EMPY00026', '4000006', 'arvin@mail.com', '$5$rounds=535000$YuYv2mY7Lo2qmAAM$p.c3K.CVJ8.ItOJCBErFQIFbHJQjxpcB2LKO2JjG6k9', 'Arvin', 'Abdillah', '1996-02-14', 'Male', 'jl Bango 1 No. 119', 'CITY00270', '081290049886', 'DIVS00001', 'EMTL00005', '2018-06-02', 'system', '2018-06-05 16:22:33', 'system', '2018-06-05 16:22:33', 'added'),
+('EMPY00027', '4000007', 'azalika@mail.com', '$5$rounds=535000$lYL0N3.xlCuAV7E4$i43FK9ZVS1.FT/HoGfDRZukdHFXyTfD2aORh4sGnIZ2', 'Azalika', 'Ayla', '1994-03-16', 'Female', 'Jl. Batok Raya', 'CITY00270', '086290009000', 'DIVS00001', 'EMTL00005', '2018-06-04', 'system', '2018-06-05 16:25:54', 'system', '2018-06-05 16:25:54', 'added'),
+('EMPY00028', '4000008', 'fadhil@mail.com', '$5$rounds=535000$pwV//d7emZhU/bMm$vN8uuMu2DIj.9p38w/9wqwGlHaQ6pMOq1JkcW9NmKXA', 'Fadhil', 'Eka Hentino', '2018-06-05', 'Male', 'Jl. bango 1 No 119', 'CITY00270', '085290034567', 'DIVS00001', 'EMTL00005', '2018-06-04', 'system', '2018-06-05 16:28:34', 'system', '2018-06-05 16:28:34', 'added');
 
 --
 -- Trigger `employees`
 --
+DROP TRIGGER IF EXISTS `tg_employees`;
 DELIMITER $$
 CREATE TRIGGER `tg_employees` BEFORE INSERT ON `employees` FOR EACH ROW begin
  declare x int;
@@ -797,6 +836,7 @@ DELIMITER ;
 -- Struktur dari tabel `emptitle`
 --
 
+DROP TABLE IF EXISTS `emptitle`;
 CREATE TABLE `emptitle` (
   `empTitle_id` varchar(20) NOT NULL DEFAULT '0',
   `title_name` varchar(50) NOT NULL,
@@ -817,6 +857,7 @@ INSERT INTO `emptitle` (`empTitle_id`, `title_name`, `description`) VALUES
 --
 -- Trigger `emptitle`
 --
+DROP TRIGGER IF EXISTS `tg_empTitle`;
 DELIMITER $$
 CREATE TRIGGER `tg_empTitle` BEFORE INSERT ON `emptitle` FOR EACH ROW begin
  declare x int;
@@ -837,6 +878,7 @@ DELIMITER ;
 -- Struktur dari tabel `job`
 --
 
+DROP TABLE IF EXISTS `job`;
 CREATE TABLE `job` (
   `Job_ID` char(2) NOT NULL,
   `Job_Name` varchar(30) NOT NULL,
@@ -846,6 +888,7 @@ CREATE TABLE `job` (
 --
 -- Trigger `job`
 --
+DROP TRIGGER IF EXISTS `tg_job`;
 DELIMITER $$
 CREATE TRIGGER `tg_job` BEFORE INSERT ON `job` FOR EACH ROW begin
  declare x int;
@@ -863,9 +906,64 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `master_task`
+--
+
+DROP TABLE IF EXISTS `master_task`;
+CREATE TABLE `master_task` (
+  `master_task_id` varchar(20) NOT NULL DEFAULT '0',
+  `task_name` varchar(50) NOT NULL,
+  `project_status_id` varchar(20) NOT NULL,
+  `increment_task` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `master_task`
+--
+
+INSERT INTO `master_task` (`master_task_id`, `task_name`, `project_status_id`, `increment_task`) VALUES
+('MTTK00001', 'Inisialisasi Project ', 'PRST00004', 1),
+('MTTK00002', 'Installation', 'PRST00004', 2),
+('MTTK00003', 'Training', 'PRST00004', 3),
+('MTTK00004', 'GAP Analyst Report Project', 'PRST00005', 4),
+('MTTK00005', 'Proposal System Project', 'PRST00005', 5),
+('MTTK00006', 'Design System Project', 'PRST00005', 6),
+('MTTK00007', 'Proposal System Change Request', 'PRST00005', 7),
+('MTTK00008', 'Design System Change Request', 'PRST00005', 8),
+('MTTK00009', 'Design System Problem', 'PRST00005', 9),
+('MTTK00010', 'Development', 'PRST00006', 10),
+('MTTK00011', 'Internal Test ', 'PRST00006', 11),
+('MTTK00012', 'Technical Doc ', 'PRST00006', 12),
+('MTTK00013', 'SIT ', 'PRST00006', 13),
+('MTTK00014', 'System Doc', 'PRST00006', 14),
+('MTTK00015', 'UAT', 'PRST00006', 15),
+('MTTK00016', 'Closing', 'PRST00007', 16);
+
+--
+-- Trigger `master_task`
+--
+DROP TRIGGER IF EXISTS `tg_master_task`;
+DELIMITER $$
+CREATE TRIGGER `tg_master_task` BEFORE INSERT ON `master_task` FOR EACH ROW begin
+ declare x int;
+ declare y int;
+ declare name_tab varchar(5);
+ set y := (select seq_lastno from sequence where seq_table = 'master_task');
+ set name_tab := (select table_code from sequence where seq_table = 'master_task');
+ update sequence set seq_lastno =  y+1 where seq_table = 'master_task';
+ set x := (select seq_lastno from sequence where seq_table = 'master_task');
+ set new.master_task_id = concat(name_tab, LPAD(x, 5, '0'));
+ end
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `notification`
 --
 
+DROP TABLE IF EXISTS `notification`;
 CREATE TABLE `notification` (
   `Notif_ID` varchar(12) NOT NULL,
   `employee_id` varchar(20) NOT NULL,
@@ -880,6 +978,7 @@ CREATE TABLE `notification` (
 -- Struktur dari tabel `project`
 --
 
+DROP TABLE IF EXISTS `project`;
 CREATE TABLE `project` (
   `project_id` varchar(20) NOT NULL DEFAULT '0',
   `client_id` varchar(20) NOT NULL,
@@ -906,26 +1005,26 @@ CREATE TABLE `project` (
 --
 
 INSERT INTO `project` (`project_id`, `client_id`, `name`, `mandays`, `startDate`, `endDate`, `status_id`, `created_by`, `created_date`, `modify_by`, `modify_date`, `status`, `pid`, `priority`, `employee_id`, `description`, `doc_project`, `doc_size`) VALUES
-('PRJT00001', 'CLNT00001', 'Penambahan Fitur e-channel Core Banking', 10, '2018-09-18', '0000-00-00', 'PRST00001', 'system', '2018-05-31 11:06:19', 'system', '2018-05-31 11:06:19', 'added', '7DKIS20180001', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Core Banking', '7DKIS20180001_NEW_PROJECT.pdf', '321895'),
-('PRJT00002', 'CLNT00002', 'Penambahan Fitur e-channel Internet Banking', 10, '0000-00-00', '0000-00-00', 'PRST00001', 'system', '2018-05-31 11:14:58', 'system', '2018-05-31 11:14:58', 'added', '7BRUS20180001', 'Medium', 'EMPY00023', '<p>Penambahan Fitur e-channel Internet Banking<br></p>', '7BRUS20180001_NEW_PROJECT.pdf', '321895'),
-('PRJT00003', 'CLNT00002', 'Penambahan Fitur e-channel Internet Banking', 10, '0000-00-00', '0000-00-00', 'PRST00001', 'system', '2018-05-31 11:16:09', 'system', '2018-05-31 11:16:09', 'added', '7BRUS20180001', 'Medium', 'EMPY00023', '<p>Penambahan Fitur e-channel Internet Banking<br></p>', '7BRUS20180001_NEW_PROJECT.pdf', '321895'),
-('PRJT00004', 'CLNT00001', 'ATM Bersama', 10, '2018-06-01', '2018-06-02', 'PRST00001', 'system', '2018-05-31 11:48:00', 'system', '2018-05-31 11:48:00', 'added', '7DKIS20180002', 'Medium', 'EMPY00023', '<p>ATM Bersama<br></p>', '7DKIS20180002_NEW_PROJECT.pdf', '321895'),
-('PRJT00005', 'CLNT00001', 'ATM Loading', 10, '2018-06-01', '2018-06-06', 'PRST00001', 'system', '2018-05-31 12:04:27', 'system', '2018-05-31 12:04:27', 'added', '7DKIS20180003', 'Medium', 'EMPY00023', '<p>ATM Loading<br></p>', '7DKIS20180003_NEW_PROJECT.pdf', '321895'),
-('PRJT00006', 'CLNT00001', 'Teller ATM Error', 10, '2018-06-01', '2018-06-02', 'PRST00001', 'system', '2018-05-31 12:06:55', 'system', '2018-05-31 12:06:55', 'added', '7DKIS20180004', 'Medium', 'EMPY00023', '<p>Teller ATM Error<br></p>', '7DKIS20180004_NEW_PROJECT.pdf', '321895'),
-('PRJT00007', 'CLNT00001', 'Proses Migrasi Core', 10, '2018-06-21', '2018-06-29', 'PRST00001', 'system', '2018-05-31 12:08:41', 'system', '2018-05-31 12:08:41', 'added', '7DKIS20180005', 'Medium', 'EMPY00023', '<p>Proses Migrasi Core<br></p>', '7DKIS20180005_NEW_PROJECT.pdf', '321895'),
-('PRJT00008', 'CLNT00001', 'project testing', 10, '2018-06-09', '2018-06-30', 'PRST00001', 'system', '2018-05-31 12:10:14', 'system', '2018-05-31 12:10:14', 'added', '7DKIS20180006', 'Medium', 'EMPY00023', '<p>project testing<br></p>', '7DKIS20180006_NEW_PROJECT.pdf', '321895'),
-('PRJT00009', 'CLNT00001', 'Project testing02', 10, '2018-06-01', '2018-07-26', 'PRST00001', 'system', '2018-05-31 12:12:58', 'system', '2018-05-31 12:12:58', 'added', '7DKIS20180007', 'Medium', 'EMPY00023', '<p>Project testing02<br></p>', '7DKIS20180007_NEW_PROJECT.pdf', '321895'),
-('PRJT00010', 'CLNT00001', 'Project testing 001', 10, '2018-06-01', '2018-06-16', 'PRST00001', 'system', '2018-05-31 12:15:56', 'system', '2018-05-31 12:15:56', 'added', '7DKIS20180008', 'Medium', 'EMPY00023', '<p>Project testing 001<br></p>', '7DKIS20180008_NEW_PROJECT.pdf', '321895'),
-('PRJT00011', 'CLNT00001', 'Penambahan Fitur Mobile Banking', 10, '2018-06-01', '2018-06-30', 'PRST00001', 'system', '2018-05-31 13:13:01', 'system', '2018-05-31 13:13:01', 'added', '7DKIS20180009', 'Medium', 'EMPY00023', '<p>Penambahan Fitur Mobile Banking<br></p>', '7DKIS20180009_NEW_PROJECT.pdf', '321895'),
-('PRJT00012', 'CLNT00002', 'Core Banking back end', 10, '2018-06-01', '2018-06-08', 'PRST00001', 'system', '2018-05-31 13:14:59', 'system', '2018-05-31 13:14:59', 'added', '7BRUS20180003', 'Medium', 'EMPY00023', '<p>Core Banking back end<br></p>', '7BRUS20180003_NEW_PROJECT.pdf', '321895'),
-('PRJT00013', 'CLNT00002', 'Creating End of day', 3, '2018-06-01', '2018-06-05', 'PRST00001', 'system', '2018-05-31 13:17:08', 'system', '2018-05-31 13:17:08', 'added', '7BRUS20180004', 'Medium', 'EMPY00023', '<p>Creating End of day<br></p>', '7BRUS20180004_NEW_PROJECT.pdf', '321895'),
-('PRJT00014', 'CLNT00002', 'Add mobile apps', 10, '2018-06-08', '2018-07-06', 'PRST00001', 'system', '2018-05-31 13:18:37', 'system', '2018-05-31 13:18:37', 'added', '7BRUS20180005', 'Medium', 'EMPY00023', '<p>Add mobile apps<br></p>', '7BRUS20180005_NEW_PROJECT.pdf', '321895'),
-('PRJT00015', 'CLNT00002', 'test', 10, '2018-06-07', '2018-06-09', 'PRST00001', 'system', '2018-05-31 13:20:56', 'system', '2018-05-31 13:20:56', 'added', '7BRUS20180006', 'Medium', 'EMPY00023', '<p>test</p>', '7BRUS20180006_NEW_PROJECT.pdf', '321895'),
-('PRJT00016', 'CLNT00002', 'test01', 10, '2018-06-01', '2018-06-05', 'PRST00001', 'system', '2018-05-31 13:23:08', 'system', '2018-05-31 13:23:08', 'added', '7BRUS20180007', 'Medium', 'EMPY00023', 'test01', '7BRUS20180007_NEW_PROJECT.pdf', '321895');
+('PRJT00001', 'CLNT00001', 'Penambahan Fitur e-channel Core Banking', 10, '0000-00-00', '0000-00-00', 'PRST00002', 'system', '2018-05-31 11:06:19', 'system', '2018-05-31 11:06:19', 'added', '7DKIS20180001', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Core Banking', '7DKIS20180001_NEW_PROJECT.pdf', '321895'),
+('PRJT00002', 'CLNT00002', 'Penambahan Fitur e-channel Internet Banking', 10, '2018-06-06', '2018-06-07', 'PRST00002', 'system', '2018-05-31 11:14:58', 'system', '2018-05-31 11:14:58', 'added', '7BRUS20180001', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7BRUS20180001_NEW_PROJECT.pdf', '321895'),
+('PRJT00004', 'CLNT00001', 'ATM Bersama Fitur e-channel Internet Banking', 10, '2018-06-01', '2018-06-02', 'PRST00002', 'system', '2018-05-31 11:48:00', 'system', '2018-05-31 11:48:00', 'added', '7DKIS20180002', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7DKIS20180002_NEW_PROJECT.pdf', '321895'),
+('PRJT00005', 'CLNT00001', 'ATM Loading', 10, '2018-06-01', '2018-06-06', 'PRST00001', 'system', '2018-05-31 12:04:27', 'system', '2018-05-31 12:04:27', 'added', '7DKIS20180003', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7DKIS20180003_NEW_PROJECT.pdf', '321895'),
+('PRJT00006', 'CLNT00001', 'Teller ATM Error', 10, '2018-06-01', '2018-06-02', 'PRST00001', 'system', '2018-05-31 12:06:55', 'system', '2018-05-31 12:06:55', 'added', '7DKIS20180004', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7DKIS20180004_NEW_PROJECT.pdf', '321895'),
+('PRJT00007', 'CLNT00001', 'Proses Migrasi Core', 10, '2018-06-21', '2018-06-29', 'PRST00002', 'system', '2018-05-31 12:08:41', 'system', '2018-05-31 12:08:41', 'added', '7DKIS20180005', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7DKIS20180005_NEW_PROJECT.pdf', '321895'),
+('PRJT00008', 'CLNT00001', 'project testing', 10, '2018-06-09', '2018-06-30', 'PRST00001', 'system', '2018-05-31 12:10:14', 'system', '2018-05-31 12:10:14', 'added', '7DKIS20180006', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7DKIS20180006_NEW_PROJECT.pdf', '321895'),
+('PRJT00009', 'CLNT00001', 'Project testing02', 10, '2018-06-01', '2018-07-26', 'PRST00001', 'system', '2018-05-31 12:12:58', 'system', '2018-05-31 12:12:58', 'added', '7DKIS20180007', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7DKIS20180007_NEW_PROJECT.pdf', '321895'),
+('PRJT00010', 'CLNT00001', 'Project testing 001', 10, '2018-06-01', '2018-06-16', 'PRST00001', 'system', '2018-05-31 12:15:56', 'system', '2018-05-31 12:15:56', 'added', '7DKIS20180008', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7DKIS20180008_NEW_PROJECT.pdf', '321895'),
+('PRJT00011', 'CLNT00001', 'Penambahan Fitur Mobile Banking', 10, '2018-06-01', '2018-06-30', 'PRST00001', 'system', '2018-05-31 13:13:01', 'system', '2018-05-31 13:13:01', 'added', '7DKIS20180009', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7DKIS20180009_NEW_PROJECT.pdf', '321895'),
+('PRJT00012', 'CLNT00002', 'Core Banking back end', 10, '2018-06-01', '2018-06-08', 'PRST00001', 'system', '2018-05-31 13:14:59', 'system', '2018-05-31 13:14:59', 'added', '7BRUS20180003', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7BRUS20180003_NEW_PROJECT.pdf', '321895'),
+('PRJT00013', 'CLNT00002', 'Creating End of day', 3, '2018-06-01', '2018-06-05', 'PRST00001', 'system', '2018-05-31 13:17:08', 'system', '2018-05-31 13:17:08', 'added', '7BRUS20180004', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7BRUS20180004_NEW_PROJECT.pdf', '321895'),
+('PRJT00014', 'CLNT00002', 'Add mobile apps', 10, '2018-06-08', '2018-07-06', 'PRST00001', 'system', '2018-05-31 13:18:37', 'system', '2018-05-31 13:18:37', 'added', '7BRUS20180005', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7BRUS20180005_NEW_PROJECT.pdf', '321895'),
+('PRJT00015', 'CLNT00002', 'test', 10, '2018-06-07', '2018-06-09', 'PRST00001', 'system', '2018-05-31 13:20:56', 'system', '2018-05-31 13:20:56', 'added', '7BRUS20180006', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7BRUS20180006_NEW_PROJECT.pdf', '321895'),
+('PRJT00016', 'CLNT00002', 'test01', 10, '2018-06-01', '2018-06-05', 'PRST00001', 'system', '2018-05-31 13:23:08', 'system', '2018-05-31 13:23:08', 'added', '7BRUS20180007', 'Medium', 'EMPY00023', 'Penambahan Fitur e-channel Internet Banking', '7BRUS20180007_NEW_PROJECT.pdf', '321895');
 
 --
 -- Trigger `project`
 --
+DROP TRIGGER IF EXISTS `tg_project`;
 DELIMITER $$
 CREATE TRIGGER `tg_project` BEFORE INSERT ON `project` FOR EACH ROW begin
  declare x int;
@@ -946,6 +1045,7 @@ DELIMITER ;
 -- Struktur dari tabel `project_status`
 --
 
+DROP TABLE IF EXISTS `project_status`;
 CREATE TABLE `project_status` (
   `status_id` varchar(20) NOT NULL DEFAULT '0',
   `status_name` varchar(100) NOT NULL,
@@ -975,6 +1075,7 @@ INSERT INTO `project_status` (`status_id`, `status_name`, `status_desc`, `create
 --
 -- Trigger `project_status`
 --
+DROP TRIGGER IF EXISTS `tg_project_status`;
 DELIMITER $$
 CREATE TRIGGER `tg_project_status` BEFORE INSERT ON `project_status` FOR EACH ROW begin
  declare x int;
@@ -995,6 +1096,7 @@ DELIMITER ;
 -- Struktur dari tabel `province`
 --
 
+DROP TABLE IF EXISTS `province`;
 CREATE TABLE `province` (
   `province_id` varchar(20) NOT NULL DEFAULT '0',
   `province_name` varchar(50) NOT NULL
@@ -1043,6 +1145,7 @@ INSERT INTO `province` (`province_id`, `province_name`) VALUES
 --
 -- Trigger `province`
 --
+DROP TRIGGER IF EXISTS `tg_province`;
 DELIMITER $$
 CREATE TRIGGER `tg_province` BEFORE INSERT ON `province` FOR EACH ROW begin
  declare x int;
@@ -1063,6 +1166,7 @@ DELIMITER ;
 -- Struktur dari tabel `sequence`
 --
 
+DROP TABLE IF EXISTS `sequence`;
 CREATE TABLE `sequence` (
   `no` int(11) NOT NULL,
   `seq_table` varchar(20) NOT NULL,
@@ -1076,13 +1180,13 @@ CREATE TABLE `sequence` (
 
 INSERT INTO `sequence` (`no`, `seq_table`, `seq_lastno`, `table_code`) VALUES
 (1, 'audit_trail', 0, NULL),
-(2, 'client', 2, 'CLNT'),
+(2, 'client', 3, 'CLNT'),
 (3, 'document', 0, NULL),
-(4, 'employees', 23, 'EMPY'),
+(4, 'employees', 28, 'EMPY'),
 (5, 'prl', 0, NULL),
 (6, 'project', 16, 'PRJT'),
-(7, 'task', 0, NULL),
-(8, 'team_project', 0, NULL),
+(7, 'task', 7, 'TASK'),
+(8, 'team_project', 23, 'TMPR'),
 (9, 'department', 9, 'DEPT'),
 (10, 'division', 2, 'DIVS'),
 (16, 'empTitle', 5, 'EMTL'),
@@ -1092,7 +1196,10 @@ INSERT INTO `sequence` (`no`, `seq_table`, `seq_lastno`, `table_code`) VALUES
 (20, 'city', 514, 'CITY'),
 (21, 'testing', 2, 'TEST'),
 (22, 'project_status', 9, 'PRST'),
-(23, 'notification', 0, 'NOTF');
+(23, 'notification', 0, 'NOTF'),
+(24, 'master_task', 16, 'MTTK'),
+(25, 'status', 3, 'STAT'),
+(26, 'task_assign', 6, 'TKAN');
 
 -- --------------------------------------------------------
 
@@ -1100,11 +1207,39 @@ INSERT INTO `sequence` (`no`, `seq_table`, `seq_lastno`, `table_code`) VALUES
 -- Struktur dari tabel `status`
 --
 
+DROP TABLE IF EXISTS `status`;
 CREATE TABLE `status` (
-  `Status_ID` char(1) NOT NULL,
+  `taskstatus_id` varchar(20) NOT NULL DEFAULT '0',
   `Status_Name` varchar(20) NOT NULL,
   `Status_Desc` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `status`
+--
+
+INSERT INTO `status` (`taskstatus_id`, `Status_Name`, `Status_Desc`) VALUES
+('STAT00001', 'On Going', 'On Going task'),
+('STAT00002', 'Verify', 'Verify taks'),
+('STAT00003', 'done', 'done taks');
+
+--
+-- Trigger `status`
+--
+DROP TRIGGER IF EXISTS `tg_status`;
+DELIMITER $$
+CREATE TRIGGER `tg_status` BEFORE INSERT ON `status` FOR EACH ROW begin
+ declare x int;
+ declare y int;
+ declare name_tab varchar(5);
+ set y := (select seq_lastno from sequence where seq_table = 'status');
+ set name_tab := (select table_code from sequence where seq_table = 'status');
+ update sequence set seq_lastno =  y+1 where seq_table = 'status';
+ set x := (select seq_lastno from sequence where seq_table = 'status');
+ set new.taskstatus_id = concat(name_tab, LPAD(x, 5, '0'));
+ end
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1112,19 +1247,92 @@ CREATE TABLE `status` (
 -- Struktur dari tabel `task`
 --
 
+DROP TABLE IF EXISTS `task`;
 CREATE TABLE `task` (
-  `Task_ID` varchar(12) NOT NULL,
-  `Project_ID` varchar(12) NOT NULL,
-  `status_id` varchar(20) NOT NULL,
-  `TeamProject_ID` varchar(12) NOT NULL,
+  `task_id` varchar(20) NOT NULL,
+  `project_id` varchar(20) NOT NULL,
   `Task_StartDate` date NOT NULL,
   `Task_EndDate` date NOT NULL,
   `Task_Target` date NOT NULL,
-  `Task_Name` varchar(20) NOT NULL,
-  `Task_Status` char(1) NOT NULL,
-  `Task_Document_No` varchar(20) NOT NULL,
-  `Task_Notes` varchar(200) NOT NULL
+  `master_task_id` varchar(20) NOT NULL,
+  `taskstatus_id` varchar(20) NOT NULL,
+  `task_notes` varchar(200) DEFAULT NULL,
+  `task_description` text,
+  `increment_proses` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `task`
+--
+
+INSERT INTO `task` (`task_id`, `project_id`, `Task_StartDate`, `Task_EndDate`, `Task_Target`, `master_task_id`, `taskstatus_id`, `task_notes`, `task_description`, `increment_proses`) VALUES
+('TASK00002', 'PRJT00002', '2018-06-11', '2018-06-11', '2018-06-11', 'MTTK00001', 'STAT00001', 'testing add tas', NULL, 1),
+('TASK00003', 'PRJT00002', '0000-00-00', '0000-00-00', '0000-00-00', 'MTTK00002', 'STAT00001', NULL, 'testing', 3),
+('TASK00004', 'PRJT00002', '2018-06-15', '2018-06-22', '2018-06-17', 'MTTK00003', 'STAT00001', NULL, 'training to customer', 4),
+('TASK00005', 'PRJT00002', '2018-06-29', '2018-07-26', '2018-06-30', 'MTTK00004', 'STAT00001', NULL, 'Analyst report project', 5),
+('TASK00006', 'PRJT00002', '2018-06-13', '2018-06-14', '2018-06-14', 'MTTK00005', 'STAT00001', NULL, 'testing assign', 6),
+('TASK00007', 'PRJT00002', '2018-06-13', '2018-06-14', '2018-06-15', 'MTTK00006', 'STAT00001', NULL, 'testing assign', 7);
+
+--
+-- Trigger `task`
+--
+DROP TRIGGER IF EXISTS `tg_task`;
+DELIMITER $$
+CREATE TRIGGER `tg_task` BEFORE INSERT ON `task` FOR EACH ROW begin
+ declare x int;
+ declare y int;
+ declare name_tab varchar(5);
+ set y := (select seq_lastno from sequence where seq_table = 'task');
+ set name_tab := (select table_code from sequence where seq_table = 'task');
+ update sequence set seq_lastno =  y+1 where seq_table = 'task';
+ set x := (select seq_lastno from sequence where seq_table = 'task');
+ set new.task_id = concat(name_tab, LPAD(x, 5, '0'));
+ end
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `task_assign`
+--
+
+DROP TABLE IF EXISTS `task_assign`;
+CREATE TABLE `task_assign` (
+  `taskassign_id` varchar(20) NOT NULL DEFAULT '0',
+  `task_id` varchar(20) NOT NULL,
+  `teamproject_id` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `task_assign`
+--
+
+INSERT INTO `task_assign` (`taskassign_id`, `task_id`, `teamproject_id`) VALUES
+('TKAN00001', 'TASK00002', 'TMPR00018'),
+('TKAN00002', 'TASK00004', 'TMPR00023'),
+('TKAN00003', 'TASK00004', 'TMPR00018'),
+('TKAN00004', 'TASK00005', 'TMPR00023'),
+('TKAN00005', 'TASK00006', 'TMPR00018'),
+('TKAN00006', 'TASK00007', 'TMPR00023');
+
+--
+-- Trigger `task_assign`
+--
+DROP TRIGGER IF EXISTS `tg_task_assign`;
+DELIMITER $$
+CREATE TRIGGER `tg_task_assign` BEFORE INSERT ON `task_assign` FOR EACH ROW begin
+ declare x int;
+ declare y int;
+ declare name_tab varchar(5);
+ set y := (select seq_lastno from sequence where seq_table = 'task_assign');
+ set name_tab := (select table_code from sequence where seq_table = 'task_assign');
+ update sequence set seq_lastno =  y+1 where seq_table = 'task_assign';
+ set x := (select seq_lastno from sequence where seq_table = 'task_assign');
+ set new.taskassign_id = concat(name_tab, LPAD(x, 5, '0'));
+ end
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1132,13 +1340,59 @@ CREATE TABLE `task` (
 -- Struktur dari tabel `team_project`
 --
 
+DROP TABLE IF EXISTS `team_project`;
 CREATE TABLE `team_project` (
   `TeamProject_ID` varchar(12) NOT NULL,
   `employee_id` varchar(20) NOT NULL,
-  `project_id` varchar(20) NOT NULL,
-  `Job_ID` char(2) NOT NULL,
-  `Task_ID` varchar(12) NOT NULL
+  `project_id` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `team_project`
+--
+
+INSERT INTO `team_project` (`TeamProject_ID`, `employee_id`, `project_id`) VALUES
+('TMPR00018', 'EMPY00024', 'PRJT00002'),
+('TMPR00022', 'EMPY00026', 'PRJT00001'),
+('TMPR00023', 'EMPY00026', 'PRJT00002');
+
+--
+-- Trigger `team_project`
+--
+DROP TRIGGER IF EXISTS `tg_team_project`;
+DELIMITER $$
+CREATE TRIGGER `tg_team_project` BEFORE INSERT ON `team_project` FOR EACH ROW begin
+ declare x int;
+ declare y int;
+ declare name_tab varchar(5);
+ set y := (select seq_lastno from sequence where seq_table = 'team_project');
+ set name_tab := (select table_code from sequence where seq_table = 'team_project');
+ update sequence set seq_lastno =  y+1 where seq_table = 'team_project';
+ set x := (select seq_lastno from sequence where seq_table = 'team_project');
+ set new.TeamProject_ID = concat(name_tab, LPAD(x, 5, '0'));
+ end
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `testing`
+--
+
+DROP TABLE IF EXISTS `testing`;
+CREATE TABLE `testing` (
+  `no` int(11) NOT NULL,
+  `nama` varchar(20) DEFAULT NULL,
+  `alamat` varchar(15) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `testing`
+--
+
+INSERT INTO `testing` (`no`, `nama`, `alamat`) VALUES
+(1, 'lkurniawan', 'malang');
 
 -- --------------------------------------------------------
 
@@ -1146,6 +1400,7 @@ CREATE TABLE `team_project` (
 -- Stand-in structure for view `v_client_detail`
 -- (Lihat di bawah untuk tampilan aktual)
 --
+DROP VIEW IF EXISTS `v_client_detail`;
 CREATE TABLE `v_client_detail` (
 `client_id` varchar(20)
 ,`name` varchar(50)
@@ -1165,6 +1420,7 @@ CREATE TABLE `v_client_detail` (
 -- Stand-in structure for view `v_division_detail`
 -- (Lihat di bawah untuk tampilan aktual)
 --
+DROP VIEW IF EXISTS `v_division_detail`;
 CREATE TABLE `v_division_detail` (
 `division_id` varchar(20)
 ,`division_name` varchar(50)
@@ -1180,7 +1436,65 @@ CREATE TABLE `v_division_detail` (
 -- Stand-in structure for view `v_employees_detail`
 -- (Lihat di bawah untuk tampilan aktual)
 --
+DROP VIEW IF EXISTS `v_employees_detail`;
 CREATE TABLE `v_employees_detail` (
+`Initial` varchar(1)
+,`employee_id` varchar(20)
+,`NIK` varchar(10)
+,`email` varchar(100)
+,`password` varchar(255)
+,`firstname` varchar(100)
+,`lastname` varchar(255)
+,`birthday` date
+,`gender` enum('Male','Female')
+,`address` text
+,`city_name` varchar(50)
+,`phone` varchar(15)
+,`division_name` varchar(50)
+,`title_name` varchar(50)
+,`join_date` date
+,`status` enum('added','deleted')
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_employee_assign_project`
+-- (Lihat di bawah untuk tampilan aktual)
+--
+DROP VIEW IF EXISTS `v_employee_assign_project`;
+CREATE TABLE `v_employee_assign_project` (
+`teamproject_id` varchar(12)
+,`employee_id` varchar(20)
+,`email` varchar(100)
+,`firstname` varchar(100)
+,`lastname` varchar(255)
+,`title_name` varchar(50)
+,`project_id` varchar(20)
+,`initial` varchar(1)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `v_employee_team_project`
+-- (Lihat di bawah untuk tampilan aktual)
+--
+DROP VIEW IF EXISTS `v_employee_team_project`;
+CREATE TABLE `v_employee_team_project` (
+`initial` varchar(1)
+,`employee_id` varchar(20)
+,`email` varchar(100)
+,`firstname` varchar(100)
+,`lastname` varchar(255)
+,`emptitle_id` varchar(20)
+,`title_name` varchar(50)
+,`TeamProject_ID` varchar(12)
+,`project_id` varchar(20)
+,`assign_project_user` varchar(20)
+,`project_name` varchar(150)
+,`client_id` varchar(20)
+,`client_name` varchar(50)
 );
 
 -- --------------------------------------------------------
@@ -1189,6 +1503,7 @@ CREATE TABLE `v_employees_detail` (
 -- Stand-in structure for view `v_project_detail`
 -- (Lihat di bawah untuk tampilan aktual)
 --
+DROP VIEW IF EXISTS `v_project_detail`;
 CREATE TABLE `v_project_detail` (
 `project_id` varchar(20)
 ,`client_id` varchar(20)
@@ -1237,7 +1552,25 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `v_employees_detail`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_employees_detail`  AS  select left(`emp`.`firstname`,1) AS `Initial`,`emp`.`employee_id` AS `employee_id`,`emp`.`NIK` AS `NIK`,`emp`.`email` AS `email`,`emp`.`password` AS `password`,`emp`.`firstname` AS `firstname`,`emp`.`lastname` AS `lastname`,`emp`.`birthday` AS `birthday`,`emp`.`gender` AS `gender`,`emp`.`address` AS `address`,`ci`.`city_name` AS `city_name`,`emp`.`pincode` AS `pincode`,`emp`.`phone` AS `phone`,`divs`.`division_name` AS `division_name`,`ti`.`title_name` AS `title_name`,`emp`.`join_date` AS `join_date`,`sc`.`school` AS `school`,`emp`.`institusi_name` AS `institusi_name`,`emp`.`start_school` AS `start_school`,`emp`.`completed_school` AS `completed_school`,`emp`.`degree` AS `degree`,`emp`.`grade` AS `grade`,`emp`.`experience_comp` AS `experience_comp`,`emp`.`experience_location` AS `experience_location`,`emp`.`experience_position` AS `experience_position`,`emp`.`experience_report` AS `experience_report`,`emp`.`experience_start` AS `experience_start`,`emp`.`experience_completed` AS `experience_completed`,`emp`.`status` AS `status` from ((((`employees` `emp` left join `city` `ci` on((`emp`.`city_code` = `ci`.`city_code`))) left join `division` `divs` on((`emp`.`division_id` = `divs`.`division_id`))) left join `emptitle` `ti` on((`emp`.`empTitle_id` = `ti`.`empTitle_id`))) left join `school_level` `sc` on((`emp`.`schoollevel_id` = `sc`.`schoollevel_id`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_employees_detail`  AS  select left(`emp`.`firstname`,1) AS `Initial`,`emp`.`employee_id` AS `employee_id`,`emp`.`NIK` AS `NIK`,`emp`.`email` AS `email`,`emp`.`password` AS `password`,`emp`.`firstname` AS `firstname`,`emp`.`lastname` AS `lastname`,`emp`.`birthday` AS `birthday`,`emp`.`gender` AS `gender`,`emp`.`address` AS `address`,`ci`.`city_name` AS `city_name`,`emp`.`phone` AS `phone`,`divs`.`division_name` AS `division_name`,`ti`.`title_name` AS `title_name`,`emp`.`join_date` AS `join_date`,`emp`.`status` AS `status` from (((`employees` `emp` left join `city` `ci` on((`emp`.`city_code` = `ci`.`city_code`))) left join `division` `divs` on((`emp`.`division_id` = `divs`.`division_id`))) left join `emptitle` `ti` on((`emp`.`empTitle_id` = `ti`.`empTitle_id`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur untuk view `v_employee_assign_project`
+--
+DROP TABLE IF EXISTS `v_employee_assign_project`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_employee_assign_project`  AS  select `tp`.`TeamProject_ID` AS `teamproject_id`,`tp`.`employee_id` AS `employee_id`,`em`.`email` AS `email`,`em`.`firstname` AS `firstname`,`em`.`lastname` AS `lastname`,`emt`.`title_name` AS `title_name`,`tp`.`project_id` AS `project_id`,left(`em`.`firstname`,1) AS `initial` from ((`team_project` `tp` left join `employees` `em` on((`tp`.`employee_id` = `em`.`employee_id`))) left join `emptitle` `emt` on((`em`.`empTitle_id` = `emt`.`empTitle_id`))) ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur untuk view `v_employee_team_project`
+--
+DROP TABLE IF EXISTS `v_employee_team_project`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_employee_team_project`  AS  select left(`emp`.`firstname`,1) AS `initial`,`emp`.`employee_id` AS `employee_id`,`emp`.`email` AS `email`,`emp`.`firstname` AS `firstname`,`emp`.`lastname` AS `lastname`,`emp`.`empTitle_id` AS `emptitle_id`,`tit`.`title_name` AS `title_name`,`tp`.`TeamProject_ID` AS `TeamProject_ID`,`tp`.`project_id` AS `project_id`,ifnull(`tp`.`project_id`,0) AS `assign_project_user`,`pro`.`name` AS `project_name`,`pro`.`client_id` AS `client_id`,`cli`.`name` AS `client_name` from ((((`employees` `emp` left join `emptitle` `tit` on((`emp`.`empTitle_id` = `tit`.`empTitle_id`))) left join `team_project` `tp` on((`emp`.`employee_id` = `tp`.`employee_id`))) left join `project` `pro` on((`tp`.`project_id` = `pro`.`project_id`))) left join `client` `cli` on((`pro`.`client_id` = `cli`.`client_id`))) where (`emp`.`empTitle_id` in ('EMTL00004','EMTL00005')) ;
 
 -- --------------------------------------------------------
 
@@ -1306,6 +1639,14 @@ ALTER TABLE `job`
   ADD PRIMARY KEY (`Job_ID`);
 
 --
+-- Indexes for table `master_task`
+--
+ALTER TABLE `master_task`
+  ADD PRIMARY KEY (`master_task_id`),
+  ADD UNIQUE KEY `increment_task` (`increment_task`),
+  ADD KEY `project_status_id` (`project_status_id`);
+
+--
 -- Indexes for table `notification`
 --
 ALTER TABLE `notification`
@@ -1317,6 +1658,7 @@ ALTER TABLE `notification`
 --
 ALTER TABLE `project`
   ADD PRIMARY KEY (`project_id`),
+  ADD UNIQUE KEY `pid` (`pid`),
   ADD KEY `client_id` (`client_id`),
   ADD KEY `status_id` (`status_id`),
   ADD KEY `employee_id` (`employee_id`);
@@ -1343,16 +1685,25 @@ ALTER TABLE `sequence`
 -- Indexes for table `status`
 --
 ALTER TABLE `status`
-  ADD PRIMARY KEY (`Status_ID`);
+  ADD PRIMARY KEY (`taskstatus_id`);
 
 --
 -- Indexes for table `task`
 --
 ALTER TABLE `task`
-  ADD PRIMARY KEY (`Task_ID`),
-  ADD KEY `FKTask857121` (`Task_Status`),
-  ADD KEY `FKTask390397` (`Task_Document_No`),
-  ADD KEY `FKTask885393` (`status_id`);
+  ADD PRIMARY KEY (`task_id`),
+  ADD UNIQUE KEY `increment_proses` (`increment_proses`),
+  ADD KEY `FKTask857121` (`taskstatus_id`),
+  ADD KEY `project_id` (`project_id`),
+  ADD KEY `master_task_id` (`master_task_id`);
+
+--
+-- Indexes for table `task_assign`
+--
+ALTER TABLE `task_assign`
+  ADD PRIMARY KEY (`taskassign_id`),
+  ADD KEY `task_id` (`task_id`),
+  ADD KEY `teamproject_id` (`teamproject_id`);
 
 --
 -- Indexes for table `team_project`
@@ -1360,19 +1711,38 @@ ALTER TABLE `task`
 ALTER TABLE `team_project`
   ADD PRIMARY KEY (`TeamProject_ID`),
   ADD KEY `FKTeam_proje214919` (`employee_id`),
-  ADD KEY `FKTeam_proje153194` (`project_id`),
-  ADD KEY `FKTeam_proje756887` (`Job_ID`),
-  ADD KEY `FKTeam_proje910071` (`Task_ID`);
+  ADD KEY `FKTeam_proje153194` (`project_id`);
+
+--
+-- Indexes for table `testing`
+--
+ALTER TABLE `testing`
+  ADD PRIMARY KEY (`no`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
+-- AUTO_INCREMENT for table `master_task`
+--
+ALTER TABLE `master_task`
+  MODIFY `increment_task` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+--
 -- AUTO_INCREMENT for table `sequence`
 --
 ALTER TABLE `sequence`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+--
+-- AUTO_INCREMENT for table `task`
+--
+ALTER TABLE `task`
+  MODIFY `increment_proses` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `testing`
+--
+ALTER TABLE `testing`
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
@@ -1398,6 +1768,12 @@ ALTER TABLE `employees`
   ADD CONSTRAINT `employees_ibfk_3` FOREIGN KEY (`empTitle_id`) REFERENCES `emptitle` (`empTitle_id`);
 
 --
+-- Ketidakleluasaan untuk tabel `master_task`
+--
+ALTER TABLE `master_task`
+  ADD CONSTRAINT `master_task_ibfk_1` FOREIGN KEY (`project_status_id`) REFERENCES `project_status` (`status_id`);
+
+--
 -- Ketidakleluasaan untuk tabel `notification`
 --
 ALTER TABLE `notification`
@@ -1415,16 +1791,20 @@ ALTER TABLE `project`
 -- Ketidakleluasaan untuk tabel `task`
 --
 ALTER TABLE `task`
-  ADD CONSTRAINT `FKTask390397` FOREIGN KEY (`Task_Document_No`) REFERENCES `document` (`Document_No`),
-  ADD CONSTRAINT `FKTask857121` FOREIGN KEY (`Task_Status`) REFERENCES `status` (`Status_ID`),
-  ADD CONSTRAINT `task_ibfk_1` FOREIGN KEY (`status_id`) REFERENCES `project_status` (`status_id`);
+  ADD CONSTRAINT `task_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`),
+  ADD CONSTRAINT `task_ibfk_4` FOREIGN KEY (`master_task_id`) REFERENCES `master_task` (`master_task_id`);
+
+--
+-- Ketidakleluasaan untuk tabel `task_assign`
+--
+ALTER TABLE `task_assign`
+  ADD CONSTRAINT `task_assign_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `task` (`task_id`),
+  ADD CONSTRAINT `task_assign_ibfk_2` FOREIGN KEY (`teamproject_id`) REFERENCES `team_project` (`TeamProject_ID`);
 
 --
 -- Ketidakleluasaan untuk tabel `team_project`
 --
 ALTER TABLE `team_project`
-  ADD CONSTRAINT `FKTeam_proje756887` FOREIGN KEY (`Job_ID`) REFERENCES `job` (`Job_ID`),
-  ADD CONSTRAINT `FKTeam_proje910071` FOREIGN KEY (`Task_ID`) REFERENCES `task` (`Task_ID`),
   ADD CONSTRAINT `team_project_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`employee_id`),
   ADD CONSTRAINT `team_project_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`);
 
