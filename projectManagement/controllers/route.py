@@ -564,7 +564,15 @@ def projectDoc():
 #page task list
 @app.route("/project/task/all")
 def projectTaskList():
-    return render_template('content/list-task.html')
+    task = tasks()
+    taskAll = task.getTaskAll()
+    return render_template('content/list-task.html', taskAll=taskAll)
+
+
+# page task view detail
+@app.route("/project/task/detail")
+def projectTaskDetail():
+    return render_template('content/detail-taskview.html')
 
 
 # page insert task to system
@@ -654,12 +662,6 @@ def projectTeamDetail(teamproject_id):
 @app.route("/project/task/edit")
 def projectTaskEdit():
     return render_template('content/edit-task.html')
-
-
-#page detail task
-@app.route("/project/task/detail")
-def projectTaskDetail():
-    return render_template('content/detail-task.html')
 
 
 #page time sheet

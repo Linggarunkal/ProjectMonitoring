@@ -130,3 +130,29 @@ class tasks(object):
                 return 1
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def getTaskAll(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getData = conn.select('v_task_detail', None, '*')
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'task_id': list[0],
+                    'project_id': list[1],
+                    'pid': list[2],
+                    'client_id': list[3],
+                    'name_client': list[4],
+                    'task_startdate': list[5],
+                    'task_enddate': list[6],
+                    'master_task_id': list[7],
+                    'task_name': list[8],
+                    'project_status_id': list[9],
+                    'status_project': list[10],
+                    'taskstatus_id': list[11],
+                    'status_task': list[12]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)

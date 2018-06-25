@@ -84,21 +84,20 @@
                                     <th>Start Date</th>
 							    	<th>End Date</th>
 									<th>Status</th>
-								    <th>Document Number</th>
 									<th class="text-right">Actions</th>
 								</tr>
 							</thead>
 							<tbody>
+								{% for task in taskAll %}
 								<tr>
-                                    <td>1</td>
-									<td>Bank DKI Syariah</td>
-									<td>7DKI20180001</td>
-							    	<td>Kick Off</td>
-									<td>2 May 2018</td>
-									<td>4 May 2018</td>
-                                    <td>Casual Leave</td>
-									<td>BV00001000-SRB</td>
-                                    <td class="text-right">
+									<td>{{ loop.index }}</td>
+									<td>{{ task.name_client }}</td>
+									<td>{{ task.pid }}</td>
+									<td>{{ task.status_project }}</td>
+									<td>{{ task.task_startdate }}</td>
+									<td>{{ task.task_enddate }}</td>
+									<td>{{ task.status_task }}</td>
+									<td class="text-right">
 										<div class="dropdown">
 											<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 												<ul class="dropdown-menu pull-right">
@@ -108,29 +107,8 @@
 												</ul>
 										</div>
 									</td>
-                                </tr>
-								<tr>
-                                    <td>2</td>
-									<td>Bank Riau</td>
-									<td>7BRU20180001</td>
-									<td>Kick Off</td>
-									<td>2 Feb 2018</td>
-									<td>4 May 2018</td>
-                                    <td>Done</td>
-									<td>BV00001000-SRR</td>
-
-									<td class="text-right">
-										<div class="dropdown">
-											<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-											<ul class="dropdown-menu pull-right">
-												<li><a href="{{ url_for('projectTaskDetail') }}" title="Detail"><i class="fa fa-clipboard m-r-5"></i> Detail</a></li>
-												<li><a href="{{ url_for('projectTaskEdit') }}" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-												<li><a href="#" title="Decline" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-											</ul>
-										</div>
-									</td>
 								</tr>
-
+								{% endfor %}
                             </tbody>
                         </table>
                     </div>
