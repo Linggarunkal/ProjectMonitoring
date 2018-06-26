@@ -570,10 +570,55 @@ def projectTaskList():
 
 
 # page task view detail
-@app.route("/project/task/detail")
-def projectTaskDetail():
-    return render_template('content/detail-taskview.html')
+@app.route("/project/task/detail/<taskid>")
+def projectTaskDetail(taskid):
+    task = tasks()
+    viewDetail = task.taskDetail(taskid)
+    empTaskAssign = task.getTaskAssign()
+    return render_template('content/detail-taskview.html', viewDetail=viewDetail, empTaskAssign=empTaskAssign)
 
+
+# page update task detail
+@app.route("/project/task/update/note", methods=['POST'])
+def taskNoteUpdate():
+    parse = reqparse.RequestParser()
+    parse.add_argument('task_id', type=str, help='task_id')
+    parse.add_argument('note', type=str, help='note_task')
+    args = parse.parse_args()
+
+    task_id = args['task_id']
+    note = args['note']
+
+    task = tasks()
+    noteUpdate = task.taskNote(task_id, note)
+    if noteUpdate:
+        response = {
+            "code": 200,
+            "Message": "Update Success"
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            "code": 500,
+            "Message": "Update Failed"
+        }
+        return json.dumps(response)
+
+
+# page to search validate employee assign task
+@app.route("/project/task/getassign/<taskid>")
+def projectgetAssignTask(taskid):
+    task = tasks()
+    getEmpAssign = task.getAssignTaskEmp(taskid)
+    return json.dumps(getEmpAssign)
+
+
+# page get team project
+@app.route("/project/task/teamproject/<projectid>")
+def projectTaskTeamproject(projectid):
+    task = tasks()
+    getTeamAssignProject = task.getTeamProject(projectid)
+    return json.dumps(getTeamAssignProject)
 
 # page insert task to system
 @app.route("/project/task/insert", methods=['POST'])

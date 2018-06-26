@@ -156,3 +156,87 @@ class tasks(object):
             return detail
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def taskDetail(self, taskid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'task_id = %s'
+            getData = conn.select('v_task_detail_view', cond, '*', task_id=taskid)
+            detail = []
+            for index, list in enumerate(getData):
+                dateStart = list[11].strftime('%d-%m-%Y')
+                dateEnd = list[12].strftime('%d-%m-%Y')
+                i = {
+                    'task_id': list[0],
+                    'master_task_id': list[1],
+                    'task_name': list[2],
+                    'project_status_id': list[3],
+                    'category_task': list[4],
+                    'task_description': list[5],
+                    'project_id': list[6],
+                    'client_id': list[7],
+                    'client_name': list[8],
+                    'project_name': list[9],
+                    'pid': list[10],
+                    'task_startDate': dateStart,
+                    'task_enddate': dateEnd,
+                    'taskstatus_id': list[13],
+                    'task_status': list[14],
+                    'task_notes': list[15]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getTaskAssign(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getData = conn.select('v_task_assign_employee', None, '*')
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'taskassign_id': list[0],
+                    'task_id': list[1],
+                    'teamproject_id': list[2],
+                    'employee_id': list[3],
+                    'nik': list[4],
+                    'firstname': list[5],
+                    'lastname': list[6],
+                    'emptitle_id': list[7],
+                    'title_name': list[8],
+                    'initial': list[9]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def taskNote(self, taskid, note):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'task_id = %s'
+            updData = conn.update('task', cond, taskid, task_notes=note)
+            if updData:
+                return True
+            else:
+                return False
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getAssignTaskEmp(self, taskid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = "task_id = %s"
+            getData = conn.select("task_assign", cond, '*', task_id=taskid)
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'taskassign_id': list[0],
+                    'task_id': list[1],
+                    'teamproject_id': list[2]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
