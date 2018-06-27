@@ -8,6 +8,7 @@
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/select2.min.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap-datetimepicker.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/style.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/plugins/dropify/dist/css/dropify.min.css') }}">
         <style>
             textarea {
                 resize: none;
@@ -44,7 +45,7 @@
 
 							<div class="panel">
 								<div class="panel-body">
-									<h5 class="panel-title m-b-20">Uploaded files <a class="pull-right btn btn-primary btn-xs" data-toggle="modal" data-target="#upload_document"><i class="fa fa-plus"></i> Upload Document</a></h5>
+									<h5 class="panel-title m-b-20">Uploaded files <button class="pull-right btn btn-primary btn-xs" id="addNewDoc"><i class="fa fa-plus"></i> Upload Document</button></h5>
 									<ul class="files-list">
 										<li>
                                             <h5>Kick Off Document</h5>
@@ -127,6 +128,7 @@
 										<tbody>
                                             <input type="hidden" name="project_id" id="project_id" value="{{ taskDetail.project_id }}">
                                             <input type="hidden" name="task_id" id="task_id" value="{{ taskDetail.task_id }}">
+											<input type="hidden" name="master_task" id="master_task" value="{{ taskDetail.master_task_id }}">
 											<tr>
 												<td>Client:</td>
 												<td class="text-right">{{ taskDetail.client_name }}</td>
@@ -214,8 +216,8 @@
 						</ul>
 					</div>
 				<div class="m-t-50 text-center">
-					<input class="form-control" id="employee_seleted" type="text" name="employee_seleted">
-					<input class="form-control" id="employee_unseleted" type="text" name="employee_unseleted">
+					<input class="form-control" id="employee_seleted" type="hidden" name="employee_seleted">
+					<input class="form-control" id="employee_unseleted" type="hidden" name="employee_unseleted">
 					<button class="btn btn-primary btn-lg" id="addTaskProject">Save</button>
 				</div>
 			</div>
@@ -227,17 +229,16 @@
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<div class="modal-content">
 						<div class="modal-header">
-							<h3 class="modal-title">Note Task Progress</h3>
+							<h3 class="modal-title">Add Task Document</h3>
 						</div>
 						<div class="modal-body">
 							<div>
-								<ul class="media-list media-list-linked chat-user-list">
-									<textarea rows="10" cols="83"></textarea>
+								<ul class="media-list media-list-linked chat-user-list" id="elementAddDoc">
 								</ul>
 
 							</div>
 							<div class="m-t-50 text-center">
-								<button class="btn btn-primary btn-lg" id="addNoteTask">Add Note</button>
+								<button class="btn btn-primary btn-lg" id="addNoteTask">Add Document</button>
 							</div>
 						</div>
 					</div>
@@ -256,6 +257,8 @@
 		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/moment.min.js') }}"></script>
 		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap-datetimepicker.min.js') }}"></script>
 		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/dropzone.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/plugins/dropify/dist/js/dropify.min.js') }}"></script>
 		<script type="text/template" id="task-template">
 			<li class="task">
 				<div class="task-container">
@@ -436,18 +439,6 @@
 			});
 		});
 
-			var checkMember = new Array();
-			var uncheckMember = new Array();
-			var task_id = document.getElementById('task_id').value;
-			$("input:checkbox").change(function(){
-				if ($(this).is(":checked")){
-					var teamproject = document.getElementById($(this).attr("id")).value;
-					console.log(teamproject);
-				}else{
-					var teamproject = document.getElementById($(this).attr("id")).value;
-					console.log(teamproject);
-				}
-			});
             $(document).ready(function(){
                 $('#addTaskProject').click(function(){
                     var checkedValue = [];
@@ -464,9 +455,97 @@
                     }
                     document.getElementById('employee_seleted').value = checkedValue.join();
                     document.getElementById('employee_unseleted').value = uncheckedValue.join();
+
+					var taskid = document.getElementById('task_id').value;
+                    checked_json = JSON.stringify(checkedValue);
+                    unchecked_json = JSON.stringify(uncheckedValue);
+
+                    data = {
+                    	'task_id': taskid,
+                    	'assign': checked_json,
+                    	'unassign': unchecked_json
+                    }
+
+					assign_json = JSON.stringify(data);
+
+                    $.ajax({
+                    	url: 'http://localhost:14045/project/task/assign',
+                    	type: 'POST',
+                    	contentType: 'application/json;charset=UTF-8',
+                    	data: assign_json,
+                    	success: function(resp){
+                    		resp_json = JSON.parse(resp);
+                    		if (resp_json['code'] == 200){
+                    			swal({
+									title: 'Success',
+    								text: resp_json['message'],
+    								type: 'success',
+    								allowOutsideClick: true,
+    								html: true
+									},
+									function () {
+    									$('#assign_user').modal('hide');
+    									location.reload(true);
+								});
+                    		}
+                    	},
+                    	error: function(resp){
+                    		console.log(resp);
+                    	}
+                   		});
+
+
+
                 });
             });
 
+        $(document).ready(function(){
+        	$('#addNewDoc').click(function(){
 
+			var master_task = document.getElementById('master_task').value;
+			console.log(master_task);
+
+			$.ajax({
+				type: 'GET',
+				url: 'http://localhost:14045/project/task/getdocument/'+master_task,
+				success: function(resp){
+					resp_json = JSON.parse(resp);
+
+					for (var i = 0; i < resp_json.length; i++){
+						var doc_type = resp_json[i]['document_type_id'];
+						var doc_name = resp_json[i]['document_name'];
+						var master_task = resp_json[i]['master_task_id'];
+
+						var newDiv = document.createElement("div");
+						newDiv.className = "form-group";
+
+						var newLabel = document.createElement("label");
+						newLabel.className = "label-control";
+						newLabel.appendChild(document.createTextNode(doc_name));
+
+						var fileUpload = document.createElement("input");
+						fileUpload.setAttribute("type", "file");
+						fileUpload.setAttribute("id", doc_type);
+						fileUpload.setAttribute("class", "form-control");
+						fileUpload.setAttribute("name", "doc_type");
+
+						newDiv.appendChild(newLabel);
+						newDiv.appendChild(fileUpload);
+
+
+						var uploadElement = document.getElementById('elementAddDoc');
+						uploadElement.insertBefore(newDiv, uploadElement.childNodes[0]);
+
+					}
+					$('#upload_document').modal('show');
+				},
+				error: function(resp){
+					console.log(resp);
+				}
+
+			});
+
+        	});
+        });
 		</script>
 {% endblock %}

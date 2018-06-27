@@ -1,5 +1,6 @@
 from projectManagement.library.connection import mysqlconnection
 from projectManagement.library.config import HOST, USERNAME, PASSWORD, DATABASE
+import json
 
 
 class tasks(object):
@@ -235,6 +236,56 @@ class tasks(object):
                     'taskassign_id': list[0],
                     'task_id': list[1],
                     'teamproject_id': list[2]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def addAssignTaskEmp(self, taskid, assign, unassign):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            validate = []
+            data = json.loads(assign)
+            data_unassign = json.loads(unassign)
+            start = 0
+            # for assign new task
+            while start < len(data):
+                getRowExist = conn.execquery("select * from task_assign where task_id ='"+taskid+"' and teamproject_id = '" +data[start]+"'")
+                if getRowExist == 0:
+                    # insert assign user
+                    addNewAssign = conn.insert('task_assign', task_id=taskid, teamproject_id=data[start])
+                    if addNewAssign == 0:
+                        validate.append('success')
+                    else:
+                        validate.append('failed')
+                start += 1
+            # for unassign user
+            count = 0
+            while count < len(data_unassign):
+                getAssignExist = conn.execquery("select * from task_assign where task_id ='"+taskid+"' and teamproject_id='"+data_unassign[count]+"'")
+                if getAssignExist == 1:
+                    delAssign = conn.execquery("delete from task_assign where task_id = '"+taskid+"' and teamproject_id='"+data_unassign[count]+"'")
+                    if delAssign == 1:
+                        validate.append('success')
+                    else:
+                        validate.append('failed')
+                count += 1
+            return validate
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getDocTask(self, mastertaskid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = "master_task_id = %s"
+            getData = conn.select("document_type", cond, '*', master_task_id=mastertaskid)
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'document_type_id': list[0],
+                    'document_name': list[1],
+                    'master_task_id': list[2]
                 }
                 detail.append(i)
             return detail

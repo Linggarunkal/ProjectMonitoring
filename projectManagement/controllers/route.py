@@ -620,6 +620,45 @@ def projectTaskTeamproject(projectid):
     getTeamAssignProject = task.getTeamProject(projectid)
     return json.dumps(getTeamAssignProject)
 
+
+# page to assign and unassign task member
+@app.route("/project/task/assign", methods=['POST'])
+def projectTaskAssign():
+    parse = reqparse.RequestParser()
+    parse.add_argument('task_id', type=str, help='task_id')
+    parse.add_argument('assign', type=str, help='assign')
+    parse.add_argument('unassign', type=str, help='unassign')
+
+    args = parse.parse_args()
+    task_id = args['task_id']
+    assign = args['assign']
+    unassign = args['unassign']
+
+    task = tasks()
+    addAssign = task.addAssignTaskEmp(task_id, assign, unassign)
+    print addAssign
+    if 'failed' not in addAssign:
+        response = {
+            'code': 200,
+            'message': 'Data Success Update to System'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': 'Data Failed Update to System'
+        }
+        return json.dumps(response)
+
+
+# page to get document upload
+@app.route("/project/task/getdocument/<mastertaskid>")
+def projectTaskgetDoc(mastertaskid):
+    task = tasks()
+    getDocName = task.getDocTask(mastertaskid)
+    return json.dumps(getDocName)
+
+
 # page insert task to system
 @app.route("/project/task/insert", methods=['POST'])
 def taskInsert():
