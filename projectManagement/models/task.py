@@ -39,7 +39,7 @@ class tasks(object):
     def getProjectStatus(self):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            getStatus = conn.customquery("select status_id, status_name from project_status where status_id not in ('PRST00001','PRST00002','PRST00003','PRST00008','PRST00009')")
+            getStatus = conn.customquery("select status_id, status_name from project_status where status_id not in ('PRST00001','PRST00002','PRST00003','PRST00009','PRST00010')")
             detail = []
             for index, list in enumerate(getStatus):
                 i = {
@@ -54,12 +54,30 @@ class tasks(object):
     def getTaskName(self, project_id, category_id):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            getTask = conn.customquery("select master_task_id, task_name from master_task where master_task_id not in (select master_task_id from task where project_id='"+project_id+"') and project_status_id = '"+category_id+"';")
+            getTask = conn.customquery("select master_task_id, task_name, increment_task from master_task where master_task_id not in (select master_task_id from task where project_id='"+project_id+"') and project_status_id = '"+category_id+"';")
             detail = []
             for index, list in enumerate(getTask):
                 i = {
                     'master_task_id': list[0],
-                    'task_name': list[1]
+                    'task_name': list[1],
+                    'increment_task': list[2]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getTaskIncremental(self, taskname):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'master_task_id = %s'
+            getData = conn.select('master_task', cond, 'master_task_id, task_name, increment_task', master_task_id=taskname)
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'master_task_id': list[0],
+                    'task_name': list[1],
+                    'increment_task': list[2]
                 }
                 detail.append(i)
             return detail
@@ -110,11 +128,11 @@ class tasks(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
-    def taskAdd(self, project_id, task_startDate, task_endDate, task_target, task_id, task_description, member_split):
+    def taskAdd(self, project_id, task_startDate, task_endDate, task_target, task_id, task_description, incremental, member_split):
         taskstatus = 'STAT00001'
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            addTask = conn.customquery("call sp_add_task('"+project_id+"','"+task_startDate+"','"+task_endDate+"','"+task_target+"','"+task_id+"','"+taskstatus+"','"+task_description+"')")
+            addTask = conn.customquery("call sp_add_task('"+project_id+"','"+task_startDate+"','"+task_endDate+"','"+task_target+"','"+task_id+"','"+taskstatus+"','"+task_description+"','"+incremental+"')")
 
             if len(addTask) > 0:
                 start = 0
@@ -136,6 +154,34 @@ class tasks(object):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
             getData = conn.select('v_task_detail', None, '*')
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'task_id': list[0],
+                    'project_id': list[1],
+                    'pid': list[2],
+                    'client_id': list[3],
+                    'name_client': list[4],
+                    'task_startdate': list[5],
+                    'task_enddate': list[6],
+                    'master_task_id': list[7],
+                    'task_name': list[8],
+                    'project_status_id': list[9],
+                    'status_project': list[10],
+                    'taskstatus_id': list[11],
+                    'status_task': list[12]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getTaskOnGoing(self):
+        task_status = 'STAT00002'
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'taskstatus_id = %s'
+            getData = conn.select('v_task_detail', cond, '*', taskstatus_id=task_status)
             detail = []
             for index, list in enumerate(getData):
                 i = {

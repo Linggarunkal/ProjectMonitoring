@@ -1,0 +1,153 @@
+{% extends "base/index.html" %}
+{% block title %}{% endblock %}
+{% block stylecss %}
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/dataTables.bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap-datetimepicker.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/style.css') }}">
+{% endblock %}
+{{ super() }}
+{% block webcontent %}
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <div class="modal-header">
+                <h4 class="modal-title">Add Problem Log</h4>
+            </div>
+            <form>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Project Client</label>
+                            <select class="select" id="client_name" name="client_name">
+                                <option value="0">-- Select Project Client --</option>
+                                {% for client in getClientProject %}
+                                <option value="{{ client.client_id }}">{{ client.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Project ID</label>
+                            <select class="select" id="prl_pid" name="prl_pid">
+                                <option value="0">-- Select Project ID --</option>
+                                <option>7DKI20180001</option>
+                                <option>7BRU20180002</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>PRL Name</label>
+                            <input type="text" class="form-control" name="taskname" id="taskname">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <div class="cal-icon"><input class="form-control datetimepicker" type="text"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+							<div class="form-group">
+								<label>End Date</label>
+								<div class="cal-icon"><input class="form-control datetimepicker" style="" type="text"></div>
+							</div>
+						</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Task Name</label>
+                            <input placeholder="Task name" class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Project Document</label>
+                            <input class="form-control" type="file">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Assign Team</label>
+                            <div class="project-members">
+                                <a href="#" data-toggle="tooltip" title="Jeffery Lalor">
+                                    <img src="{{ url_for('static', filename='assets/img/user.jpg') }}" class="avatar" alt="Jeffery Lalor" height="20" width="20">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea rows="4" cols="5" class="form-control summernote" placeholder="Enter your message here"></textarea>
+                </div>
+                <div class="m-t-20 text-center">
+                    <button class="btn btn-primary">Create Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-3.2.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.dataTables.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/dataTables.bootstrap.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.slimscroll.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/select2.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/moment.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+            $('#client_name').change(function(){
+                var clientid = $(this).val();
+                console.log(clientid);
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://localhost:14045/problem/getpid/'+clientid,
+                    success: function(resp){
+                        resp_json = JSON.parse(resp);
+
+                        (function() {
+    						var elm = document.getElementById('prl_pid'),
+        						df = document.createDocumentFragment();
+        					$('#prl_pid')
+    							.find('option')
+    							.remove()
+    							.end();
+
+    							var option = document.createElement('option');
+        						option.value = "0";
+        						option.appendChild(document.createTextNode("-- Select Task Project--"));
+        						df.appendChild(option);
+    						for (var i = 0; i < resp_json.length; i++) {
+        						var option = document.createElement('option');
+        						option.value = resp_json[i]['task_id'];
+        						option.appendChild(document.createTextNode(resp_json[i]['pid']));
+        						df.appendChild(option);
+    						}
+    						elm.appendChild(df);
+						}());
+                    },
+                    error: function(resp){
+
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -58,6 +58,7 @@
 							<select class="select" name="task_name" id="task_name">
 								<option value="0">-- Select Task Project--</option>
 							</select>
+							<input type="text" class="form-control" id="increment_task" name="increment_task">
 						</div>
 					</div>
 				</div>
@@ -246,6 +247,11 @@
     							.find('option')
     							.remove()
     							.end();
+
+    							var option = document.createElement('option');
+        						option.value = "0";
+        						option.appendChild(document.createTextNode("-- Select Task Project--"));
+        						df.appendChild(option);
     						for (var i = 0; i < data.length; i++) {
         						var option = document.createElement('option');
         						option.value = data[i]['master_task_id'];
@@ -253,13 +259,32 @@
         						df.appendChild(option);
     						}
     						elm.appendChild(df);
-							}());
+						}());
 
 					},
 					error: function(data){
 						console.log(data);
 					}
 				});
+			});
+		});
+
+		$(document).ready(function(){
+			$('#task_name').change(function(){
+				var task_code = $(this).val();
+
+				$.ajax({
+					type: 'GET',
+					url: 'http://localhost:14045/task/project/increment/'+task_code,
+					success: function(resp){
+						resp_json_taskName = JSON.parse(resp);
+						document.getElementById('increment_task').value = resp_json_taskName[0]['increment_task'];
+					},
+					error: function(resp){
+						console.log(resp);
+					}
+				});
+
 			});
 		});
 
@@ -429,6 +454,7 @@
 				var task_id = document.getElementById('task_name').value;
 				var task_description = document.getElementById('task_desec').value;
 				var task_assign = document.getElementById('saveAdd').value;
+				var task_incremental = document.getElementById('increment_task').value;
 
 				data = {
 					'project_id': project_id,
@@ -437,7 +463,8 @@
 					'task_target': task_target,
 					'task_id': task_id,
 					'task_description': task_description,
-					'assign_array': task_assign
+					'assign_array': task_assign,
+					'incremental': task_incremental
 				}
 				json_task_data = JSON.stringify(data);
 

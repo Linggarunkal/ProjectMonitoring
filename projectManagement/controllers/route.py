@@ -7,6 +7,7 @@ from projectManagement.models.employee import department, division, employees
 from projectManagement.models.client import clients
 from projectManagement.models.project import project_list, projectApp
 from projectManagement.models.task import tasks
+from projectManagement.models.problem_log import problem_logs
 from projectManagement.models.uploaded import upload
 from werkzeug.utils import secure_filename
 import os
@@ -561,12 +562,20 @@ def projectDoc():
     return render_template('content/doc-project.html')
 
 
-#page task list
+# page task list
 @app.route("/project/task/all")
 def projectTaskList():
     task = tasks()
     taskAll = task.getTaskAll()
     return render_template('content/list-task.html', taskAll=taskAll)
+
+
+# page task list on going
+@app.route("/project/task/ongoing")
+def projectTaskListOnGoing():
+    task = tasks()
+    taskOnGoing = task.getTaskOnGoing()
+    return render_template('content/list-task-ongoing.html', taskAll=taskOnGoing)
 
 
 # page task view detail
@@ -698,6 +707,7 @@ def taskInsert():
     parse.add_argument('task_id', type=str, help='task_id')
     parse.add_argument('task_description', type=str, help='task_description')
     parse.add_argument('assign_array', type=str, help='assign_array')
+    parse.add_argument('incremental', type=str, help='incremental')
     args = parse.parse_args()
 
     project_id = args['project_id']
@@ -707,6 +717,7 @@ def taskInsert():
     task_id = args['task_id']
     task_description = args['task_description']
     assign_array = args['assign_array']
+    incremental = args['incremental']
     member_split = assign_array.split(',')
 
     start_date = datetime.strptime(task_startDate, '%d/%m/%Y').strftime('%Y-%m-%d')
@@ -715,7 +726,7 @@ def taskInsert():
 
 
     task = tasks()
-    addTask = task.taskAdd(project_id, start_date, end_date, target_date, task_id, task_description, member_split)
+    addTask = task.taskAdd(project_id, start_date, end_date, target_date, task_id, task_description, incremental, member_split)
     if addTask == 0:
         response = {
             'code': 200,
@@ -754,6 +765,14 @@ def taskProjectAdd(projectid, categoryid):
     return json.dumps(getTask)
 
 
+# page to get incremental task project
+@app.route("/task/project/increment/<taskname>")
+def taskProjectIncrement(taskname):
+    task = tasks()
+    getTaskCode = task.getTaskIncremental(taskname)
+    return json.dumps(getTaskCode)
+
+
 #page get team project assign
 @app.route("/project/team/<projectid>")
 def projectTeam(projectid):
@@ -782,10 +801,26 @@ def projectTimesheet():
     return render_template('content/time-sheet.html')
 
 
-#page problem all
+# page problem all
 @app.route("/problem/all")
 def problemAll():
     return render_template('content/problem-log.html')
+
+
+# page problem add
+@app.route("/problem/add")
+def problemAdd():
+    problemLog = problem_logs()
+    getClientProject = problemLog.getClientName()
+    return render_template('content/add-problem-log.html', getClientProject=getClientProject)
+
+
+# page get pid problem log
+@app.route("/problem/getpid/<clientid>")
+def problemGetpid(clientid):
+    problemLog = problem_logs()
+    getPidProject = problemLog.problemPid(clientid)
+    return json.dumps(getPidProject)
 
 
 #page problem detail
