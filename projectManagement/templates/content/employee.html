@@ -102,13 +102,13 @@
 												<div class="col-md-6">
 													<div class="form-group form-focus">
 														<label class="control-label">First Name</label>
-														<input type="text" class="form-control floating" name="fname" id="fname"/>
+														<input type="text" required="" class="form-control floating" name="fname" id="fname"/>
 													</div>
 												</div>
 												<div class="col-md-6">
 													<div class="form-group form-focus">
 														<label class="control-label">Last Name</label>
-														<input type="text" class="form-control floating" name="lname" id="lname"/>
+														<input type="text" required="" class="form-control floating" name="lname" id="lname"/>
 													</div>
 												</div>
 												<div class="col-md-6">
@@ -184,7 +184,7 @@
 										</div>
 										<div class="col-md-6">
 											<div class="form-group form-focus">
-												<input type="text" class="form-control floating" name="nik" id="nik" placeholder="NIK"/>
+												<input type="text" disabled class="form-control floating" name="nik" id="nik" placeholder="NIK"/>
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -323,6 +323,48 @@
        	var title = document.getElementById('job_title').value;
        	var email = document.getElementById('email').value;
        	var join_date = document.getElementById('join_date').value;
+
+		// validation
+		if(fname == ""){
+			swal("Sorry!", " First Name must be filled out.. "+city, "warning")
+			return false;
+		} else if(lname == ""){
+			swal("Sorry!", " Last Name must be filled out.. ", "warning")
+        	return false;
+		}  else if(birth == ""){
+			swal("Sorry!", " Birth Date must be filled out.. ", "warning")
+        	return false;
+		} else if(gender == ""){
+			swal("Sorry!", " Gender must be filled out.. ", "warning")
+        	return false;
+		} else if(address == ""){
+			swal("Sorry!", " Address must be filled out.. ", "warning")
+        	return false;
+		} else if(city == ""){
+			swal("Sorry!", " City must be filled out.. ", "warning")
+        	return false;
+		} else if(phone == ""){
+			swal("Sorry!", " Phone Number must be filled out.. ", "warning")
+        	return false;
+		} else if(nik == ""){
+			swal("Sorry!", " NIK must be filled out.. ", "warning")
+        	return false;
+		} else if(password == ""){
+			swal("Sorry!", " Password must be filled out.. ", "warning")
+        	return false;
+		} else if(division == ""){
+			swal("Sorry!", " Division must be filled out.. ", "warning")
+        	return false;
+		} else if(title == ""){
+			swal("Sorry!", " Title must be filled out.. ", "warning")
+        	return false;
+		} else if(email == ""){
+			swal("Sorry!", " Email must be filled out.. ", "warning")
+        	return false;
+		} else if(join_date == ""){
+			swal("Sorry!", " Join Date must be filled out.. ", "warning")
+        	return false;
+		}
 
        	data_emp = {
 			'fname': fname,
