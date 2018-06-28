@@ -107,10 +107,11 @@
                                     <div class="project-title">
                                         <h5 class="panel-title">Approval Task</h5>
                                     </div>
-                                    <select class="form-control">
+                                    <select class="form-control" id="updTask">
                                         <option value="0">-- Approve Task Complete --</option>
-                                        <option>On Going</option>
-                                        <option>Done</option>
+										{% for task in taskStatus %}
+										<option value="{{ task.taskstatus_id }}">{{ task.Status_Name }}</option>
+										{% endfor %}
                                     </select>
                                     <br>
                                     <div class="col-md-12 text-center">
@@ -545,6 +546,55 @@
 
 			});
 
+        	});
+        });
+
+        $(document).ready(function(){
+        	$('#close_task').click(function(){
+        		var task_id = document.getElementById('task_id').value;
+        		var taskUpd = document.getElementById('updTask').value;
+        		data_task = {
+        			'task_id': task_id,
+        			'task_status': taskUpd
+        		}
+
+        		data_task_json = JSON.stringify(data_task);
+        		$.ajax({
+        			type: 'POST',
+        			url: '{{ url_for('projectTaskUpdStatus') }}',
+        			contentType: 'application/json;charset=UTF-8',
+        			data: data_task_json,
+        			success: function(resp){
+        				resp_task_json = JSON.parse(resp);
+
+        				if (resp_task_json['code'] == 200){
+        					swal({
+								title: 'Success',
+    							text: resp_task_json['message'],
+    							type: 'success',
+    							allowOutsideClick: true,
+    							html: true
+								},
+								function () {
+    								location.reload(true);
+							});
+        				}else{
+        					swal({
+								title: 'Warning',
+    							text: resp_task_json['message'],
+    							icon: 'warning',
+    							allowOutsideClick: true,
+    							html: true
+								},
+								function () {
+    								location.reload(true);
+							});
+        				}
+        			},
+        			error: function(resp){
+        				alert(resp);
+        			}
+        		});
         	});
         });
 		</script>

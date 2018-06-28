@@ -575,7 +575,8 @@ def projectTaskDetail(taskid):
     task = tasks()
     viewDetail = task.taskDetail(taskid)
     empTaskAssign = task.getTaskAssign()
-    return render_template('content/detail-taskview.html', viewDetail=viewDetail, empTaskAssign=empTaskAssign)
+    taskStatus = task.getTaskStatus()
+    return render_template('content/detail-taskview.html', viewDetail=viewDetail, empTaskAssign=empTaskAssign, taskStatus=taskStatus)
 
 
 # page update task detail
@@ -657,6 +658,33 @@ def projectTaskgetDoc(mastertaskid):
     task = tasks()
     getDocName = task.getDocTask(mastertaskid)
     return json.dumps(getDocName)
+
+
+# page to update task
+@app.route("/project/task/update/status", methods=['POST'])
+def projectTaskUpdStatus():
+    parse = reqparse.RequestParser()
+    parse.add_argument('task_id', type=str, help='task_id')
+    parse.add_argument('task_status', type=str, help='task_status')
+    args = parse.parse_args()
+
+    task_id = args['task_id']
+    task_status = args['task_status']
+
+    task = tasks()
+    updTask = task.updateTaskStatus(task_id, task_status)
+    if updTask:
+        response = {
+            'code': 200,
+            'Message': "Success Update to System"
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'Message': "Failed Update to System"
+        }
+        return json.dumps(response)
 
 
 # page insert task to system

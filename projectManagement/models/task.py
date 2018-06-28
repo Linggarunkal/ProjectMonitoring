@@ -291,3 +291,31 @@ class tasks(object):
             return detail
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def getTaskStatus(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getData = conn.select('status', None, '*')
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'taskstatus_id': list[0],
+                    'Status_Name': list[1],
+                    'Status_Desc': list[2]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def updateTaskStatus(self, taskid, taskStatus):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'task_id = %s'
+            updData = conn.update('task', cond, taskid, taskstatus_id=taskStatus)
+            if updData:
+                return True
+            else:
+                return False
+        except Exception as e:
+            return "Error Database: %s" % str(e)
