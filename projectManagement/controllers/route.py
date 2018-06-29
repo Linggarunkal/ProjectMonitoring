@@ -289,7 +289,7 @@ def divAll():
     return render_template('content/division.html', divList=divList, deptName=deptName)
 
 
-#page edit detail division
+# page edit detail division
 @app.route('/division/detail/edit/<divno>')
 def divEditDet(divno):
     div = division()
@@ -343,8 +343,7 @@ def divAdd():
 #     return redirect(url_for('deptAll'))
 
 
-
-#page delete division
+# page delete division
 @app.route('/division/delete', methods=['POST'])
 def divDelete():
     divno = request.form['divNo']
@@ -353,16 +352,36 @@ def divDelete():
     div.deleted(divno)
     return redirect(url_for('divAll'))
 
-#page update division
+
+# page update division
 @app.route('/division/update', methods=['POST'])
 def divUpdate():
-    divNo = request.form['divNo']
-    dept = request.form['dept']
-    divName = request.form['divName']
-    divDesc = request.form['divDesc']
-    div = division()
-    div.updated(divNo, dept, divName, divDesc)
-    return redirect(url_for('divAll'))
+    parse = reqparse.RequestParser()
+    parse.add_argument('divNo', type=str, help='divNo')
+    parse.add_argument('deptNo', type=str, help='deptNo')
+    parse.add_argument('divName', type=str, help='divName')
+    parse.add_argument('divDesc', type=str, help='divDesc')
+
+    args = parse.parse_args()
+    divNo = args['divNo']
+    deptNo = args['deptNo']
+    divName = args['divName']
+    divDesc = args['divDesc']
+
+    divisi = division()
+    updDiv = divisi.updated(divNo, deptNo, divName, divDesc)
+    if updDiv:
+        response = {
+            'code': 200,
+            'message': 'Data Success Add to System'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': 'Data Failed add to System'
+        }
+        return json.dumps(response)
 
 #page main client
 @app.route("/user/main/client", methods=['POST', 'GET'])

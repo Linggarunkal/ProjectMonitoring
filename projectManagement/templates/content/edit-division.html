@@ -18,7 +18,7 @@
         </div>
         <div class="modal-body">
 		    <div class="m-b-30">
-                <form action="{{ url_for('divUpdate') }}" method="POST">
+                <form role="form" id="updateDiv" >
 					<div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -35,7 +35,7 @@
 						<div class="col-md-6">
 						<div class="form-group">
                             <label>Division Name <span class="text-danger">*</span></label>
-							<input class="form-control" required="" type="text" id="divName" name="divName">
+							<input class="form-control" type="text" id="divName" name="divName">
 						</div>
 					    </div>
 					</div>
@@ -43,12 +43,12 @@
 						<div class="col-md-12">
 							<div class="form-group">
 								<label>Description<span class="text-danger">*</span></label>
-								<input class="form-control" required="" type="text" name="divDesc" id="divDesc">
+								<input class="form-control" type="text" name="divDesc" id="divDesc">
 							</div>
 						</div>
 					</div>
 					<div class="m-t-20 text-center">
-				    	<button class="btn btn-primary" type="submit">Save Changes</button>
+				    	<button class="btn btn-primary" type="button" id="updDiv" name="updDiv">Save Changes</button>
 					</div>
                 </form>
             </div>
@@ -66,6 +66,8 @@
 		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap-datetimepicker.min.js') }}"></script>
 		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
 		<script type="text/javascript" src="{{ url_for('static', filename='assets/plugins/summernote/dist/summernote.min.js') }}"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet"/>
         <script>
 		$(document).ready(function(){
 			$('.summernote').summernote({
@@ -76,10 +78,70 @@
 			});
 		});
 
-		var divDetail = JSON.parse({{ divDetail|tojson|safe }})
+		var divDetail = JSON.parse({{ divDetail|tojson|safe }});
+		console.log(divDetail);
 		document.getElementById('divNo').value = divDetail[0]['division_id'];
 		document.getElementById('dept').value = divDetail[0]['department_id'];
 		document.getElementById('divName').value = divDetail[0]['division_name'];
 		document.getElementById('divDesc').value = divDetail[0]['description'];
+
+		$(document).ready(function(){
+			$('#updDiv').click(function(){
+				var divNo = document.getElementById('divNo').value;
+				var deptNo = document.getElementById('dept').value;
+				var divName = document.getElementById('divName').value;
+       			var divDesc = document.getElementById('divDesc').value;
+
+       			// start of validation
+				if(deptNo == 0){
+					swal("Sorry!", " Departement must be selected.. ", "warning")
+	            	var cursor = document.getElementById('department_name');cursor.focus();
+					return false;
+				} else if(divName == ""){
+					swal("Sorry!", " Division Name must be filled out.. ", "warning")
+					var cursor = document.getElementById('description');cursor.focus();
+	        		return false;
+				}else if(divDesc == ""){
+					swal("Sorry!", " Description must be filled out.. ", "warning")
+					var cursor = document.getElementById('description');cursor.focus();
+        			return false;
+				}
+
+				data_div = {
+					'divNo': divNo,
+					'deptNo': deptNo,
+					'divName': divName,
+					'divDesc': divDesc
+				}
+				json_dataDiv = JSON.stringify(data_div);
+
+				$.ajax({
+            	type: 'POST',
+           		url: '{{ url_for('divUpdate') }}',
+            	contentType: 'application/json;charset=UTF-8',
+            	data: json_dataDiv,
+            	success: function(data){
+                	var response = JSON.parse(data);
+                	console.log(response);
+                	console.log(response['code']);
+                	if (response['code'] == 200){
+                        swal({
+    							title: 'Success',
+    							text: 'Update Division Detail Success',
+    							type: 'success',
+    							allowOutsideClick: true,
+    							html: true
+								},
+								function () {
+    							window.location.href = "{{ url_for('divAll') }}"
+							});
+                	}
+            	},
+            	error: function(data){
+                	console.log(data);
+            	}
+        	});
+    });
+});
         </script>
 {% endblock %}

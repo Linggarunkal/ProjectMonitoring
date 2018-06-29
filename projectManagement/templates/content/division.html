@@ -151,7 +151,7 @@
        		var divDesc = document.getElementById('divDesc').value;
        		var deptNo = document.getElementById('deptNo').value;
        		// start of validation
-			if(deptNo == ""){
+			if(deptNo == 0){
 				swal("Sorry!", " Departement must be selected.. ", "warning")
             	var cursor = document.getElementById('department_name');cursor.focus();
 				return false;
@@ -159,7 +159,7 @@
 				swal("Sorry!", " Division Name must be filled out.. ", "warning")
 				var cursor = document.getElementById('description');cursor.focus();
         		return false;
-			}else if(divDesc == 0){
+			}else if(divDesc == ""){
 				swal("Sorry!", " Description must be filled out.. ", "warning")
 				var cursor = document.getElementById('description');cursor.focus();
         		return false;
