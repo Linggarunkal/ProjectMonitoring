@@ -219,11 +219,28 @@ def deptAll():
 #action add department employee
 @app.route('/department/add', methods=['POST'])
 def deptAdd():
-    deptName = request.form['department_name']
-    deptDesc = request.form['description']
-    addDept = department()
-    addDept.add(deptName, deptDesc)
-    return redirect(url_for('deptAll'))
+    parse = reqparse.RequestParser()
+    parse.add_argument('department_name', type=str, help='department_name')
+    parse.add_argument('description', type=str, help='description')
+
+    args = parse.parse_args()
+    department_name = args['department_name']
+    description = args['description']
+
+    departemen = department()
+    addDept = departemen.add(department_name, description)
+    if addDept:
+        response = {
+            'code': 200,
+            'message': 'Data Success Add to System'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': 'Data Failed add to System'
+        }
+        return json.dumps(response)
 
 
 #page show detail department
@@ -292,13 +309,30 @@ def divDelDet(divno):
 #page add division
 @app.route('/division/add', methods=['POST'])
 def divAdd():
-    deptNo = request.form['deptNo']
-    divName = request.form['divName']
-    divDesc = request.form['divDesc']
-    div = division()
-    #if add alert in this command
-    div.add(deptNo, divName, divDesc)
-    return redirect(url_for('divAll'))
+    parse = reqparse.RequestParser()
+    parse.add_argument('deptNo', type=str, help='deptNo')
+    parse.add_argument('divName', type=str, help='divName')
+    parse.add_argument('divDesc', type=str, help='divDesc')
+
+    args = parse.parse_args()
+    deptNo = args['deptNo']
+    divName = args['divName']
+    divDesc = args['divDesc']
+
+    divisi = division()
+    addDiv = divisi.add(deptNo, divName, divDesc)
+    if addDiv:
+        response = {
+            'code': 200,
+            'message': 'Data Success Add to System'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': 'Data Failed add to System'
+        }
+        return json.dumps(response)
 
 
 # @app.route('/department/delete', methods=['POST'])
@@ -777,17 +811,13 @@ def projectTaskUpdStatus():
     parse = reqparse.RequestParser()
     parse.add_argument('task_id', type=str, help='task_id')
     parse.add_argument('task_status', type=str, help='task_status')
-    parse.add_argument('taskIncrement', type=str, help='taskIncrement')
-    parse.add_argument('project_id', type=str, help='project_id')
     args = parse.parse_args()
 
     task_id = args['task_id']
     task_status = args['task_status']
-    taskIncrement = args['taskIncrement']
-    project_id = args['project_id']
 
     task = tasks()
-    updTask = task.updateTaskStatus(task_id, task_status, taskIncrement, project_id)
+    updTask = task.updateTaskStatus(task_id, task_status)
     if updTask:
         response = {
             'code': 200,
