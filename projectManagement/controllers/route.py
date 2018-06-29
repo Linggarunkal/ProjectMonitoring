@@ -20,40 +20,43 @@ from passlib.hash import sha256_crypt
 def generate_passwd(passwd):
     return sha256_crypt.encrypt(passwd)
 
+
 @app.route('/')
 def start():
     return render_template('auth/login.html')
 
 
-#login route logic
+# login route logic
 @app.route("/login")
 def login():
     return render_template('auth/login.html')
 
-#login route logic
+
+# login route logic
 @app.route("/registration")
 def registration():
     return render_template('auth/register.html')
 
 
-#login route logic
+# login route logic
 @app.route("/dashboard")
 def dashboard():
     return render_template('content/home.html')
 
 
-#forgot password route logic
+# forgot password route logic
 @app.route('/user/forgot')
 def forgotPasswd():
     return render_template('auth/forgot-password.html')
 
 
-#forgot password route logic
+# forgot password route logic
 @app.route('/user/changepassword')
 def chgPasswd():
     return render_template('content/change-password.html')
 
 # concatString = "{0:0>4}".format(auto_increment)
+
 
 # page to check emp count
 @app.route('/employees/count')
@@ -120,7 +123,7 @@ def empAdd():
         return json.dumps(response)
 
 
-#page all employee
+# page all employee
 @app.route('/employees/all')
 def emplAll():
     div = division()
@@ -216,7 +219,7 @@ def deptAll():
     return render_template('content/department.html', allDeapt=getDeptAll)
 
 
-#action add department employee
+# action add department employee
 @app.route('/department/add', methods=['POST'])
 def deptAdd():
     parse = reqparse.RequestParser()
@@ -243,7 +246,7 @@ def deptAdd():
         return json.dumps(response)
 
 
-#page show detail department
+# page show detail department
 @app.route('/department/detail/edit/<deptno>')
 def deptEditDet(deptno):
     detailDept = department()
@@ -251,7 +254,7 @@ def deptEditDet(deptno):
     return render_template('content/edit-department.html', detailDept=json.dumps(getdetDept))
 
 
-#page show detail department
+# page show detail department
 @app.route('/department/detail/delete/<deptno>')
 def deptDeleteDet(deptno):
     detailDept = department()
@@ -259,7 +262,7 @@ def deptDeleteDet(deptno):
     return render_template('content/delete-department.html', detailDept=json.dumps(getdetDept))
 
 
-#page update edit detail department
+# page update edit detail department
 @app.route('/department/edit', methods=['POST'])
 def deptUpdDet():
     deptId = request.form['deptId']
@@ -271,7 +274,7 @@ def deptUpdDet():
     return redirect(url_for('deptAll'))
 
 
-#page update detail department
+# page update detail department
 @app.route('/department/delete', methods=['POST'])
 def deptDelDet():
     deptId = request.form['deptId']
@@ -280,7 +283,7 @@ def deptDelDet():
     return redirect(url_for('deptAll'))
 
 
-#page division
+# page division
 @app.route('/division/all')
 def divAll():
     div = division()
@@ -298,7 +301,7 @@ def divEditDet(divno):
     return render_template('content/edit-division.html', divDetail=json.dumps(divDetail), deptName=getDept)
 
 
-#page delete detil division
+# page delete detil division
 @app.route('/division/detail/delete/<divno>')
 def divDelDet(divno):
     div = division()
@@ -306,7 +309,8 @@ def divDelDet(divno):
     getDept = div.getDeptName()
     return render_template('content/delete-division.html', divDetail=json.dumps(divDetail), deptName=getDept)
 
-#page add division
+
+# page add division
 @app.route('/division/add', methods=['POST'])
 def divAdd():
     parse = reqparse.RequestParser()
@@ -383,7 +387,7 @@ def divUpdate():
         }
         return json.dumps(response)
 
-#page main client
+# page main client
 @app.route("/user/main/client", methods=['POST', 'GET'])
 def userMainHome():
     client = clients()
@@ -393,7 +397,7 @@ def userMainHome():
     return render_template('content/main-client.html', pic_name=clientAll, province=province)
 
 
-#page post new client
+# page post new client
 @app.route('/user/main/project/add', methods=['POST'])
 def clientAddProject():
     parse = reqparse.RequestParser()
@@ -432,19 +436,19 @@ def clientAddProject():
         return json.dumps(response)
 
 
-#page edit client
+# page edit client
 @app.route("/user/edit/client")
 def userEditClient():
     return render_template('content/edit-client.html')
 
 
-#page main client
+# page main client
 @app.route("/user/main/clientlist")
 def userMainHomeList():
     return render_template('content/main-clientlist.html')
 
 
-#page detail client
+# page detail client
 @app.route("/user/detail/edit/<clientid>")
 def userClientDetail(clientid):
     client_customer = clients()
@@ -452,13 +456,13 @@ def userClientDetail(clientid):
     return render_template('content/detail-client.html', getDetClient=getDetClient)
 
 
-#page edit client
+# page edit client
 @app.route("/user/client/edit")
 def userClientEdit():
     return render_template('content/edit-profile.html')
 
 
-#page main project
+# page main project
 @app.route("/project/main")
 def mainProject():
     project = project_list()
@@ -469,7 +473,7 @@ def mainProject():
     return render_template('content/main-project.html', client=client, pm=pm, listProject=listProject, member=member)
 
 
-#page get client code
+# page get client code
 @app.route("/project/getclient/<clientcode>")
 def getClient(clientcode):
     project = project_list()
@@ -537,7 +541,7 @@ def upFile():
         return 'Format File Not Supported'
 
 
-#page edit project
+# page edit project
 @app.route("/project/edit/detail/<projectid>")
 def editProject(projectid):
     proj = projectApp()
@@ -549,7 +553,7 @@ def editProject(projectid):
 
 
 
-#page view detail project
+# page view detail project
 @app.route("/project/view/detail/<projectid>")
 def viewDetailProject(projectid):
     project = project_list()
@@ -559,6 +563,7 @@ def viewDetailProject(projectid):
     project_team = project.getTeamProject(projectid)
     all_team = project.getAllTeamProject()
     return render_template('content/detail-projectview.html', titleNdesc=titleNdesc, detailProject=detailProject, project_manager=project_manager, project_team=project_team, all_team=all_team, project_id=projectid)
+
 
 @app.route("/project/edit/detail", methods=['POST'])
 def projectEditProject():
@@ -620,7 +625,7 @@ def projectMembers():
     return teamProject
 
 
-#page delete team_project
+# page delete team_project
 @app.route("/project/remove/teamproject", methods=['POST'])
 def removeTeamProject():
     parse = reqparse.RequestParser()
@@ -639,7 +644,7 @@ def removeTeamProject():
         return "Failed"
 
 
-#page add team_project
+# page add team_project
 @app.route("/project/add/teamproject", methods=['POST'])
 def addTeamProject():
     parse = reqparse.RequestParser()
@@ -658,7 +663,7 @@ def addTeamProject():
         return "Failed"
 
 
-#page approve project
+# page approve project
 @app.route("/project/approve")
 def projectApprove():
     project = projectApp()
@@ -711,7 +716,8 @@ def projectApproveData():
         }
         return json.dumps(response)
 
-#page document project
+
+# page document project
 @app.route("/project/document")
 def projectDoc():
     return render_template('content/doc-project.html')
@@ -895,7 +901,8 @@ def taskInsert():
         }
         return json.dumps(response)
 
-#page add task
+
+# page add task
 @app.route("/project/task/add")
 def projectTaskAdd():
     task = tasks()
@@ -904,7 +911,7 @@ def projectTaskAdd():
     return render_template('content/add-task.html', allClient=allClient, status=status)
 
 
-#page detail get pid
+# page detail get pid
 @app.route("/projectid/detail/<pid>")
 def projectPid(pid):
     task = tasks()
@@ -912,7 +919,7 @@ def projectPid(pid):
     return json.dumps(allPid)
 
 
-#Page get detail task name
+# Page get detail task name
 @app.route("/task/project/<projectid>/<categoryid>")
 def taskProjectAdd(projectid, categoryid):
     task = tasks()
@@ -928,7 +935,7 @@ def taskProjectIncrement(taskname):
     return json.dumps(getTaskCode)
 
 
-#page get team project assign
+# page get team project assign
 @app.route("/project/team/<projectid>")
 def projectTeam(projectid):
     task = tasks()
@@ -936,7 +943,7 @@ def projectTeam(projectid):
     return json.dumps(getTeamProject)
 
 
-#page detail team project
+# page detail team project
 @app.route("/project/detailteam/<teamproject_id>")
 def projectTeamDetail(teamproject_id):
     task = tasks()
@@ -944,13 +951,13 @@ def projectTeamDetail(teamproject_id):
     return json.dumps(getTeamDetail)
 
 
-#page edit task
+# page edit task
 @app.route("/project/task/edit")
 def projectTaskEdit():
     return render_template('content/edit-task.html')
 
 
-#page time sheet
+# page time sheet
 @app.route("/project/timesheet")
 def projectTimesheet():
     return render_template('content/time-sheet.html')
@@ -978,43 +985,43 @@ def problemGetpid(clientid):
     return json.dumps(getPidProject)
 
 
-#page problem detail
+# page problem detail
 @app.route("/problem/detail")
 def problemDetail():
     return render_template('content/detail-problem.html')
 
 
-#page problem edit
+# page problem edit
 @app.route("/problem/edit")
 def problemEdit():
     return render_template('content/edit-problem.html')
 
 
-#page report proyek
+# page report proyek
 @app.route("/project/report/all")
 def reportProject():
     return render_template('content/report-proyek.html')
 
 
-#page report task
+# page report task
 @app.route("/project/report/task")
 def reportTask():
     return render_template('content/report-task.html')
 
 
-#page report problem
+# page report problem
 @app.route("/project/report/problem")
 def reportProblem():
     return render_template('content/report-problem.html')
 
 
-#page report audit trail
+# page report audit trail
 @app.route("/project/report/client")
 def reportClient():
     return render_template('content/report-client.html')
 
 
-#page report employee
+# page report employee
 @app.route("/project/report/employee")
 def reportEmp():
     return render_template('content/report-employee.html')
