@@ -1,5 +1,6 @@
 from projectManagement.library.connection import mysqlconnection
 from projectManagement.library.config import HOST, USERNAME, PASSWORD, DATABASE
+from datetime import datetime
 
 
 class department(object):
@@ -229,6 +230,21 @@ class employees(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
+    def city_all(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getCity = conn.select('city', None, 'city_code, city_name')
+            detCity = []
+            for index, list in enumerate(getCity):
+                i = {
+                    'city_code': list[0],
+                    'city_name': list[1]
+                }
+                detCity.append(i)
+            return detCity
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
     def city(self, prov_id):
         self.prov_id = prov_id
         try:
@@ -291,6 +307,51 @@ class employees(object):
             getAll = conn.select('employees', None, 'employee_id')
             if len(getAll) > 0:
                 return len(getAll)
+            else:
+                return False
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getEmployeeDetail(self, empid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = "employee_id = %s"
+            getData = conn.select('v_employee_detail_edit', cond, '*', employee_id=empid)
+            detailData = []
+            for index, list in enumerate(getData):
+
+                date_birthday = datetime.strptime(str(list[6]), '%Y-%m-%d').strftime('%d/%m/%Y')
+                date_join = datetime.strptime(str(list[14]), '%Y-%m-%d').strftime('%d/%m/%Y')
+
+                i = {
+                    'employee_id': list[0],
+                    'nik': list[1],
+                    'email': list[2],
+                    'password': list[3],
+                    'firstname': list[4],
+                    'lastname': list[5],
+                    'birthday': date_birthday,
+                    'gender': list[7],
+                    'address': list[8],
+                    'city_code': list[9],
+                    'province_id': list[10],
+                    'phone': list[11],
+                    'division_id': list[12],
+                    'emptitle_id': list[13],
+                    'join_date': date_join
+                }
+                detailData.append(i)
+            return detailData
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def editEmp(self, emp_id, fname, lname, birth, gender, address, city, phone, division, job_title, join_date):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = "employee_id = %s"
+            updData = conn.update('employees', cond, emp_id, firstname=fname, lastname=lname, birthday=birth, gender=gender, address=address, city_code=city, phone=phone, division_id=division, empTitle_id=job_title, join_date=join_date)
+            if updData:
+                return True
             else:
                 return False
         except Exception as e:

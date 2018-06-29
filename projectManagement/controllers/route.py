@@ -132,14 +132,14 @@ def emplAll():
     return render_template('content/employee.html', deptName=deptName, titleName=titleName, province=province, getAllEmp=getAllEmp)
 
 
-#page city detail
+# page city detail
 @app.route('/city/detail/<provid>')
 def cityDet(provid):
     emp = employees()
     getCity = emp.city(provid)
     return json.dumps(getCity)
 
-#page detail employee
+# page detail employee
 @app.route('/employees/detail/<empno>')
 def empEdtDet(empno):
     emp = employees()
@@ -147,12 +147,68 @@ def empEdtDet(empno):
     return render_template('content/profile.html', getDetEmp=getDetEmp)
 
 
-#page edit employee
-@app.route('/employees/edit')
-def empEdt():
-    return render_template('content/edit-employee.html')
+# page edit employee
+@app.route('/employees/edit/<empid>')
+def empEdt(empid):
+    div = division()
+    deptName = div.all()
+    emp = employees()
+    titleName = emp.getJobsTitle()
+    province = emp.province()
+    city = emp.city_all()
+    getDetailEmp = emp.getEmployeeDetail(empid)
+    return render_template('content/edit-employee.html', deptName=deptName, titleName=titleName, province=province, city=city, getDetailEmp=json.dumps(getDetailEmp))
 
-#page department employee
+
+# page add update employee
+@app.route("/employees/update/detail", methods=['POST'])
+def empUpdDetail():
+    parse = reqparse.RequestParser()
+    parse.add_argument('emp_id', type=str, help='emp_id')
+    parse.add_argument('fname', type=str, help='fname')
+    parse.add_argument('lname', type=str, help='lname')
+    parse.add_argument('birth', type=str, help='birth')
+    parse.add_argument('gender', type=str, help='gender')
+    parse.add_argument('address', type=str, help='address')
+    parse.add_argument('city', type=str, help='city')
+    parse.add_argument('phone', type=str, help='phone')
+    parse.add_argument('division', type=str, help='division')
+    parse.add_argument('job_title', type=str, help='job_title')
+    parse.add_argument('join_date', type=str, help='join_date')
+
+    args = parse.parse_args()
+    emp_id = args['emp_id']
+    fname = args['fname']
+    lname = args['lname']
+    birth = args['birth']
+    gender = args['gender']
+    address = args['address']
+    city = args['city']
+    phone = args['phone']
+    division = args['division']
+    job_title = args['job_title']
+    join_date = args['join_date']
+
+    date_join = datetime.strptime(join_date, '%d/%m/%Y').strftime('%Y-%m-%d')
+    date_birth = datetime.strptime(birth, '%d/%m/%Y').strftime('%Y-%m-%d')
+
+    emp = employees()
+    updEmployees = emp.editEmp(emp_id, fname, lname, date_birth, gender, address, city, phone, division, job_title, date_join)
+    if updEmployees:
+        response = {
+            'code': 200,
+            'message': "Success Update Data to System"
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': "Failed Update Data to System"
+        }
+        return json.dumps(response)
+
+
+# page department employee
 @app.route('/department/all')
 def deptAll():
     allDept = department()
