@@ -82,7 +82,7 @@
 							<h4 class="modal-title">Add Designation</h4>
 						</div>
 						<div class="modal-body">
-							<form action="{{ url_for('divAdd') }}" method="POST">
+							<form role="form" id="addDivNew">
 								<!--<div class="form-group">-->
 									<!--<label>Department Name <span class="text-danger">*</span></label>-->
 									<!--<select class="select">-->
@@ -99,7 +99,7 @@
 										<div class="form-group">
 											<label>Department Name <span class="text-danger">*</span></label>
 											<select class="select" id="deptNo" name="deptNo">
-												<option>-- Select Department --</option>>
+												<option value="0">-- Select Department --</option>>
 												{% for dept in deptName %}
 												<option value="{{ dept.department_id }}">  {{ dept.department_name }}</option>
 												{% endfor %}
@@ -109,7 +109,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>Division Name <span class="text-danger">*</span></label>
-											<input class="form-control" required="" type="text" name="divName" id="divName">
+											<input class="form-control" type="text" name="divName" id="divName">
 										</div>
 									</div>
 								</div>
@@ -117,13 +117,13 @@
 									<div class="col-md-12">
 										<div class="form-group">
 											<label>Description<span class="text-danger">*</span></label>
-											<input class="form-control" required="" type="text" name="divDesc" id="divDesc">
+											<input class="form-control" type="text" name="divDesc" id="divDesc">
 										</div>
 									</div>
 								</div>
 
 								<div class="m-t-20 text-center">
-									<button class="btn btn-primary" type="submit">Create Division</button>
+									<button class="btn btn-primary" type="button" id="addDivision" name="addDivision">Create Division</button>
 								</div>
 							</form>
 						</div>
@@ -133,10 +133,71 @@
 {% endblock %}
 {% block js %}
     <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-3.2.1.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/sweetalert.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.dataTables.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/dataTables.bootstrap.min.js') }}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/select2.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.slimscroll.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/select2.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/moment.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap-datetimepicker.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+	<script type="text/javascript">
+		$(function(){
+   			$('#addDivision').click(function(){
+    		event.preventDefault();
+       		var form_data = new FormData($('#addDivision')[0]);
+       		var divName = document.getElementById('divName').value;
+       		var divDesc = document.getElementById('divDesc').value;
+       		var deptNo = document.getElementById('deptNo').value;
+       		// start of validation
+			if(deptNo == ""){
+				swal("Sorry!", " Departement must be selected.. ", "warning")
+            	var cursor = document.getElementById('department_name');cursor.focus();
+				return false;
+			} else if(divName == ""){
+				swal("Sorry!", " Division Name must be filled out.. ", "warning")
+				var cursor = document.getElementById('description');cursor.focus();
+        		return false;
+			}else if(divDesc == 0){
+				swal("Sorry!", " Description must be filled out.. ", "warning")
+				var cursor = document.getElementById('description');cursor.focus();
+        		return false;
+			}
+			// end of validation
+			data_div = {
+				'deptNo': deptNo,
+				'divName': divName,
+				'divDesc': divDesc
+			}
+			json_dataDiv = JSON.stringify(data_div);
+
+	        $.ajax({
+            	type: 'POST',
+           		url: '{{ url_for('divAdd') }}',
+            	contentType: 'application/json;charset=UTF-8',
+            	data: json_dataDiv,
+            	success: function(data){
+                	var response = JSON.parse(data);
+                	console.log(response);
+                	console.log(response['code']);
+                	if (response['code'] == 200){
+                		JSalert();
+                    	function JSalert(){
+                    		swal("Congrats!", " Data Success created to System ", "success")
+                            	.then(willRedirect => {
+                                	if (willRedirect){
+                                    	window.location.href = "{{ url_for('divAll') }}";
+                                	}
+                            });
+                        }
+                	}
+            	},
+            	error: function(data){
+                	console.log(data);
+            	}
+        	});
+    });
+});
+	</script>
 {% endblock %}
