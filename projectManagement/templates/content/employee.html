@@ -63,7 +63,7 @@
 								<div class="dropdown profile-action">
 									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 									<ul class="dropdown-menu pull-right">
-										<li><a href="{{ url_for('empEdt', empid=emp.employee_id) }}" ><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+										<li><a href="{{ url_for('empEdt') }}" ><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
 										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
 									</ul>
 								</div>
@@ -315,56 +315,89 @@
        	var birth = document.getElementById('birth').value;
        	var gender = document.getElementById('gender').value;
        	var address = document.getElementById('address').value;
+       	var province = document.getElementById('province').value;
        	var city = document.getElementById('city').value;
        	var phone = document.getElementById('phone').value;
+       	var typeEmp = document.getElementById('typeEmp').value;
        	var nik = document.getElementById('nik').value;
        	var password = document.getElementById('password').value;
+       	var repeat_password = document.getElementById('repeat_password').value;
        	var division = document.getElementById('division').value;
        	var title = document.getElementById('job_title').value;
        	var email = document.getElementById('email').value;
        	var join_date = document.getElementById('join_date').value;
 
-		// validation
+		// start of validation
 		if(fname == ""){
-			swal("Sorry!", " First Name must be filled out.. "+city, "warning")
+			swal("Sorry!", " First Name must be filled out.. ", "warning")
+            var cursor = document.getElementById('fname');cursor.focus();
 			return false;
 		} else if(lname == ""){
 			swal("Sorry!", " Last Name must be filled out.. ", "warning")
+			var cursor = document.getElementById('lname');cursor.focus();
         	return false;
-		}  else if(birth == ""){
+		}  else if(birth == 0){
 			swal("Sorry!", " Birth Date must be filled out.. ", "warning")
+			var cursor = document.getElementById('birth');cursor.focus();
         	return false;
-		} else if(gender == ""){
+		} else if(gender == 0){
 			swal("Sorry!", " Gender must be filled out.. ", "warning")
+			var cursor = document.getElementById('gender');cursor.focus();
         	return false;
 		} else if(address == ""){
 			swal("Sorry!", " Address must be filled out.. ", "warning")
+			var cursor = document.getElementById('address');cursor.focus();
         	return false;
-		} else if(city == ""){
+		} else if(province == 0){
+			swal("Sorry!", " Province must be filled out.. ", "warning")
+			var cursor = document.getElementById('province');cursor.focus();
+        	return false;
+		} else if(city == 0){
 			swal("Sorry!", " City must be filled out.. ", "warning")
+			var cursor = document.getElementById('city');cursor.focus();
         	return false;
 		} else if(phone == ""){
 			swal("Sorry!", " Phone Number must be filled out.. ", "warning")
+			var cursor = document.getElementById('phone');cursor.focus();
+        	return false;
+		} else if(typeEmp == 0){
+			swal("Sorry!", " Employee Type must be filled out.. ", "warning")
+			var cursor = document.getElementById('typeEmp');cursor.focus();
         	return false;
 		} else if(nik == ""){
-			swal("Sorry!", " NIK must be filled out.. ", "warning")
+			swal("Sorry!", " NIK must be filled out.. "+typeEmp, "warning")
+			var cursor = document.getElementById('nik');cursor.focus();
         	return false;
 		} else if(password == ""){
 			swal("Sorry!", " Password must be filled out.. ", "warning")
+			var cursor = document.getElementById('password');cursor.focus();
         	return false;
-		} else if(division == ""){
+		} else if(repeat_password == ""){
+			swal("Sorry!", " Repeat Password must be filled out.. ", "warning")
+			var cursor = document.getElementById('repeat_password');cursor.focus();
+        	return false;
+		} else if(repeat_password != password){
+			swal("Sorry!", " Password must same with Repeat Password.. ", "warning")
+			var cursor = document.getElementById('repeat_password');cursor.focus();
+        	return false;
+		} else if(division == 0){
 			swal("Sorry!", " Division must be filled out.. ", "warning")
+			var cursor = document.getElementById('division');cursor.focus();
         	return false;
-		} else if(title == ""){
+		} else if(title == 0){
 			swal("Sorry!", " Title must be filled out.. ", "warning")
+			var cursor = document.getElementById('title');cursor.focus();
         	return false;
 		} else if(email == ""){
 			swal("Sorry!", " Email must be filled out.. ", "warning")
+			var cursor = document.getElementById('email');cursor.focus();
         	return false;
-		} else if(join_date == ""){
+		} else if(join_date == 0){
 			swal("Sorry!", " Join Date must be filled out.. ", "warning")
+			var cursor = document.getElementById('join_date');cursor.focus();
         	return false;
 		}
+		// end of validation
 
        	data_emp = {
 			'fname': fname,
@@ -406,6 +439,7 @@
             },
             error: function(data){
                 console.log(data);
+
             }
         });
     });
