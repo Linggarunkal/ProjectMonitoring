@@ -494,6 +494,8 @@ def editProject(projectid):
     return render_template('content/edit-project.html', getClientName=getClientName, getpmName=getpmName, getDetailProject=json.dumps(getDetailProject))
 
 
+
+
 #page view detail project
 @app.route("/project/view/detail/<projectid>")
 def viewDetailProject(projectid):
@@ -504,6 +506,46 @@ def viewDetailProject(projectid):
     project_team = project.getTeamProject(projectid)
     all_team = project.getAllTeamProject()
     return render_template('content/detail-projectview.html', titleNdesc=titleNdesc, detailProject=detailProject, project_manager=project_manager, project_team=project_team, all_team=all_team, project_id=projectid)
+
+@app.route("/project/edit/detail", methods=['POST'])
+def projectEditProject():
+    parse = reqparse.RequestParser()
+    parse.add_argument('project_id', type=str, help='project_id')
+    parse.add_argument('project_name', type=str, help='project_name')
+    parse.add_argument('pm', type=str, help="pm")
+    parse.add_argument('project_start', type=str, help="project_start")
+    parse.add_argument('project_end', type=str, help="project_end")
+    parse.add_argument('mandays', type=str, help="mandays")
+    parse.add_argument('priority', type=str, help="priority")
+    parse.add_argument('desc', type=str, help="desc")
+    args = parse.parse_args()
+
+    project_id = args['project_id']
+    project_name = args['project_name']
+    pm = args['pm']
+    project_start = args['project_start']
+    project_end = args['project_end']
+    mandays = args['mandays']
+    priority = args['priority']
+    desc = args['desc']
+
+    date_start = datetime.strptime(str(project_start), '%d/%m/%Y').strftime('%Y-%m-%d')
+    date_end = datetime.strptime(str(project_end), '%d/%m/%Y').strftime('%Y-%m-%d')
+
+    proj = projectApp()
+    updProject = proj.projectDetailUpdate(project_id, project_name, pm, date_start, date_end, mandays, priority, desc)
+    if updProject:
+        response = {
+            'code': 200,
+            'message': "Success Update to system"
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': "Failed Update to system"
+        }
+        return json.dumps(response)
 
 
 # page to get assign_team_project

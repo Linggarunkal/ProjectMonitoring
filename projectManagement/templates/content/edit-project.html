@@ -26,14 +26,14 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Project ID</label>
-								<input class="form-control" type="text" name="pid" id="pid">
+								<input class="form-control" type="text" name="pid" id="pid" disabled>
 								<input type="hidden" name="project_id" id="project_id">
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Client</label>
-								<select class="select" id="client">
+								<select class="select" id="client" disabled>
 									<option>-- Select Client --</option>
 									{% for client in getClientName %}
 									<option value="{{ client.client_id }}">{{ client.name }}</option>
@@ -140,6 +140,79 @@
 		});
 
 		var projectDetail = JSON.parse({{ getDetailProject|tojson|safe }});
+		document.getElementById('pid').value = projectDetail[0]['pid'];
+		document.getElementById('project_id').value = projectDetail[0]['project_id'];
+		document.getElementById('client').value = projectDetail[0]['client_id'];
+		document.getElementById('project_name').value = projectDetail[0]['name'];
+		document.getElementById('pm').value = projectDetail[0]['employee_id'];
+		document.getElementById('project_start').value = projectDetail[0]['startDate'];
+		document.getElementById('project_end').value = projectDetail[0]['endDate'];
+		document.getElementById('mandays').value = projectDetail[0]['mandays'];
+		document.getElementById('priority').value = projectDetail[0]['priority'];
+		document.getElementById('desc').value = projectDetail[0]['description'];
+
+		$(document).ready(function(){
+			$('#updProject').click(function(){
+				var project_id = document.getElementById('project_id').value;
+				var project_name = document.getElementById('project_name').value;
+				var pm = document.getElementById('pm').value;
+				var project_start = document.getElementById('project_start').value;
+				var project_end = document.getElementById('project_end').value;
+				var mandays = document.getElementById('mandays').value;
+				var priority = document.getElementById('priority').value;
+				var desc = document.getElementById('desc').value;
+
+				data_project = {
+					'project_id': project_id,
+					'project_name': project_name,
+					'pm': pm,
+					'project_start': project_start,
+					'project_end': project_end,
+					'mandays': mandays,
+					'priority': priority,
+					'desc': desc
+				}
+
+				data_project_json = JSON.stringify(data_project);
+
+				$.ajax({
+					type: 'POST',
+					url: '{{ url_for('projectEditProject') }}',
+					contentType: 'application/json;charset=UTF-8',
+					data: data_project_json,
+					success: function(resp){
+						resp_json = JSON.parse(resp);
+						if(resp_json['code'] == 200){
+							swal({
+    							title: 'Success',
+    							text: 'Update Project Detail Success',
+    							type: 'success',
+    							allowOutsideClick: true,
+    							html: true
+								},
+								function () {
+    							window.location.href = "{{ url_for('mainProject') }}"
+							});
+						}else{
+							swal({
+    							title: 'Error',
+    							text: 'Update Project Detail Error',
+    							icon: 'warning',
+    							allowOutsideClick: true,
+    							html: true
+								},
+								function () {
+    							window.location.href = "{{ url_for('mainProject') }}"
+							});
+						}
+					},
+					error: function(resp){
+						alert(resp);
+					}
+				});
+
+			});
+		});
 
         </script>
 {% endblock %}

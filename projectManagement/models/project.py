@@ -426,3 +426,15 @@ class projectApp(object):
             return detail
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def projectDetailUpdate(self, project_id, project_name, pm, project_start, project_end, mandays, priority, desc):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = "project_id = %s"
+            updData = conn.update('project', cond, project_id, name=project_name, mandays=mandays, startDate=project_start, endDate=project_end, priority=priority, employee_id=pm, description=desc)
+            if updData:
+                return True
+            else:
+                return False
+        except Exception as e:
+            return "Error Database: %s" % str(e)
