@@ -115,7 +115,7 @@
                                     </select>
                                     <br>
                                     <div class="col-md-12 text-center">
-                                        <button class="btn btn-primary" id="close_task" name="close_task">Close Task</button>
+                                        <button class="btn btn-primary" id="close_task" name="close_task">Update Task</button>
                                     </div>
                                 </div>
 
@@ -130,6 +130,7 @@
                                             <input type="hidden" name="project_id" id="project_id" value="{{ taskDetail.project_id }}">
                                             <input type="hidden" name="task_id" id="task_id" value="{{ taskDetail.task_id }}">
 											<input type="hidden" name="master_task" id="master_task" value="{{ taskDetail.master_task_id }}">
+											<input type="hidden" name="increment_id" id="increment_id" value="{{ taskDetail.task_proses_increment }}">
 											<tr>
 												<td>Client:</td>
 												<td class="text-right">{{ taskDetail.client_name }}</td>
@@ -553,9 +554,14 @@
         	$('#close_task').click(function(){
         		var task_id = document.getElementById('task_id').value;
         		var taskUpd = document.getElementById('updTask').value;
+        		var taskIncrement = document.getElementById('increment_id').value;
+        		var project_id = document.getElementById('project_id').value;
+
         		data_task = {
         			'task_id': task_id,
-        			'task_status': taskUpd
+        			'task_status': taskUpd,
+        			'taskIncrement': taskIncrement,
+        			'project_id': project_id
         		}
 
         		data_task_json = JSON.stringify(data_task);

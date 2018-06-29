@@ -229,7 +229,8 @@ class tasks(object):
                     'task_enddate': dateEnd,
                     'taskstatus_id': list[13],
                     'task_status': list[14],
-                    'task_notes': list[15]
+                    'task_notes': list[15],
+                    'task_proses_increment': list[16]
                 }
                 detail.append(i)
             return detail
@@ -354,13 +355,21 @@ class tasks(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
-    def updateTaskStatus(self, taskid, taskStatus):
+    def updateTaskStatus(self, taskid, taskStatus, taskIncrement, project_id):
         try:
+            nextCountTask = int(taskIncrement)+1
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
             cond = 'task_id = %s'
             updData = conn.update('task', cond, taskid, taskstatus_id=taskStatus)
-            if updData:
-                return True
+            if updData == 1:
+                checkNextTask = conn.execquery('select * from task where project_id="'+project_id+'" and task_proses_increment="'+str(nextCountTask)+'"')
+                if checkNextTask == 1:
+                    updNextTask = conn.execquery('update task set taskstatus_id="STAT00002" where project_id="'+project_id+'" and task_proses_increment="'+str(nextCountTask)+'"')
+                    if updNextTask == 1:
+                        print checkNextTask
+                        return True
+                    else:
+                        return False
             else:
                 return False
         except Exception as e:

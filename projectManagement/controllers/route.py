@@ -777,13 +777,17 @@ def projectTaskUpdStatus():
     parse = reqparse.RequestParser()
     parse.add_argument('task_id', type=str, help='task_id')
     parse.add_argument('task_status', type=str, help='task_status')
+    parse.add_argument('taskIncrement', type=str, help='taskIncrement')
+    parse.add_argument('project_id', type=str, help='project_id')
     args = parse.parse_args()
 
     task_id = args['task_id']
     task_status = args['task_status']
+    taskIncrement = args['taskIncrement']
+    project_id = args['project_id']
 
     task = tasks()
-    updTask = task.updateTaskStatus(task_id, task_status)
+    updTask = task.updateTaskStatus(task_id, task_status, taskIncrement, project_id)
     if updTask:
         response = {
             'code': 200,
