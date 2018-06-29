@@ -265,13 +265,30 @@ def deptDeleteDet(deptno):
 # page update edit detail department
 @app.route('/department/edit', methods=['POST'])
 def deptUpdDet():
-    deptId = request.form['deptId']
-    deptName = request.form['deptName']
-    deptDesc = request.form['deptDesc']
+    parse = reqparse.RequestParser()
+    parse.add_argument('deptId', type=str, help='deptId')
+    parse.add_argument('deptName', type=str, help='deptName')
+    parse.add_argument('deptDesc', type=str, help='deptDesc')
+
+    args = parse.parse_args()
+    deptId = args['deptId']
+    deptName = args['deptName']
+    deptDesc = args['deptDesc']
     updDept = department()
     # jika ada validasi di tambah di sini
-    updDept.update(deptId, deptName, deptDesc)
-    return redirect(url_for('deptAll'))
+    update_division = updDept.update(deptId, deptName, deptDesc)
+    if update_division:
+        response = {
+            'code': 200,
+            'message': 'Data Success Update to System'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': 'Data Failed Update to System'
+        }
+        return json.dumps(response)
 
 
 # page update detail department
