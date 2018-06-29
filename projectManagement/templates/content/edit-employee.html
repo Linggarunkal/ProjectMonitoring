@@ -210,15 +210,72 @@
 			$('#updEmployee').click(function(){
 				var emp_id = document.getElementById('emp_id').value;
 				var fname = document.getElementById('fname').value;
-				var lname = document.getElementById('lname').value;
-				var birth = document.getElementById('birth').value;
-				var gender = document.getElementById('gender').value;
-				var address = document.getElementById('address').value;
-				var city = document.getElementById('city').value;
-				var phone = document.getElementById('phone').value;
-				var division = document.getElementById('division').value;
-				var job_title = document.getElementById('job_title').value;
-				var join_date = document.getElementById('join_date').value;
+       			var lname = document.getElementById('lname').value;
+       			var birth = document.getElementById('birth').value;
+       			var gender = document.getElementById('gender').value;
+       			var address = document.getElementById('address').value;
+       			var province = document.getElementById('province').value;
+       			var city = document.getElementById('city').value;
+       			var phone = document.getElementById('phone').value;
+       			var nik = document.getElementById('nik').value;
+       			var password = document.getElementById('password').value;
+       			var repeat_password = document.getElementById('repeat_password').value;
+       			var division = document.getElementById('division').value;
+       			var title = document.getElementById('job_title').value;
+       			var email = document.getElementById('email').value;
+       			var join_date = document.getElementById('join_date').value;
+
+				// start of validation
+				if(fname == ""){
+					swal("Sorry!", " First Name must be filled out.. ", "warning")
+            		var cursor = document.getElementById('fname');cursor.focus();
+					return false;
+				} else if(lname == ""){
+					swal("Sorry!", " Last Name must be filled out.. ", "warning")
+					var cursor = document.getElementById('lname');cursor.focus();
+        			return false;
+				}  else if(birth == 0){
+					swal("Sorry!", " Birth Date must be filled out.. ", "warning")
+					var cursor = document.getElementById('birth');cursor.focus();
+        			return false;
+				} else if(gender == 0){
+					swal("Sorry!", " Gender must be filled out.. ", "warning")
+					var cursor = document.getElementById('gender');cursor.focus();
+        			return false;
+				} else if(address == ""){
+					swal("Sorry!", " Address must be filled out.. ", "warning")
+					var cursor = document.getElementById('address');cursor.focus();
+        			return false;
+				} else if(province == 0){
+					swal("Sorry!", " Province must be filled out.. ", "warning")
+					var cursor = document.getElementById('province');cursor.focus();
+        			return false;
+				} else if(city == 0){
+					swal("Sorry!", " City must be filled out.. ", "warning")
+					var cursor = document.getElementById('city');cursor.focus();
+        			return false;
+				} else if(phone == ""){
+					swal("Sorry!", " Phone Number must be filled out.. ", "warning")
+					var cursor = document.getElementById('phone');cursor.focus();
+        			return false;
+				} else if(division == 0){
+					swal("Sorry!", " Division must be filled out.. ", "warning")
+					var cursor = document.getElementById('division');cursor.focus();
+        			return false;
+				} else if(title == 0){
+					swal("Sorry!", " Title must be filled out.. ", "warning")
+					var cursor = document.getElementById('title');cursor.focus();
+		        	return false;
+				} else if(email == ""){
+					swal("Sorry!", " Email must be filled out.. ", "warning")
+					var cursor = document.getElementById('email');cursor.focus();
+        			return false;
+				} else if(join_date == 0){
+					swal("Sorry!", " Join Date must be filled out.. ", "warning")
+					var cursor = document.getElementById('join_date');cursor.focus();
+        			return false;
+				}
+				// end of validation
 
 				data_emp = {
 					'emp_id': emp_id,
