@@ -188,7 +188,7 @@
 	<script type="text/javascript">
 
 		var detEmployees = JSON.parse({{ getDetailEmp|tojson|safe }});
-		
+
 		document.getElementById('emp_id').value = detEmployees[0]['employee_id'];
 		document.getElementById('fname').value = detEmployees[0]['firstname'];
 		document.getElementById('lname').value = detEmployees[0]['lastname'];

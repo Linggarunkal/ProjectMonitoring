@@ -485,9 +485,13 @@ def upFile():
 
 
 #page edit project
-@app.route("/project/edit/detail")
-def editProject():
-    return render_template('content/edit-project.html')
+@app.route("/project/edit/detail/<projectid>")
+def editProject(projectid):
+    proj = projectApp()
+    getClientName = proj.getClientName()
+    getpmName = proj.getpmName()
+    getDetailProject = proj.getDetailProject(projectid)
+    return render_template('content/edit-project.html', getClientName=getClientName, getpmName=getpmName, getDetailProject=json.dumps(getDetailProject))
 
 
 #page view detail project

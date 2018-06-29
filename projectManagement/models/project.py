@@ -1,5 +1,6 @@
 from projectManagement.library.connection import mysqlconnection
 from projectManagement.library.config import HOST, USERNAME, PASSWORD, DATABASE
+from datetime import datetime
 
 
 class project_list(object):
@@ -363,5 +364,65 @@ class projectApp(object):
                     return 1
             else:
                 return 1
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    # for edit project
+    def getClientName(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getData = conn.select('client', None, 'client_id, name')
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'client_id': list[0],
+                    'name': list[1]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getpmName(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = "empTitle_id = %s"
+            getData = conn.select('employees', cond, 'employee_id, firstname, lastname, emptitle_id', emptitle_id='EMTL00003')
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'employee_id': list[0],
+                    'firstname': list[1],
+                    'lastname': list[2],
+                    'emptitle_id': list[3]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getDetailProject(self, projectid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'project_id = %s'
+            getData = conn.select('project', cond, 'project_id, client_id, name, mandays, startDate, endDate, pid, priority, employee_id, description', project_id=projectid)
+            detail = []
+            for index, list in enumerate(getData):
+                date_start = datetime.strptime(str(list[4]), '%Y-%m-%d').strftime('%d/%m/%Y')
+                date_end = datetime.strptime(str(list[5]), '%Y-%m-%d').strftime('%d/%m/%Y')
+                i = {
+                    'project_id': list[0],
+                    'client_id': list[1],
+                    'name': list[2],
+                    'mandays': list[3],
+                    'startDate': date_start,
+                    'endDate': date_end,
+                    'pid': list[6],
+                    'priority': list[7],
+                    'employee_id': list[8],
+                    'description': list[9]
+                }
+                detail.append(i)
+            return detail
         except Exception as e:
             return "Error Database: %s" % str(e)
