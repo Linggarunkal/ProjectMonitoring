@@ -210,6 +210,21 @@ def empUpdDetail():
         }
         return json.dumps(response)
 
+# page delete detil division
+@app.route('/employees/detail/delete/<empid>')
+def empDelDet(empid):
+    emp = employees()
+    getDetEmp = emp.detail(empid)
+    return render_template('content/delete-employees.html', getDetEmp=getDetEmp)
+
+
+# page update detail employees
+@app.route('/employees/detail/delete/', methods=['POST'])
+def empDel():
+    empid = request.form['employee_id']
+    delEmp = employees()
+    delEmp.deleted(empid)
+    return redirect(url_for('emplAll'))
 
 # page department employee
 @app.route('/department/all')

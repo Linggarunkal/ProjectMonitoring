@@ -356,3 +356,16 @@ class employees(object):
                 return False
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def deleted(self, emp_id):
+        self.emp_id = emp_id
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            condDelEmp = 'employee_id = %s'
+            updEmp = conn.update('employees', condDelEmp, self.emp_id, status='deleted')
+            if updEmp:
+                return True
+            else:   
+                return False
+        except Exception as e:
+            return "Error Database: %s" % str(e)

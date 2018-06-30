@@ -64,7 +64,7 @@
 									<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 									<ul class="dropdown-menu pull-right">
 										<li><a href="{{ url_for('empEdt', empid=emp.employee_id) }}" ><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-										<li><a href="#" data-toggle="modal" data-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+										<li><a href="{{ url_for('empDelDet', empid=emp.employee_id) }}" ><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
 									</ul>
 								</div>
 								<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="{{ url_for('empEdtDet', empno=emp.employee_id) }}">{{ emp.fistname }} {{ emp.lastname }}</a></h4>
