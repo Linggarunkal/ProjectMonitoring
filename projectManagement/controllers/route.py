@@ -777,7 +777,8 @@ def projectTaskDetail(taskid):
     viewDetail = task.taskDetail(taskid)
     empTaskAssign = task.getTaskAssign()
     taskStatus = task.getTaskStatus()
-    return render_template('content/detail-taskview.html', viewDetail=viewDetail, empTaskAssign=empTaskAssign, taskStatus=taskStatus)
+    doc = task.getDocument(taskid)
+    return render_template('content/detail-taskview.html', viewDetail=viewDetail, empTaskAssign=empTaskAssign, taskStatus=taskStatus, doc=doc)
 
 
 # page update task detail
@@ -867,23 +868,44 @@ def projectTaskUpdStatus():
     parse = reqparse.RequestParser()
     parse.add_argument('task_id', type=str, help='task_id')
     parse.add_argument('task_status', type=str, help='task_status')
+    parse.add_argument('taskIncrement', type=str, help='taskIncrement')
+    parse.add_argument('project_id', type=str, help='project_id')
+    parse.add_argument('master_task', type=str, help='master_task')
     args = parse.parse_args()
 
     task_id = args['task_id']
     task_status = args['task_status']
+    taskIncrement = args['taskIncrement']
+    project_id = args['project_id']
+    master_task = args['master_task']
+
 
     task = tasks()
-    updTask = task.updateTaskStatus(task_id, task_status)
-    if updTask:
+    updateTask = task.updateTaskStatus(task_id, task_status, taskIncrement, project_id, master_task)
+
+    if updateTask == 4:
         response = {
             'code': 200,
             'Message': "Success Update to System"
         }
+
         return json.dumps(response)
-    else:
+    elif updateTask == 3:
         response = {
-            'code': 500,
-            'Message': "Failed Update to System"
+            'code': 204,
+            'Message': 'update current task unsuccessfully'
+        }
+        return json.dumps(response)
+    elif updateTask == 2:
+        response = {
+            'code': 210,
+            'message': 'next task belum di input'
+        }
+        return json.dumps(response)
+    elif updateTask == 1:
+        response = {
+            'code': 211,
+            'message': 'document belum lengkap'
         }
         return json.dumps(response)
 
@@ -1273,10 +1295,9 @@ def uploadDocTask():
         doc_url = os.path.join(updir, nameFileFormat)
         file_size = os.path.getsize(os.path.join(updir, nameFileFormat))
 
-        #yang perlu di ganti
-        problem = problem_logs()
-        addDocProblem = problem.uploadDocument(nameFileFormat, problemid, doc_code, file_size, doc_url, uploadfileFormat[1])
-        if addDocProblem:
+        task = tasks()
+        addDocTask = task.uploadDocument(nameFileFormat, problemid, doc_code, file_size, doc_url, uploadfileFormat[1])
+        if addDocTask:
             response = {
                 'code': 200,
                 'message': 'Success Upload Document to System'

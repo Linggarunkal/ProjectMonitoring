@@ -355,22 +355,59 @@ class tasks(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
-    def updateTaskStatus(self, taskid, taskStatus, taskIncrement, project_id):
+    def updateTaskStatus(self, taskid, taskStatus, taskIncrement, project_id, master_task):
         try:
             nextCountTask = int(taskIncrement)+1
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            cond = 'task_id = %s'
-            updData = conn.update('task', cond, taskid, taskstatus_id=taskStatus)
-            if updData == 1:
-                checkNextTask = conn.execquery('select * from task where project_id="'+project_id+'" and task_proses_increment="'+str(nextCountTask)+'"')
+            getValidation = conn.execquery('SELECT ta.task_id, ta.master_task_id, dt.document_type_id, dt.document_name FROM task ta LEFT JOIN document_type dt ON ta.master_task_id = dt.master_task_id WHERE ta.task_id = "'+taskid+'" AND ta.master_task_id = "'+master_task+'" AND dt.document_type_id NOT IN (SELECT  document_type_id FROM document WHERE task_id = "'+ taskid +'");')
+            if getValidation == 0:
+                checkNextTask = conn.execquery('select * from task where project_id="' + project_id + '" and task_proses_increment="' + str(nextCountTask) + '"')
                 if checkNextTask == 1:
-                    updNextTask = conn.execquery('update task set taskstatus_id="STAT00002" where project_id="'+project_id+'" and task_proses_increment="'+str(nextCountTask)+'"')
-                    if updNextTask == 1:
-                        print checkNextTask
-                        return True
-                    else:
-                        return False
+                    cond = 'task_id = %s'
+                    updData = conn.update('task', cond, taskid, taskstatus_id=taskStatus)
+                    if updData:
+                        updNextTask = conn.execquery('update task set taskstatus_id="STAT00002" where project_id="' + project_id + '" and task_proses_increment="' + str(nextCountTask) + '"')
+                        if updNextTask == 1:
+                            return 4
+                        else:
+                            return 3
+                else:
+                    return 2
+            else:
+                return 1
+
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def uploadDocument(self, doc_name, problemid, doc_code, doc_size, doc_url, doc_extention):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            addDoc = conn.insert('document', document_filename=doc_name, document_type_id=doc_code, Document_URL=doc_url, task_id=problemid, document_size=doc_size, document_extention=doc_extention)
+            if addDoc == 0:
+                return True
             else:
                 return False
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getDocument(self, taskid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'task_id = %s'
+            getData = conn.select('v_document_task_detail', cond, '*', task_id=taskid)
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'document_no': list[0],
+                    'document_type_id': list[1],
+                    'document_name': list[2],
+                    'document_url': list[3],
+                    'task_id': list[4],
+                    'document_size': list[5],
+                    'document_filename': list[6],
+                    'document_extention': list[7]
+                }
+                detail.append(i)
+            return detail
         except Exception as e:
             return "Error Database: %s" % str(e)

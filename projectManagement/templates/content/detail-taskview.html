@@ -47,16 +47,29 @@
 								<div class="panel-body">
 									<h5 class="panel-title m-b-20">Uploaded files <button class="pull-right btn btn-primary btn-xs" id="addNewDoc"><i class="fa fa-plus"></i> Upload Document</button></h5>
 									<ul class="files-list">
+										{% for doc in doc %}
 										<li>
-                                            <h5>Kick Off Document</h5>
+                                            <h5>{{ doc.document_name }}</h5>
 											<div class="files-cont">
 												<div class="file-type">
+													{% if doc.document_extention == 'pdf' %}
 													<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+													{% elif doc.document_extention == 'docx' %}
+													<span class="files-icon"><i class="fa fa-file-word-o"></i></span>
+													{% elif doc.document_extention == 'doc' %}
+													<span class="files-icon"><i class="fa fa-file-word-o"></i></span>
+													{% elif doc.document_extention == 'xlsx' %}
+													<span class="files-icon"><i class="fa fa-file-excel-o"></i></span>
+													{% elif doc.document_extention == 'xls' %}
+													<span class="files-icon"><i class="fa fa-file-excel-o"></i></span>
+													{% elif doc.document_extention == 'jpeg' %}
+													<span class="files-icon"><i class="fa fa-file-image-o"></i></span>
+													{% endif %}
 												</div>
 												<div class="files-info">
-													<span class="file-name text-ellipsis"><a href="#">AHA Selfcare Mobile Application Test-Cases.xls</a></span>
-													<span class="file-author"><a href="#">John Doe</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-													<div class="file-size">Size: 14.8Mb</div>
+													<span class="file-name text-ellipsis"><a target="_blank" href="{{ url_for('static', filename='document/') }}{{ doc.document_filename }}">{{ doc.document_filename }}</a></span>
+													<span class="file-author"><a href="#">Admin</a></span>
+													<div class="file-size">Size: {{ doc.document_size }} Mb</div>
 												</div>
 												<ul class="files-action">
 													<li class="dropdown">
@@ -68,27 +81,7 @@
 												</ul>
 											</div>
 										</li>
-										<li>
-                                            <h5>Planning Document</h5>
-											<div class="files-cont">
-												<div class="file-type">
-													<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
-												</div>
-												<div class="files-info">
-													<span class="file-name text-ellipsis"><a href="#">AHA Selfcare Mobile Application Test-Cases.xls</a></span>
-													<span class="file-author"><a href="#">Richard Miles</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-													<div class="file-size">Size: 14.8Mb</div>
-												</div>
-												<ul class="files-action">
-													<li class="dropdown">
-														<a href="" class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
-														<ul class="dropdown-menu">
-															<li><a href="javascript:void(0)">Download</a></li>
-														</ul>
-													</li>
-												</ul>
-											</div>
-										</li>
+										{% endfor %}
 									</ul>
 								</div>
 							</div>
@@ -107,15 +100,24 @@
                                     <div class="project-title">
                                         <h5 class="panel-title">Approval Task</h5>
                                     </div>
-                                    <select class="form-control" id="updTask">
+									{% if taskDetail.taskstatus_id == 'STAT00004' %}
+									<select class="form-control" id="status" disabled>
+										<option value="" selected>-- Approve Task Complete --</option>
+									</select>
+									{% else %}
+									<select class="form-control" id="updTask">
                                         <option value="0">-- Approve Task Complete --</option>
-										{% for task in taskStatus %}
-										<option value="{{ task.taskstatus_id }}">{{ task.Status_Name }}</option>
-										{% endfor %}
+										<option value="STAT00004">Done</option>
                                     </select>
+									{% endif %}
+
                                     <br>
                                     <div class="col-md-12 text-center">
-                                        <button class="btn btn-primary" id="close_task" name="close_task">Update Task</button>
+										{% if taskDetail.taskstatus_id == 'STAT00004' %}
+										<button class="btn btn-primary" id="" name="" disabled>Update Task</button>
+										{% else %}
+										<button class="btn btn-primary" id="close_task" name="close_task">Update Task</button>
+										{% endif %}
                                     </div>
                                 </div>
 
@@ -572,12 +574,14 @@
         		var taskUpd = document.getElementById('updTask').value;
         		var taskIncrement = document.getElementById('increment_id').value;
         		var project_id = document.getElementById('project_id').value;
+        		var master_task = document.getElementById('master_task').value;
 
         		data_task = {
         			'task_id': task_id,
         			'task_status': taskUpd,
         			'taskIncrement': taskIncrement,
-        			'project_id': project_id
+        			'project_id': project_id,
+        			'master_task': master_task
         		}
 
         		data_task_json = JSON.stringify(data_task);
@@ -592,7 +596,7 @@
         				if (resp_task_json['code'] == 200){
         					swal({
 								title: 'Success',
-    							text: resp_task_json['message'],
+    							text: 'Success Update Task',
     							type: 'success',
     							allowOutsideClick: true,
     							html: true
@@ -600,17 +604,12 @@
 								function () {
     								location.reload(true);
 							});
-        				}else{
-        					swal({
-								title: 'Warning',
-    							text: resp_task_json['message'],
-    							icon: 'warning',
-    							allowOutsideClick: true,
-    							html: true
-								},
-								function () {
-    								location.reload(true);
-							});
+        				}else if (resp_task_json['code'] == 204){
+        					swal("Warning", "update current task unsuccessfully", "warning");
+        				}else if (resp_task_json['code'] == 210){
+        					swal("Warning", "Next Task not Ready Input", "warning");
+        				}else if (resp_task_json['code'] == 211){
+        					swal("Warning", "All Document not Complete Please upload First", "warning");
         				}
         			},
         			error: function(resp){
@@ -628,9 +627,9 @@
 				var task_id = document.getElementById('task_id').value;
 
 				if (doc_code != '0'){
-					$('#uploadProblemLog').remove();
+					$('#uploadTask').remove();
 					var newForm = document.createElement("form");
-					newForm.setAttribute("id", "uploadProblemLog");
+					newForm.setAttribute("id", "uploadTask");
 					newForm.setAttribute("method", "post");
 					newForm.setAttribute("enctype", "multipart/form-data")
 
@@ -674,7 +673,51 @@
 
         $(document).ready(function(){
         	$('#addDocTask').click(function(){
+				var uploadTask = new FormData($('#uploadTask')[0]);
 
+				if (document.getElementById('inputFile').value == ""){
+					swal("Warning", "Please Upload Document", "warning");
+					return false;
+				}
+
+				$.ajax({
+        			type: 'POST',
+        			url: '{{ url_for('uploadDocTask') }}',
+            		data: uploadTask,
+            		contentType: false,
+            		cache: false,
+            		processData: false,
+            		async: false,
+            		success: function(data) {
+                		data_resp_json = JSON.parse(data);
+
+                		if (data_resp_json['code'] == 200){
+                			swal({
+								title: 'Success',
+    							text: 'Success Upload Document to System',
+    							type: 'success',
+    							allowOutsideClick: true,
+    							html: true
+								},
+								function () {
+    								location.reload(true);
+							});
+                		}else if (data_resp_json['code'] == 406){
+							swal("Warning", "Format Document Not Allowed", "warning");
+                		}else{
+                			swal({
+								title: 'Warning',
+    							text: 'Format Document Not Allowed',
+    							icon: 'warning',
+    							allowOutsideClick: true,
+    							html: true
+							},
+							function(){
+								location.reload(true);
+							});
+                		}
+            		}
+        		});
         	});
         });
 		</script>
