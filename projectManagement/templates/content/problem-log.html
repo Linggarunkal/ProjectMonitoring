@@ -84,53 +84,31 @@
                                     <th>Start Date</th>
 							    	<th>End Date</th>
 									<th>Status</th>
-								    <th>Doc Number</th>
 									<th class="text-right"></th>
 								</tr>
 							</thead>
 							<tbody>
+								{% for problem in getAllProblem %}
 								<tr>
-                                    <td>1</td>
-									<td>Bank DKI Syariah</td>
-									<td>7DKI20180001</td>
-							    	<td>Problem Debit Kredit</td>
-									<td>02-MEI-2018</td>
-									<td>04-MEI-2018</td>
-									<td>Closed</td>
-                                    <td>BV00001000-SRB</td>
-                                    <td class="text-right">
-												<div class="dropdown">
-													<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-													<ul class="dropdown-menu pull-right">
-														<li><a href="{{ url_for('problemDetail') }}" title="Detail"><i class="fa fa-clipboard m-r-5"></i> Detail</a></li>
-														<li><a href="{{ url_for('problemEdit') }}" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-														<li><a href="#" title="Decline" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-													</ul>
-												</div>
-											</td>
-                                </tr>
-								<tr>
-                                    <td>2</td>
-									<td>Bank Riau</td>
-									<td>7BRU20180001</td>
-									<td>Core Setting Error</td>
-									<td>02-MEI-2018</td>
-									<td>04-MEI-2018</td>
-									<td>Open</td>
-                                    <td>BV00001000-SRR</td>
-
+									<td>{{ loop.index }}</td>
+									<td>{{ problem.client_name }}</td>
+									<td>{{ problem.pid }}</td>
+									<td>{{ problem.problem_name }}</td>
+									<td>{{ problem.start_date }}</td>
+									<td>{{ problem.end_date }}</td>
+									<td>{{ problem.status }}</td>
 									<td class="text-right">
 										<div class="dropdown">
 											<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 											<ul class="dropdown-menu pull-right">
-												<li><a href="{{ url_for('problemDetail') }}" title="Detail"><i class="fa fa-clipboard m-r-5"></i> Detail</a></li>
+												<li><a href="{{ url_for('problemDetail', problemid=problem.problem_log_id) }}" title="Detail"><i class="fa fa-clipboard m-r-5"></i> Detail</a></li>
 												<li><a href="{{ url_for('problemEdit') }}" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
 												<li><a href="#" title="Decline" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
 											</ul>
 										</div>
 									</td>
 								</tr>
-
+								{% endfor %}
                             </tbody>
                         </table>
                     </div>

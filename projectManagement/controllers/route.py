@@ -419,6 +419,7 @@ def divUpdate():
         }
         return json.dumps(response)
 
+
 # page main client
 @app.route("/user/main/client", methods=['POST', 'GET'])
 def userMainHome():
@@ -581,8 +582,6 @@ def editProject(projectid):
     getpmName = proj.getpmName()
     getDetailProject = proj.getDetailProject(projectid)
     return render_template('content/edit-project.html', getClientName=getClientName, getpmName=getpmName, getDetailProject=json.dumps(getDetailProject))
-
-
 
 
 # page view detail project
@@ -855,10 +854,10 @@ def projectTaskAssign():
 
 
 # page to get document upload
-@app.route("/project/task/getdocument/<mastertaskid>")
-def projectTaskgetDoc(mastertaskid):
+@app.route("/project/task/getdocument/<taskid>/<mastertaskid>")
+def projectTaskgetDoc(mastertaskid, taskid):
     task = tasks()
-    getDocName = task.getDocTask(mastertaskid)
+    getDocName = task.getDocTask(mastertaskid, taskid)
     return json.dumps(getDocName)
 
 
@@ -998,7 +997,9 @@ def projectTimesheet():
 # page problem all
 @app.route("/problem/all")
 def problemAll():
-    return render_template('content/problem-log.html')
+    problem = problem_logs()
+    getAllProblem = problem.getSummaryProblem()
+    return render_template('content/problem-log.html', getAllProblem=getAllProblem)
 
 
 # page problem add
@@ -1009,6 +1010,51 @@ def problemAdd():
     return render_template('content/add-problem-log.html', getClientProject=getClientProject)
 
 
+# page to add problem log
+@app.route('/problem/add/new', methods=['POST'])
+def problemAddNew():
+    parse = reqparse.RequestParser()
+    parse.add_argument('client_id', type=str, help='client_id')
+    parse.add_argument('prl_pid', type=str, help='prl_pid')
+    parse.add_argument('taskname', type=str, help='taskname')
+    parse.add_argument('start_date', type=str, help='start_date')
+    parse.add_argument('end_date', type=str, help='end_date')
+    parse.add_argument('target_date', type=str, help='target_date')
+    parse.add_argument('array_assign', type=str, help='array_assign')
+    parse.add_argument('description', type=str, help='description')
+    args = parse.parse_args()
+
+    client_id = args['client_id']
+    prl_pid = args['prl_pid']
+    taskname = args['taskname']
+    start_date = args['start_date']
+    end_date = args['end_date']
+    target_date = args['target_date']
+    array_assign = args['array_assign']
+    description = args['description']
+
+    member_split = array_assign.split(',')
+
+    date_start = datetime.strptime(start_date, '%d/%m/%Y').strftime('%Y-%m-%d')
+    date_end = datetime.strptime(end_date, '%d/%m/%Y').strftime('%Y-%m-%d')
+    date_target = datetime.strptime(target_date, '%d/%m/%Y').strftime('%Y-%m-%d')
+
+    problem = problem_logs()
+    addProblem = problem.addNewProblemLog(prl_pid, taskname, date_start, date_end, date_target, member_split, description)
+    if addProblem:
+        response = {
+            'code': 200,
+            'message': 'Success Add to system'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': 'Failed Add to system'
+        }
+        return json.dumps(response)
+
+
 # page get pid problem log
 @app.route("/problem/getpid/<clientid>")
 def problemGetpid(clientid):
@@ -1017,10 +1063,118 @@ def problemGetpid(clientid):
     return json.dumps(getPidProject)
 
 
+# page to update note problem
+@app.route("/problem/update/note", methods=['post'])
+def problemUpdateNote():
+    parse = reqparse.RequestParser()
+    parse.add_argument('problem_id', type=str, help='problem_id')
+    parse.add_argument('note', type=str, help='note_task')
+    args = parse.parse_args()
+
+    problem_id = args['problem_id']
+    note = args['note']
+
+    problem = problem_logs()
+    noteUpdate = problem.updateNote(problem_id, note)
+    if noteUpdate:
+        response = {
+            "code": 200,
+            "Message": "Update Success"
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            "code": 500,
+            "Message": "Update Failed"
+        }
+        return json.dumps(response)
+
+
+# page problem assign
+@app.route("/problem/getassign/problem/<problemid>")
+def probleGetassignProblem(problemid):
+    problem = problem_logs()
+    getAssignProblem = problem.getAssignProblemEmp(problemid)
+    print getAssignProblem
+    
+    
+    return json.dumps(getAssignProblem)
+
 # page problem detail
-@app.route("/problem/detail")
-def problemDetail():
-    return render_template('content/detail-problem.html')
+@app.route("/problem/detail/<problemid>")
+def problemDetail(problemid):
+    problem = problem_logs()
+    getDetailProblem = problem.getDetailProblem(problemid)
+    getAssignProblem = problem.getProblemAssign()
+    getDoc = problem.getDocument(problemid)
+    getUploadDoc = problem.documentProblem(problemid)
+    return render_template('content/detail-problemview.html', getDetailProblem=getDetailProblem, getAssignProblem=getAssignProblem, getDoc=getDoc, getUploadDoc=getUploadDoc)
+
+
+# page to assign and unassign task member
+@app.route("/project/problem/assign", methods=['POST'])
+def projectProblemAssign():
+    parse = reqparse.RequestParser()
+    parse.add_argument('problemid', type=str, help='problemid')
+    parse.add_argument('assign', type=str, help='assign')
+    parse.add_argument('unassign', type=str, help='unassign')
+
+    args = parse.parse_args()
+    problemid = args['problemid']
+    assign = args['assign']
+    unassign = args['unassign']
+
+    print problemid, assign, unassign
+    problem = problem_logs()
+    addAssign = problem.addAssignProblemEmp(problemid, assign, unassign)
+    print addAssign
+    if 'failed' not in addAssign:
+        response = {
+            'code': 200,
+            'message': 'Data Success Update to System'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': 'Data Failed Update to System'
+        }
+        return json.dumps(response)
+
+
+# page update problem task
+@app.route("/problem/update/task", methods=['POST'])
+def problemUpdateTask():
+    parse = reqparse.RequestParser()
+    parse.add_argument('problem_id', type=str, help='problem_id')
+    parse.add_argument('increment_id', type=str, help='increment_id')
+    parse.add_argument('master_problem', type=str, help='master_problem')
+
+    args = parse.parse_args()
+    problemid = args['problem_id']
+    increment = args['increment_id']
+    master_problem = args['master_problem']
+
+    problem = problem_logs()
+    updStatus = problem.updateTaskProblem(problemid, master_problem,increment)
+    if updStatus == 0:
+        response = {
+            'code': 200,
+            'message': 'Success Update problem Task'
+        }
+        return json.dumps(response)
+    elif updStatus == 2:
+        response = {
+            'code': 210,
+            'message': 'Document Not Complate Upload'
+        }
+        return json.dumps(response)
+    elif updStatus == 1:
+        response = {
+            'code': 500,
+            'message': 'Failed Update problem Task'
+        }
+        return json.dumps(response)
 
 
 # page problem edit
@@ -1057,3 +1211,86 @@ def reportClient():
 @app.route("/project/report/employee")
 def reportEmp():
     return render_template('content/report-employee.html')
+
+
+# problem page upload data
+@app.route("/upload/doc/problemlog", methods=['POST'])
+def uploadDocProblemlog():
+    fileUpload = request.files['inputFile']
+    problemid = request.form['problem_id']
+    doc_code = request.form['docCode']
+    updir = os.path.join(basedir, app.config['UPLOAD_FOLDER'])
+    allowFormat = app.config['ALLOWED_EXTENSIONS']
+    nameFile = secure_filename(fileUpload.filename)
+    uploadfileFormat = nameFile.split('.')
+
+    if uploadfileFormat[1] in allowFormat:
+        time = datetime.today()
+        formattime = time.strftime('%d%m%Y_%H%M%S')
+        nameFileFormat = uploadfileFormat[0]+"_"+formattime+"."+uploadfileFormat[1]
+        fileUpload.save(os.path.join(updir, nameFileFormat))
+        doc_url = os.path.join(updir, nameFileFormat)
+        file_size = os.path.getsize(os.path.join(updir, nameFileFormat))
+
+        problem = problem_logs()
+        addDocProblem = problem.uploadDocument(nameFileFormat, problemid, doc_code, file_size, doc_url, uploadfileFormat[1])
+        if addDocProblem:
+            response = {
+                'code': 200,
+                'message': 'Success Upload Document to System'
+            }
+            return json.dumps(response)
+        else:
+            response = {
+                'code': 500,
+                'message': 'Failed Upload Document to System'
+            }
+            return json.dumps(response)
+    else:
+        response = {
+            'code': 406,
+            'message': 'Document Format not allowed'
+        }
+        return json.dumps(response)
+
+
+# problem page upload data
+@app.route("/upload/doc/task", methods=['POST'])
+def uploadDocTask():
+    fileUpload = request.files['inputFile']
+    problemid = request.form['task_id']
+    doc_code = request.form['docCode']
+    updir = os.path.join(basedir, app.config['UPLOAD_FOLDER'])
+    allowFormat = app.config['ALLOWED_EXTENSIONS']
+    nameFile = secure_filename(fileUpload.filename)
+    uploadfileFormat = nameFile.split('.')
+
+    if uploadfileFormat[1] in allowFormat:
+        time = datetime.today()
+        formattime = time.strftime('%d%m%Y_%H%M%S')
+        nameFileFormat = uploadfileFormat[0]+"_"+formattime+"."+uploadfileFormat[1]
+        fileUpload.save(os.path.join(updir, nameFileFormat))
+        doc_url = os.path.join(updir, nameFileFormat)
+        file_size = os.path.getsize(os.path.join(updir, nameFileFormat))
+
+        #yang perlu di ganti
+        problem = problem_logs()
+        addDocProblem = problem.uploadDocument(nameFileFormat, problemid, doc_code, file_size, doc_url, uploadfileFormat[1])
+        if addDocProblem:
+            response = {
+                'code': 200,
+                'message': 'Success Upload Document to System'
+            }
+            return json.dumps(response)
+        else:
+            response = {
+                'code': 500,
+                'message': 'Failed Upload Document to System'
+            }
+            return json.dumps(response)
+    else:
+        response = {
+            'code': 406,
+            'message': 'Document Format not allowed'
+        }
+        return json.dumps(response)

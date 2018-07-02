@@ -340,6 +340,56 @@
                 var target_date = document.getElementById('target_date').value;
                 var saveAdd = document.getElementById('saveAdd').value;
                 var description = document.getElementById('description').value;
+
+                data_problemlog = {
+                    'client_id': client_id,
+                    'prl_pid': prl_pid,
+                    'taskname': taskname,
+                    'start_date': start_date,
+                    'end_date': end_date,
+                    'target_date': target_date,
+                    'array_assign': saveAdd,
+                    'description': description
+                }
+
+
+
+                data_problemlog_json = JSON.stringify(data_problemlog);
+
+                console.log(data_problemlog_json);
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url_for('problemAddNew') }}',
+                    contentType: 'application/json;charset=UTF-8',
+                    data: data_problemlog_json,
+                    success: function(resp){
+                        resp_json_problem = JSON.parse(resp);
+
+                        if (resp_json_problem['code'] == 200){
+							swal({
+    							title: 'Success',
+    							text: 'Add New Problem Log to System',
+    							type: 'success',
+    							allowOutsideClick: true,
+    							html: true
+								},
+								function () {
+    							window.location.href = "{{ url_for('problemAll') }}"
+							});
+						}else{
+							swal({
+    							title: 'Warning !!',
+    							text: 'Failed add New Problem Log to System',
+    							icon: 'warning',
+    							allowOutsideClick: true,
+    							html: true
+							});
+						}
+                    },
+                    error: function(resp){
+                        console.log(resp);
+                    }
+                });
 		    });
 		});
     </script>

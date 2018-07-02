@@ -17,16 +17,16 @@
 {% endblock %}
 {{ super() }}
 {% block webcontent %}
-        {% for taskDetail in viewDetail %}
+        {% for detailProblem in getDetailProblem %}
 		<div class="page-wrapper">
 			<div class="content container-fluid">
 					<div class="row">
 						<div class="col-xs-8">
-                            <h4 class="page-title">{{ taskDetail.project_name }}</h4>
-							<h5 class="page-title">{{ taskDetail.task_name }}</h5>
+                            <h4 class="page-title">{{ detailProblem.project_name }}</h4>
+							<h5 class="page-title">{{ detailProblem.problem_name }}</h5>
 						</div>
 						<div class="col-sm-4 text-right m-b-30">
-							<a href="{{ url_for('projectTaskList') }}" class="btn btn-primary rounded" data-toggle="modal"><i class="fa fa-arrow-left"></i> Back</a>
+							<a href="{{ url_for('problemAll') }}" class="btn btn-primary rounded" data-toggle="modal"><i class="fa fa-arrow-left"></i> Back</a>
 						</div>
 					</div>
 					<div class="row">
@@ -35,10 +35,10 @@
 								<div class="panel-body">
 
 									<div class="project-title">
-										<h5 class="panel-title">Task Description</h5>
+										<h5 class="panel-title">Problem Description</h5>
 
 									</div>
-									<p>{{ taskDetail.task_description }}</p>
+									<p>{{ detailProblem.description }}</p>
 
 								</div>
 							</div>
@@ -47,16 +47,17 @@
 								<div class="panel-body">
 									<h5 class="panel-title m-b-20">Uploaded files <button class="pull-right btn btn-primary btn-xs" id="addNewDoc"><i class="fa fa-plus"></i> Upload Document</button></h5>
 									<ul class="files-list">
+										{% for docAll in getUploadDoc %}
 										<li>
-                                            <h5>Kick Off Document</h5>
+                                            <h5>{{ docAll.document_name }}</h5>
 											<div class="files-cont">
 												<div class="file-type">
 													<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
 												</div>
 												<div class="files-info">
-													<span class="file-name text-ellipsis"><a href="#">AHA Selfcare Mobile Application Test-Cases.xls</a></span>
-													<span class="file-author"><a href="#">John Doe</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-													<div class="file-size">Size: 14.8Mb</div>
+													<span class="file-name text-ellipsis"><a target="_blank" href="{{ url_for('static', filename='document/') }}{{ docAll.document_filename }}">{{ docAll.document_filename }}</a></span>
+													<span class="file-author"><a href="#">Admin</a></span>
+													<div class="file-size">Size: {{ docAll.document_size }} kb</div>
 												</div>
 												<ul class="files-action">
 													<li class="dropdown">
@@ -68,55 +69,47 @@
 												</ul>
 											</div>
 										</li>
-										<li>
-                                            <h5>Planning Document</h5>
-											<div class="files-cont">
-												<div class="file-type">
-													<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
-												</div>
-												<div class="files-info">
-													<span class="file-name text-ellipsis"><a href="#">AHA Selfcare Mobile Application Test-Cases.xls</a></span>
-													<span class="file-author"><a href="#">Richard Miles</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-													<div class="file-size">Size: 14.8Mb</div>
-												</div>
-												<ul class="files-action">
-													<li class="dropdown">
-														<a href="" class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
-														<ul class="dropdown-menu">
-															<li><a href="javascript:void(0)">Download</a></li>
-														</ul>
-													</li>
-												</ul>
-											</div>
-										</li>
+										{% endfor %}
 									</ul>
 								</div>
 							</div>
                             <div class="panel">
 								<div class="panel-body">
                                     <div class="project-title">
-										<h5 class="panel-title">Task Note <a class="pull-right btn btn-primary btn-xs" id="addTask"><i class="fa fa-plus"></i> Add Note</a></h5>
+										<h5 class="panel-title">Problem Log Note <a class="pull-right btn btn-primary btn-xs" id="addTask"><i class="fa fa-plus"></i> Add Note</a></h5>
 
 									</div>
-                                    <p>{{ taskDetail.task_notes }}</p>
+                                    <p>{{ detailProblem.problem_note }}</p>
 								</div>
 							</div>
                             <!--panel to approve task-->
                             <div class="panel">
                                 <div class="panel-body">
-                                    <div class="project-title">
-                                        <h5 class="panel-title">Approval Task</h5>
+                                    {% if detailProblem.master_problem_id == 'MSPR00001' %}
+									<div class="project-title">
+                                        <h5 class="panel-title">Approval Problem Log</h5>
                                     </div>
-                                    <select class="form-control" id="updTask">
-                                        <option value="0">-- Approve Task Complete --</option>
-										{% for task in taskStatus %}
-										<option value="{{ task.taskstatus_id }}">{{ task.Status_Name }}</option>
-										{% endfor %}
+                                    <select class="form-control" id="validationProblem">
+                                        <option value="0">-- Approve Problem Log --</option>
+										<option value="MSPR00009"> Close Problem Log </option>
                                     </select>
                                     <br>
                                     <div class="col-md-12 text-center">
-                                        <button class="btn btn-primary" id="close_task" name="close_task">Update Task</button>
+                                        <button class="btn btn-primary" id="closeProblem" name="closeProblem">Close Problem</button>
                                     </div>
+									{% else %}
+									<div class="project-title">
+                                        <h5 class="panel-title">Approval Task Problem Log</h5>
+                                    </div>
+                                    <select class="form-control" id="updTask">
+                                        <option value="0">-- Approve Task Problem Log --</option>
+										<option value="{{ detailProblem.master_problem_id }}"> Done </option>
+                                    </select>
+                                    <br>
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn btn-primary" id="close_task" name="close_task">Update Task Problem</button>
+                                    </div>
+									{% endif %}
                                 </div>
 
                             </div>
@@ -124,40 +117,36 @@
 						<div class="col-lg-3">
 							<div class="panel">
 								<div class="panel-body">
-									<h6 class="panel-title m-b-15">Task details</h6>
+									<h6 class="panel-title m-b-15">Problem Log details</h6>
 									<table class="table table-striped table-border">
 										<tbody>
-                                            <input type="hidden" name="project_id" id="project_id" value="{{ taskDetail.project_id }}">
-                                            <input type="hidden" name="task_id" id="task_id" value="{{ taskDetail.task_id }}">
-											<input type="hidden" name="master_task" id="master_task" value="{{ taskDetail.master_task_id }}">
-											<input type="hidden" name="increment_id" id="increment_id" value="{{ taskDetail.task_proses_increment }}">
+                                            <input type="hidden" name="project_id" id="project_id" value="{{ detailProblem.project_id }}">
+                                            <input type="hidden" name="problem_id" id="problem_id" value="{{ detailProblem.problem_log_id }}">
+											<input type="hidden" name="master_task" id="master_task" value="{{ detailProblem.master_problem_id }}">
+											<input type="hidden" name="increment_id" id="increment_id" value="{{ detailProblem.increment_process }}">
 											<tr>
 												<td>Client:</td>
-												<td class="text-right">{{ taskDetail.client_name }}</td>
+												<td class="text-right">{{ detailProblem.client_name }}</td>
 											</tr>
 											<tr>
 												<td>PID:</td>
-												<td class="text-right">{{ taskDetail.pid }}</td>
+												<td class="text-right">{{ detailProblem.pid }}</td>
 											</tr>
 											<tr>
-												<td>Task Category:</td>
-												<td class="text-right">{{ taskDetail.category_task }}</td>
+												<td>Problem status:</td>
+												<td class="text-right">{{ detailProblem.status_problem }}</td>
 											</tr>
 											<tr>
-												<td>Task Name:</td>
-												<td class="text-right">Task Name</td>
-											</tr>
-											<tr>
-												<td>Start Task:</td>
-												<td class="text-right">{{ taskDetail.task_startDate }}</td>
+												<td>Start Date:</td>
+												<td class="text-right">{{ detailProblem.start_date }}</td>
 											</tr>
                                             <tr>
-												<td>End Task:</td>
-												<td class="text-right">{{ taskDetail.task_enddate }}</td>
+												<td>End Date:</td>
+												<td class="text-right">{{ detailProblem.end_date }}</td>
 											</tr>
                                             <tr>
-                                                <td>Task Status:</td>
-                                                <td class="text-right">{{ taskDetail.task_status }}</td>
+                                                <td>Target Date:</td>
+                                                <td class="text-right">{{ detailProblem.target_date }}</td>
                                             </tr>
 										</tbody>
 									</table>
@@ -165,28 +154,29 @@
 							</div>
 							<div class="panel project-user">
 								<div class="panel-heading">
-                                    <h6 class="panel-title">Team Task <button class="pull-right btn btn-primary btn-xs" id="editTask"><i class="fa fa-plus"></i> assign</button></h6>
+                                    <h6 class="panel-title">Team PRL <button class="pull-right btn btn-primary btn-xs" id="editTask"><i class="fa fa-plus"></i> assign</button></h6>
 								</div>
 								<div class="panel-body">
 									<ul class="list-box">
-                                        {% for emp in empTaskAssign %}
-                                        {% if emp.task_id == taskDetail.task_id %}
+										{% for problemAssign in getAssignProblem %}
+										{% if problemAssign.problem_log_id == detailProblem.problem_log_id %}
 										<li>
 											<a href="profile.html">
 												<div class="list-item">
 													<div class="list-left">
-														<span class="avatar">{{ emp.initial }}</span>
+														<span class="avatar">{{ problemAssign.initial }}</span>
 													</div>
 													<div class="list-body">
-														<span class="message-author">{{ emp.firstname }} {{ emp.lastname }}</span>
+														<span class="message-author">{{ problemAssign.firstname }} {{ problemAssign.lastname }}</span>
 														<div class="clearfix"></div>
-														<span class="message-content">{{ emp.title_name }}</span>
+														<span class="message-content">{{ problemAssign.title_name }}</span>
 													</div>
 												</div>
 											</a>
 										</li>
-                                        {% endif %}
-                                        {% endfor%}
+										{% endif %}
+										{% endfor %}
+
 									</ul>
 								</div>
 							</div>
@@ -194,13 +184,55 @@
 					</div>
                 </div>
         </div>
+<div id="upload_document" class="modal custom-modal fade center-modal" role="dialog">
+	<div class="modal-dialog">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Add Problem Document</h3>
+			</div>
+			<div class="modal-body">
+				<div>
+					<ul class="media-list media-list-linked chat-user-list" id="elementAddDoc">
+					</ul>
 
+					<div class="row">
+						<div class="col-md-10">
+							<select class="select" id="document_name">
+								<option value="0">-- Select Document Upload --</option>
+								{% for doc in getDoc %}
+								{% if doc.master_problem_id == detailProblem.master_problem_id %}
+								<option value="{{ doc.document_type_problemlog_id }}">{{ doc.document_name }}</option>
+								{% endif %}
+								{% endfor %}
+							</select>
+						</div>
+						<div class="col-md-2">
+							<button class="btn btn-primary btn-lg" id="addUpload">Add</button>
+						</div>
+					</div>
+					<br>
+					<div class="row" >
+						<div class="col-md-12" id="uploadArea">
+						<!--dynamic upload file form-->
+						</div>
+					</div>
+
+				</div>
+				<div class="m-t-50 text-center">
+					<button class="btn btn-primary btn-lg" id="addDocument">Add Document</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+        {% endfor %}
 <div id="assign_user" class="modal custom-modal fade center-modal" role="dialog">
 	<div class="modal-dialog">
 		<button type="button" class="close" data-dismiss="modal">&times;</button>
 		<div class="modal-content">
 			<div class="modal-header">
-				<h3 class="modal-title">Assign Employee to Task</h3>
+				<h3 class="modal-title">Assign Employee to Problem Log</h3>
 			</div>
 			<div class="modal-body">
 				<div class="input-group m-b-30">
@@ -226,43 +258,8 @@
 		</div>
 	</div>
 </div>
-        <div id="upload_document" class="modal custom-modal fade center-modal" role="dialog">
-			<div class="modal-dialog">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<div class="modal-content">
-						<div class="modal-header">
-							<h3 class="modal-title">Add Task Document</h3>
-						</div>
-						<div class="modal-body">
-							<div>
-								<ul class="media-list media-list-linked chat-user-list" id="elementAddDoc">
-								</ul>
-								<div class="row">
-									<div class="col-md-10">
-										<select class="select" id="addDoctype">
 
-										</select>
 
-									</div>
-									<div class="col-md-2">
-										<button class="btn btn-primary btn-lg" id="addUpload">Add</button>
-									</div>
-								</div>
-								<div class="row" >
-									<div class="col-md-12" id="uploadArea">
-									<!--dynamic upload file form-->
-								</div>
-					</div>
-
-							</div>
-							<div class="m-t-40 text-center">
-								<button class="btn btn-primary btn-lg" id="addDocTask">Add Document</button>
-							</div>
-						</div>
-					</div>
-				</div>
-		</div>
-        {% endfor %}
 {% endblock %}
 {% block js %}
 		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-3.2.1.min.js') }}"></script>
@@ -302,7 +299,7 @@
 		    $(document).ready(function(){
 		        $('#addTask').click(function(){
 		            swal({
-                    title: "Add Note Task",
+                    title: "Add Note Problem",
                     text: "<textarea id='note_text' rows='10' cols='50'></textarea>",
                     html: true,
                     showCancelButton: true,
@@ -315,14 +312,14 @@
                     function (isConfirm) {
                     if (isConfirm) {
                     var note = document.getElementById('note_text').value;
-                    var taskid = document.getElementById('task_id').value;
+                    var problem_id = document.getElementById('problem_id').value;
                     data = {
-                        'task_id': taskid,
+                        'problem_id': problem_id,
                         'note': note
                     }
                     data_json = JSON.stringify(data);
                     $.ajax({
-                        url: '{{ url_for('taskNoteUpdate') }}',
+                        url: '{{ url_for('problemUpdateNote') }}',
                         type: 'post',
                         contentType: 'application/json;charset=UTF-8',
                         data: data_json,
@@ -354,10 +351,10 @@
             $(document).ready(function(){
 			$('#editTask').click(function(){
 				var assignEMP = [];
-				data = document.getElementById('task_id').value;
+				data = document.getElementById('problem_id').value;
 				$.ajax({
 				    type: 'GET',
-				    url: 'http://localhost:14045/project/task/getassign/'+data,
+				    url: 'http://localhost:14045/problem/getassign/problem/'+data,
 				    success: function(resp){
                         json_resp = JSON.parse(resp);
                         for(var i = 0; i < json_resp.length; i++){
@@ -368,6 +365,7 @@
 				        console.log(resp);
 				    }
 				});
+
 
                 var projectid = document.getElementById('project_id').value;
 				$.ajax({
@@ -474,12 +472,12 @@
                     document.getElementById('employee_seleted').value = checkedValue.join();
                     document.getElementById('employee_unseleted').value = uncheckedValue.join();
 
-					var taskid = document.getElementById('task_id').value;
+					var problemid = document.getElementById('problem_id').value;
                     checked_json = JSON.stringify(checkedValue);
                     unchecked_json = JSON.stringify(uncheckedValue);
 
                     data = {
-                    	'task_id': taskid,
+                    	'problemid': problemid,
                     	'assign': checked_json,
                     	'unassign': unchecked_json
                     }
@@ -487,7 +485,7 @@
 					assign_json = JSON.stringify(data);
 
                     $.ajax({
-                    	url: 'http://localhost:14045/project/task/assign',
+                    	url: '{{ url_for('projectProblemAssign') }}',
                     	type: 'POST',
                     	contentType: 'application/json;charset=UTF-8',
                     	data: assign_json,
@@ -521,41 +519,41 @@
         	$('#addNewDoc').click(function(){
 
 			var master_task = document.getElementById('master_task').value;
-			var task_id = document.getElementById('task_id').value;
-
-
+			console.log(master_task);
 
 			$.ajax({
 				type: 'GET',
-				url: 'http://localhost:14045/project/task/getdocument/'+task_id+'/'+master_task,
+				url: 'http://localhost:14045/project/task/getdocument/'+master_task,
 				success: function(resp){
 					resp_json = JSON.parse(resp);
-					console.log(resp_json);
+
+					for (var i = 0; i < resp_json.length; i++){
+						var doc_type = resp_json[i]['document_type_id'];
+						var doc_name = resp_json[i]['document_name'];
+						var master_task = resp_json[i]['master_task_id'];
+
+						var newDiv = document.createElement("div");
+						newDiv.className = "form-group";
+
+						var newLabel = document.createElement("label");
+						newLabel.className = "label-control";
+						newLabel.appendChild(document.createTextNode(doc_name));
+
+						var fileUpload = document.createElement("input");
+						fileUpload.setAttribute("type", "file");
+						fileUpload.setAttribute("id", doc_type);
+						fileUpload.setAttribute("class", "form-control");
+						fileUpload.setAttribute("name", "doc_type");
+
+						newDiv.appendChild(newLabel);
+						newDiv.appendChild(fileUpload);
 
 
+						var uploadElement = document.getElementById('elementAddDoc');
+						uploadElement.insertBefore(newDiv, uploadElement.childNodes[0]);
 
-    						var elm = document.getElementById('addDoctype'),
-        						df = document.createDocumentFragment();
-        					$('#addDoctype')
-    							.find('option')
-    							.remove()
-    							.end();
-							var option = document.createElement('option');
-        						option.value = "0";
-        						option.appendChild(document.createTextNode("-- Select Document Task Type--"));
-        						df.appendChild(option);
-    						for (var i = 0; i < resp_json.length; i++) {
-        						var option = document.createElement('option');
-        						option.value = resp_json[i]['document_type_id'];
-        						option.appendChild(document.createTextNode(resp_json[i]['document_name']));
-        						df.appendChild(option);
-    						}
-    						elm.appendChild(df);
-
-
-
+					}
 					$('#upload_document').modal('show');
-
 				},
 				error: function(resp){
 					console.log(resp);
@@ -568,22 +566,21 @@
 
         $(document).ready(function(){
         	$('#close_task').click(function(){
-        		var task_id = document.getElementById('task_id').value;
-        		var taskUpd = document.getElementById('updTask').value;
-        		var taskIncrement = document.getElementById('increment_id').value;
-        		var project_id = document.getElementById('project_id').value;
+        		var problem_id= document.getElementById('problem_id').value;
+        		var increment_id = document.getElementById('increment_id').value;
+        		var master_problem = document.getElementById('updTask').value;
 
-        		data_task = {
-        			'task_id': task_id,
-        			'task_status': taskUpd,
-        			'taskIncrement': taskIncrement,
-        			'project_id': project_id
+
+        		data_problemlog = {
+        			'problem_id': problem_id,
+        			'increment_id': increment_id,
+        			'master_problem': master_problem
         		}
 
-        		data_task_json = JSON.stringify(data_task);
+        		data_task_json = JSON.stringify(data_problemlog);
         		$.ajax({
         			type: 'POST',
-        			url: '{{ url_for('projectTaskUpdStatus') }}',
+        			url: '{{ url_for('problemUpdateTask') }}',
         			contentType: 'application/json;charset=UTF-8',
         			data: data_task_json,
         			success: function(resp){
@@ -592,7 +589,7 @@
         				if (resp_task_json['code'] == 200){
         					swal({
 								title: 'Success',
-    							text: resp_task_json['message'],
+    							text: 'Success Update task Problem Log',
     							type: 'success',
     							allowOutsideClick: true,
     							html: true
@@ -600,17 +597,11 @@
 								function () {
     								location.reload(true);
 							});
-        				}else{
-        					swal({
-								title: 'Warning',
-    							text: resp_task_json['message'],
-    							icon: 'warning',
-    							allowOutsideClick: true,
-    							html: true
-								},
-								function () {
-    								location.reload(true);
-							});
+        				}else if(resp_task_json['code'] == 210){
+        					swal("Warning", "Document Not Complate Upload Please upload Document", "warning");
+        				}
+        				else{
+        					swal("Warning", "Failed Update task Problem Log", "warning");
         				}
         			},
         			error: function(resp){
@@ -619,13 +610,77 @@
         		});
         	});
         });
+        	$('#testing').on("change", function(e){
+        		var file = e.target.files[0];
+        		var file_type = file.type;
+        		var filesize = file.size;
+        		var file_name = file.name;
+
+
+        		data = {
+        			'filename': file_name,
+        			'filesize': filesize,
+        			'filetype': file_type
+        		}
+        		console.log(data);
+        	})
+
+        $(document).ready(function(){
+        	$('#addDocument').click(function(){
+        		var uploadProblemLog = new FormData($('#uploadProblemLog')[0]);
+
+				if (document.getElementById('inputFile').value == ""){
+					swal("Warning", "Please Upload Document", "warning");
+					return false;
+				}
+
+        		$.ajax({
+        			type: 'POST',
+        			url: '{{ url_for('uploadDocProblemlog') }}',
+            		data: uploadProblemLog,
+            		contentType: false,
+            		cache: false,
+            		processData: false,
+            		async: false,
+            		success: function(data) {
+                		data_resp_json = JSON.parse(data);
+
+                		if (data_resp_json['code'] == 200){
+                			swal({
+								title: 'Success',
+    							text: 'Success Upload Document to System',
+    							type: 'success',
+    							allowOutsideClick: true,
+    							html: true
+								},
+								function () {
+    								location.reload(true);
+							});
+                		}else if (data_resp_json['code'] == 406){
+							swal("Warning", "Format Document Not Allowed", "warning");
+                		}else{
+                			swal({
+								title: 'Warning',
+    							text: 'Format Document Not Allowed',
+    							icon: 'warning',
+    							allowOutsideClick: true,
+    							html: true
+							},
+							function(){
+								location.reload(true);
+							});
+                		}
+            		}
+        		});
+        	});
+        });
 
         $(document).ready(function(){
         	$('#addUpload').click(function(){
-        		var doc_code = document.getElementById('addDoctype').value;
-        		var get_code = document.getElementById('addDoctype');
+        		var doc_code = document.getElementById('document_name').value;
+        		var get_code = document.getElementById('document_name');
         		var doc_name = get_code[get_code.selectedIndex].innerHTML;
-				var task_id = document.getElementById('task_id').value;
+				var problemlog_id = document.getElementById('problem_id').value;
 
 				if (doc_code != '0'){
 					$('#uploadProblemLog').remove();
@@ -642,9 +697,9 @@
 
 					var newInputProblemid = document.createElement("input");
 					newInputProblemid.setAttribute("type", "text");
-					newInputProblemid.setAttribute("id", "task_id");
-					newInputProblemid.setAttribute("name", "task_id");
-					newInputProblemid.setAttribute("value", task_id);
+					newInputProblemid.setAttribute("id", "problem_id");
+					newInputProblemid.setAttribute("name", "problem_id");
+					newInputProblemid.setAttribute("value", problemlog_id);
 
 					var newLabel = document.createElement("label");
 					newLabel.className = "label-control";
@@ -667,13 +722,6 @@
 					swal("Warning", "Document Not Selected Please Select Document", "warning");
 				}
 
-
-        	});
-        });
-
-
-        $(document).ready(function(){
-        	$('#addDocTask').click(function(){
 
         	});
         });

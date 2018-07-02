@@ -322,17 +322,17 @@ class tasks(object):
         except Exception as e:
             return "Error Database: %s" % str(e)
 
-    def getDocTask(self, mastertaskid):
+    def getDocTask(self, mastertaskid, taskid):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            cond = "master_task_id = %s"
-            getData = conn.select("document_type", cond, '*', master_task_id=mastertaskid)
+            getData = conn.customquery('select ta.task_id, ta.master_task_id, dt.document_type_id, dt.document_name from task ta left join document_type dt on ta.master_task_id = dt.master_task_id where ta.task_id = "'+taskid+'" and ta.master_task_id = "'+mastertaskid+'" and dt.document_type_id not in (select document_type_id from document where task_id = "'+taskid+'");')
             detail = []
             for index, list in enumerate(getData):
                 i = {
-                    'document_type_id': list[0],
-                    'document_name': list[1],
-                    'master_task_id': list[2]
+                    'task_id': list[0],
+                    'master_task_id': list[1],
+                    'document_type_id': list[2],
+                    'document_name': list[3]
                 }
                 detail.append(i)
             return detail
