@@ -1,7 +1,7 @@
 from projectManagement.library.connection import mysqlconnection
 from projectManagement.library.config import HOST, USERNAME, PASSWORD, DATABASE
 import json
-
+from datetime import datetime
 
 class tasks(object):
     def getClient(self):
@@ -211,8 +211,8 @@ class tasks(object):
             getData = conn.select('v_task_detail_view', cond, '*', task_id=taskid)
             detail = []
             for index, list in enumerate(getData):
-                dateStart = list[11].strftime('%d-%m-%Y')
-                dateEnd = list[12].strftime('%d-%m-%Y')
+                dateStart = list[11].strftime('%d/%m/%Y')
+                dateEnd = list[12].strftime('%d/%m/%Y')
                 i = {
                     'task_id': list[0],
                     'master_task_id': list[1],
@@ -409,5 +409,42 @@ class tasks(object):
                 }
                 detail.append(i)
             return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getDetailUpdateTask(self, taskid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'task_id = %s'
+            getData = conn.select('v_detail_update_task', cond, '*', task_id=taskid)
+            detail = []
+            for index, list in enumerate(getData):
+                start_date = datetime.strptime(str(list[4]), '%Y-%m-%d').strftime('%d/%m/%Y')
+                end_date = datetime.strptime(str(list[5]), '%Y-%m-%d').strftime('%d/%m/%Y')
+                i = {
+                    'task_id': list[0],
+                    'project_id': list[1],
+                    'name': list[2],
+                    'pid': list[3],
+                    'Task_StartDate': start_date,
+                    'Task_EndDate': end_date,
+                    'master_task_id': list[6],
+                    'task_name': list[7],
+                    'task_description': list[8]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def updTaskDetail(self, task_id, start_date, end_date, desc):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'task_id = %s'
+            updData = conn.update('task', cond, task_id, Task_StartDate=start_date, Task_EndDate=end_date, task_description=desc)
+            if updData:
+                return True
+            else:
+                return False
         except Exception as e:
             return "Error Database: %s" % str(e)

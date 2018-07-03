@@ -1,6 +1,7 @@
 from projectManagement.library.connection import mysqlconnection
 from projectManagement.library.config import HOST, USERNAME, PASSWORD, DATABASE
 import json
+from datetime import  datetime
 
 
 class problem_logs(object):
@@ -92,6 +93,9 @@ class problem_logs(object):
             getData = conn.select('v_problemlog_detail', cond, '*', problem_log_id=problemid)
             detail = []
             for index, list in enumerate(getData):
+                date_start = datetime.strptime(str(list[7]), '%Y-%m-%d').strftime('%d/%m/%Y')
+                date_end = datetime.strptime(str(list[8]), '%Y-%m-%d').strftime('%d/%m/%Y')
+                date_target = datetime.strptime(str(list[9]), '%Y-%m-%d').strftime('%d/%m/%Y')
                 i = {
                     'problem_log_id': list[0],
                     'project_id': list[1],
@@ -100,9 +104,9 @@ class problem_logs(object):
                     'client_name': list[4],
                     'pid': list[5],
                     'problem_name': list[6],
-                    'start_date': list[7],
-                    'end_date': list[8],
-                    'target_date': list[9],
+                    'start_date': date_start,
+                    'end_date': date_end,
+                    'target_date': date_target,
                     'master_problem_id': list[10],
                     'status_problem': list[11],
                     'description': list[12],
@@ -270,5 +274,45 @@ class problem_logs(object):
                     return 1
             else:
                 return 2
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getDetailProblemUpdate(self, problemid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'problem_log_id = %s'
+            getData = conn.select('v_detail_update_problem', cond, '*', problem_log_id=problemid)
+            detail = []
+            for index, list in enumerate(getData):
+                date_start = datetime.strptime(str(list[5]), '%Y-%m-%d').strftime('%d/%m/%Y')
+                date_end = datetime.strptime(str(list[6]), '%Y-%m-%d').strftime('%d/%m/%Y')
+                i = {
+                    'problem_log_id': list[0],
+                    'project_id': list[1],
+                    'name': list[2],
+                    'pid': list[3],
+                    'problem_name': list[4],
+                    'start_date': date_start,
+                    'end_date': date_end,
+                    'master_problem_id': list[7],
+                    'problem_task': list[8],
+                    'description': list[9]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def updateProblemDetail(self, problemid, prl_name, start_date, end_date, desc):
+        try:
+            print problemid, prl_name, start_date, end_date, desc
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'problem_log_id = %s'
+            updData = conn.update('problem_log', cond, problemid, problem_name=prl_name, start_date=start_date, end_date=end_date, description=desc)
+            print updData
+            if updData:
+                return True
+            else:
+                return False
         except Exception as e:
             return "Error Database: %s" % str(e)

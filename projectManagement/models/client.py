@@ -56,3 +56,65 @@ class clients(object):
                 return 1
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def getTaskProject(self, projectid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'project_id = %s'
+            getData = conn.select('v_task_project', cond, '*', project_id=projectid)
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'project_id': list[0],
+                    'master_task_id': list[1],
+                    'task_name': list[2],
+                    'taskstatus_id': list[3],
+                    'status_name': list[4]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def getDocumentProject(self, projectid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'project_id = %s'
+            getData = conn.select('v_document_project', cond, '*', project_id=projectid)
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'document_type_id': list[0],
+                    'document_name': list[1],
+                    'task_id': list[2],
+                    'project_id': list[3],
+                    'document_size': list[4],
+                    'document_filename': list[5],
+                    'document_extention': list[6]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def listAllClient(self, clientid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'client_id = %s'
+            getAllProject = conn.select('v_project_detail', cond, 'left(project_name, 15), client_name, status_name, left(description, 40), enddate, firstname, lastname, project_id', client_id=clientid)
+            detAllProject = []
+            for index, list in enumerate(getAllProject):
+                i = {
+                    'project_name': list[0],
+                    'client_name': list[1],
+                    'status_name': list[2],
+                    'desc': list[3],
+                    'deadline': list[4],
+                    'firstname': list[5],
+                    'lastname': list[6],
+                    'project_id': list[7]
+                }
+                detAllProject.append(i)
+            return detAllProject
+        except Exception as e:
+            return "Error Database: %s" % str(e)

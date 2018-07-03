@@ -487,7 +487,8 @@ def userMainHomeList():
 def userClientDetail(clientid):
     client_customer = clients()
     getDetClient = client_customer.detail(clientid)
-    return render_template('content/detail-client.html', getDetClient=getDetClient)
+    getProjectClient = client_customer.listAllClient(clientid)
+    return render_template('content/detail-client.html', getDetClient=getDetClient, getProjectClient=getProjectClient)
 
 
 # page edit client
@@ -594,7 +595,10 @@ def viewDetailProject(projectid):
     project_manager = project.getPM(projectid)
     project_team = project.getTeamProject(projectid)
     all_team = project.getAllTeamProject()
-    return render_template('content/detail-projectview.html', titleNdesc=titleNdesc, detailProject=detailProject, project_manager=project_manager, project_team=project_team, all_team=all_team, project_id=projectid)
+    client = clients()
+    getTask = client.getTaskProject(projectid)
+    getDoc = client.getDocumentProject(projectid)
+    return render_template('content/detail-projectview.html', titleNdesc=titleNdesc, detailProject=detailProject, project_manager=project_manager, project_team=project_team, all_team=all_team, project_id=projectid, getTask=getTask, getDoc=getDoc)
 
 
 @app.route("/project/edit/detail", methods=['POST'])
@@ -780,6 +784,40 @@ def projectTaskDetail(taskid):
     taskStatus = task.getTaskStatus()
     doc = task.getDocument(taskid)
     return render_template('content/detail-taskview.html', viewDetail=viewDetail, empTaskAssign=empTaskAssign, taskStatus=taskStatus, doc=doc)
+
+
+# page update task detail desc and date
+@app.route("/project/task/update/detail", methods=['POST'])
+def projectTaskUpdateDetail():
+    parse = reqparse.RequestParser()
+    parse.add_argument('task_id', type=str, help='task_id')
+    parse.add_argument('start_task', type=str, help='start_task')
+    parse.add_argument('end_task', type=str, help='end_task')
+    parse.add_argument('desc', type=str, help='desc')
+    args = parse.parse_args()
+
+    task_id = args['task_id']
+    start_task = args['start_task']
+    end_task = args['end_task']
+    desc = args['desc']
+
+    date_start = datetime.strptime(str(start_task), '%d/%m/%Y').strftime('%Y-%m-%d')
+    date_end = datetime.strptime(str(end_task), '%d/%m/%Y').strftime('%Y-%m-%d')
+
+    task = tasks()
+    upData = task.updTaskDetail(task_id, date_start, date_end, desc)
+    if upData:
+        response = {
+            'code': 200,
+            'message': 'Success Update to System'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 200,
+            'message': 'Success Update to System'
+        }
+        return json.dumps(response)
 
 
 # page update task detail
@@ -1006,10 +1044,46 @@ def projectTeamDetail(teamproject_id):
 
 
 # page edit task
-@app.route("/project/task/edit")
-def projectTaskEdit():
-    return render_template('content/edit-task.html')
+@app.route("/project/task/edit/<taskid>")
+def projectTaskEdit(taskid):
+    task = tasks()
+    getUpdateTask = task.getDetailUpdateTask(taskid)
+    return render_template('content/edit-task.html', getUpdateTask=json.dumps(getUpdateTask))
 
+
+# page update task
+@app.route("/task/update", methods=['POST'])
+def taskUpdateDetail():
+    parse = reqparse.RequestParser()
+    parse.add_argument('task_id', type=str, help='task_id')
+    parse.add_argument('start_date', type=str, help='start_date')
+    parse.add_argument('end_date', type=str, help='end_date')
+    parse.add_argument('desc', type=str, help='desc')
+
+
+    args = parse.parse_args()
+
+    task_id = args['task_id']
+    start_date = args['start_date']
+    end_date = args['end_date']
+    desc = args['desc']
+
+    date_start = datetime.strptime(str(start_date), '%d/%m/%Y').strftime('%Y-%m-%d')
+    date_end = datetime.strptime(str(end_date), '%d/%m/%Y').strftime('%Y-%m-%d')
+    task = tasks()
+    updData = task.updTaskDetail(task_id, date_start, date_end, desc)
+    if updData:
+        response = {
+            'code': 200,
+            'message': 'Success Update'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': 'Failed Update'
+        }
+        return json.dumps(response)
 
 # page time sheet
 @app.route("/project/timesheet")
@@ -1134,8 +1208,44 @@ def problemDetail(problemid):
     return render_template('content/detail-problemview.html', getDetailProblem=getDetailProblem, getAssignProblem=getAssignProblem, getDoc=getDoc, getUploadDoc=getUploadDoc)
 
 
+# page update problem log
+@app.route("/project/problem/update/detail", methods=['POST'])
+def projectProblemUpdateDetail():
+    parse = reqparse.RequestParser()
+    parse.add_argument('problem_id', type=str, help='problem_id')
+    parse.add_argument('prl_name', type=str, help='prl_name')
+    parse.add_argument('start_date', type=str, help='start_date')
+    parse.add_argument('end_date', type=str, help='end_date')
+    parse.add_argument('desc', type=str, help='desc')
+
+    args = parse.parse_args()
+    problem_id = args['problem_id']
+    prl_name = args['prl_name']
+    start_date = args['start_date']
+    end_date = args['end_date']
+    desc = args['desc']
+
+    date_start = datetime.strptime(str(start_date), '%d/%m/%Y').strftime('%Y-%m-%d')
+    date_end = datetime.strptime(str(end_date), '%d/%m/%Y').strftime('%Y-%m-%d')
+
+    problem = problem_logs()
+    updData = problem.updateProblemDetail(problem_id, prl_name, date_start, date_end, desc)
+    if updData:
+        response = {
+            'code': 200,
+            'message': 'Success Update to System'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': 'Failed Update to System'
+        }
+        return json.dumps(response)
+
+
 # page to assign and unassign task member
-@app.route("/project/problem/assign", methods=['POST'])
+@app.route("/project/problem/assign", )
 def projectProblemAssign():
     parse = reqparse.RequestParser()
     parse.add_argument('problemid', type=str, help='problemid')
@@ -1201,9 +1311,11 @@ def problemUpdateTask():
 
 
 # page problem edit
-@app.route("/problem/edit")
-def problemEdit():
-    return render_template('content/edit-problem.html')
+@app.route("/problem/edit/")
+def problemEdit(problemid):
+    problem = problem_logs()
+    getProblem = problem.getDetailProblemUpdate(problemid)
+    return render_template('content/edit-problem.html', getProblem=json.dumps(getProblem))
 
 
 # page report proyek

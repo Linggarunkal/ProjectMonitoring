@@ -117,7 +117,7 @@
 						<div class="col-lg-3">
 							<div class="panel">
 								<div class="panel-body">
-									<h6 class="panel-title m-b-15">Problem Log details</h6>
+									<h6 class="panel-title m-b-15">Problem Log details </h6>
 									<table class="table table-striped table-border">
 										<tbody>
                                             <input type="hidden" name="project_id" id="project_id" value="{{ detailProblem.project_id }}">
@@ -148,8 +148,11 @@
                                                 <td>Target Date:</td>
                                                 <td class="text-right">{{ detailProblem.target_date }}</td>
                                             </tr>
+
 										</tbody>
+
 									</table>
+									<button class="pull-right btn btn-primary btn-xs" id="edit_problem"><i class="fa fa-plus"></i> Edit Problem Detail</button>
 								</div>
 							</div>
 							<div class="panel project-user">
@@ -226,6 +229,49 @@
 		</div>
 	</div>
 </div>
+<div id="edit_problem_detail" class="modal custom-modal fade center-modal" role="dialog">
+	<div class="modal-dialog">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Edit Detail Problem Log</h3>
+			</div>
+			<div class="modal-body">
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label>PRL Name</label>
+								<input type="text" class="form-control" name="prl_name" id="prl_name" value="{{ detailProblem.problem_name }}">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Start Date</label>
+								<div class="cal-icon"><input class="form-control datetimepicker" type="text" id="start_date" name="start_date" value="{{ detailProblem.start_date }}"></div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>End Date</label>
+								<div class="cal-icon"><input class="form-control datetimepicker" style="" type="text" id="end_date" name="end_date" value="{{ detailProblem.end_date }}"></div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label>Description</label>
+						<textarea rows="4" cols="5" class="form-control summernote" placeholder="Enter your message here" id="desc" name="desc">{{ detailProblem.description }}</textarea>
+					</div>
+
+				<div class="m-t-50 text-center">
+					<button class="btn btn-primary btn-lg" id="updateProblem">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
         {% endfor %}
 <div id="assign_user" class="modal custom-modal fade center-modal" role="dialog">
 	<div class="modal-dialog">
@@ -258,6 +304,7 @@
 		</div>
 	</div>
 </div>
+
 
 
 {% endblock %}
@@ -295,6 +342,61 @@
 			</li>
 		</script>
 		<script type="text/javascript">
+
+			$(document).ready(function(){
+				$('#edit_problem').click(function(){
+					$('#edit_problem_detail').modal('show');
+				})
+			})
+
+			$(document).ready(function(){
+				$('#updateProblem').click(function(){
+
+					var problem_id = document.getElementById('problem_id').value;
+					console.log(problem_id);
+					var prl_name = document.getElementById('prl_name').value;
+					var start_date = document.getElementById('start_date').value;
+					var end_date = document.getElementById('end_date').value;
+					var desc = document.getElementById('desc').value;
+
+					problem_data = {
+						'problem_id': problem_id,
+						'prl_name': prl_name,
+						'start_date': start_date,
+						'end_date': end_date,
+						'desc': desc
+					}
+					json_problem_data = JSON.stringify(problem_data);
+					console.log(json_problem_data);
+
+					$.ajax({
+						type: 'POST',
+						url: '{{ url_for('projectProblemUpdateDetail') }}',
+						contentType: 'application/json;charset=UTF-8',
+						data: json_problem_data,
+						success: function(resp){
+							resp_json = JSON.parse(resp);
+							if (resp_json['code'] == 200){
+								swal({
+                                	title: "Success Update",
+                                	text: "Update Detail Problem Log Successfull",
+                                	type: "success",
+                                	allowOutsideClick: true,
+                                	html: true
+                              	},
+                              	function (){
+                                	location.reload(true);
+                              	});
+							}else{
+								swal("Warning", "Update Detail Problem Log Failed", "warning");
+							}
+						},
+						error: function(resp){
+							alert(resp);
+						}
+					});
+				})
+			})
 
 		    $(document).ready(function(){
 		        $('#addTask').click(function(){

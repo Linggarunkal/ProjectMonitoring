@@ -22,21 +22,13 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Project Client</label>
-								<select class="select">
-									<option>-- Select Project Client --</option>
-									<option>Bank DKI Syariah</option>
-									<option>Bank Riau</option>
-								</select>
+								<input type="text" class="form-control" id="client_name" name="client_name" disabled>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Project ID</label>
-								<select class="select">
-									<option>-- Select Project ID --</option>
-									<option>7DKI20180001</option>
-									<option>7BRU20180002</option>
-								</select>
+								<input type="text" class="form-control" id="pid" name="pid" disabled>
 							</div>
 						</div>
 					</div>
@@ -44,7 +36,7 @@
 						<div class="col-md-12">
 							<div class="form-group">
 								<label>PRL Name</label>
-								<input type="text" class="form-control" name="taskname" id="taskname">
+								<input type="text" class="form-control" name="prl_name" id="prl_name">
 							</div>
 						</div>
 
@@ -53,49 +45,32 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Start Date</label>
-								<div class="cal-icon"><input class="form-control datetimepicker" type="text"></div>
+								<div class="cal-icon"><input class="form-control datetimepicker" type="text" id="start_date" name="start_date"></div>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>End Date</label>
-								<div class="cal-icon"><input class="form-control datetimepicker" style="" type="text"></div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>Task Name</label>
-								<input placeholder="Task name" class="form-control" type="text">
-							</div>
-						</div>
-                        <div class="col-md-6">
-							<div class="form-group">
-								<label>Project Document</label>
-								<input class="form-control" type="file">
+								<div class="cal-icon"><input class="form-control datetimepicker" style="" type="text" id="end_date" name="end_date"></div>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
-								<label>Assign Team</label>
-								<div class="project-members">
-									<a href="#" data-toggle="tooltip" title="Jeffery Lalor">
-										<img src="{{ url_for('static', filename='assets/img/user.jpg') }}" class="avatar" alt="Jeffery Lalor" height="20" width="20">
-									</a>
-								</div>
+								<label>Problem Name</label>
+								<input placeholder="Task name" class="form-control" type="text" id="task_name" name="task_name" disabled>
 							</div>
 						</div>
 
 					</div>
 					<div class="form-group">
 						<label>Description</label>
-						<textarea rows="4" cols="5" class="form-control summernote" placeholder="Enter your message here"></textarea>
+						<textarea rows="4" cols="5" class="form-control summernote" placeholder="Enter your message here" id="desc" name="desc"></textarea>
 					</div>
 					<div class="m-t-20 text-center">
-						<button class="btn btn-primary">Create Task</button>
+						<input type="hidden" name="problem_id" id="problem_id">
+						<button class="btn btn-primary" id="updateProblem">Update Problem</button>
 					</div>
 				</form>
 			</div>
@@ -112,4 +87,36 @@
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/moment.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap-datetimepicker.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+	<script>
+		var probleDetail = JSON.parse({{ getProblem|tojson|safe }})
+
+		document.getElementById('problem_id').value = probleDetail[0]['problem_log_id'];
+		document.getElementById('client_name').value = probleDetail[0]['name'];
+		document.getElementById('pid').value = probleDetail[0]['pid'];
+		document.getElementById('prl_name').value = probleDetail[0]['problem_name'];
+		document.getElementById('start_date').value = probleDetail[0]['start_date'];
+		document.getElementById('end_date').value = probleDetail[0]['end_date'];
+		document.getElementById('task_name').value = probleDetail[0]['problem_task'];
+		document.getElementById('desc').value = probleDetail[0]['description'];
+
+		$(document).ready(function(){
+			$('#updateProblem').click(function(){
+				var problemid = document.getElementById('problem_id').value;
+				var prl_name = document.getElementById('prl_name').value;
+				var start_date = document.getElementById('start_date').value;
+				var end_date = document.getElementById('end_date').value;
+				var desc = document.getElementById('desc').value;
+
+				problem_data = {
+					'problemid': problemid,
+					'prl_name': prl_name,
+					'start_date': start_date,
+					'end_date': end_date,
+					'desc': desc
+				}
+				json_problem_data = JSON.stringify(problem_data);
+				console.log(json_problem_data);
+			});
+		});
+	</script>
 {% endblock %}
