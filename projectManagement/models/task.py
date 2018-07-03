@@ -498,3 +498,40 @@ class tasks(object):
             return detail
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def getDocDetailProject(self, docid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'document_no = %s'
+            getData = conn.select('v_document_detail_project', cond, '*', document_no=docid)
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'document_no': list[0],
+                    'document_type_id': list[1],
+                    'document_name': list[2],
+                    'task_id': list[3],
+                    'project_id': list[4],
+                    'project_name': list[5],
+                    'client_id': list[6],
+                    'client_name': list[7],
+                    'pid': list[8],
+                    'doc_name': list[9],
+                    'status': list[10]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def documentUpdateApprove(self, doc_id, status):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'document_no = %s'
+            updData = conn.update('document', cond, doc_id, status=status)
+            if updData:
+                return True
+            else:
+                return False
+        except Exception as e:
+            "Error Database: %s" % str(e)

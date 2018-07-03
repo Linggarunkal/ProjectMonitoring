@@ -1,0 +1,174 @@
+{% extends "base/index.html" %}
+{% block title %}Main Project{% endblock %}
+{% block stylecss %}
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/font-awesome.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/select2.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap-datetimepicker.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/plugins/summernote/dist/summernote.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/style.css') }}">
+{% endblock %}
+{{ super() }}
+{% block webcontent %}
+        <div class="page-wrapper">
+			<div class="content container-fluid">
+
+				<a href="{{ url_for('projectDoc') }}"><button type="button" class="close" data-dismiss="modal">&times;</button></a>
+
+						<div class="modal-header">
+							<h4 class="modal-title">Approval Document Project</h4>
+						</div>
+                        {% for detail_doc in getDetailData %}
+						<div class="modal-body">
+							<form id="approve_project" method="post" enctype="multipart/form-data">
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Project ID</label>
+                                            <input class="form-control" type="hidden" name="doc_id" id="doc_id" value="{{ detail_doc.document_no }}">
+											<input class="form-control" type="text" name="pid" id="pid" value="{{ detail_doc.pid }}" disabled>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Client Name</label>
+											<input class="form-control" type="text" name="client_name" id="client_name" value="{{ detail_doc.client_name }}" disabled>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Project Name</label>
+											<input class="form-control" type="text" name="project_name" id="project_name" value="{{ detail_doc.project_name }}" disabled>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<label>Document Name</label>
+										<div class="project-members">
+											<input class="form-control" type="text" name="doc_name_type" id="doc_name_type" value="{{ detail_doc.document_name }}" disabled>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="row">
+									<div class="col-md-6">
+                                        <label>Document File</label>
+										<div class="files-cont">
+												<div class="file-type">
+													<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+												</div>
+												<div class="files-info">
+                                                    <span class="file-name text-ellipsis"><a target="_blank" href="{{ url_for('static', filename='document/') }}{{ detail_doc.doc_name }}">{{ detail_doc.doc_name }}<span id="doc_name"></span></a></span>
+													<span class="file-author"><a href="#">Admin</a></span>
+												</div>
+												<ul class="files-action">
+													<li class="dropdown">
+														<a href="" class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
+														<ul class="dropdown-menu">
+															<li><a href="javascript:void(0)">Download</a></li>
+															<li><a href="#" data-toggle="modal" data-target="#share_files">Share</a></li>
+															<li><a href="javascript:void(0)">Delete</a></li>
+														</ul>
+													</li>
+												</ul>
+											</div>
+									</div>
+                                    {% if detail_doc.status == 'Verify' %}
+                                    <div class="col-md-6">
+                                        <label>Approve Project</label>
+                                        <select class="select" name="status" disabled>
+											<option value="0">-- Select Document Approve --</option>
+                                            <option value="Verify">Verify</option>
+                                        </select>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-md-6">
+                                        <label>Approve Project</label>
+                                        <select class="select" name="status" id="status">
+											<option value="0">-- Select Document Approve --</option>
+                                            <option value="Verify">Verify</option>
+                                        </select>
+                                    </div>
+                                    {% endif %}
+								</div>
+                                <br>
+								<div class="m-t-20 text-center">
+									<button class="btn btn-primary" type="button" id="btnApprove">Update Project</button>
+								</div>
+							</form>
+						</div>
+                {% endfor %}
+            </div>
+        </div>
+{% endblock %}
+{% block js %}
+        <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-3.2.1.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='assets/js/sweetalert.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.slimscroll.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/select2.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/moment.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='assets/plugins/summernote/dist/summernote.min.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet"/>
+        <script>
+		$(document).ready(function(){
+			$('.summernote').summernote({
+				height: 200,                 // set editor height
+				minHeight: null,             // set minimum height of editor
+				maxHeight: null,             // set maximum height of editor
+				focus: false                 // set focus to editable area after initializing summernote
+			});
+		});
+
+		$(document).ready(function(){
+		    $('#btnApprove').click(function(){
+		        var doc_id = document.getElementById('doc_id').value;
+		        var status = document.getElementById('status').value;
+
+
+		        data = {
+		            'doc_id': doc_id,
+		            'status': status
+		        }
+
+		        json_data = JSON.stringify(data);
+
+		        $.ajax({
+		            type: 'POST',
+		            url: '{{ url_for('projectDocApproveData') }}',
+		            contentType: 'application/json;charset=UTF-8',
+		            data: json_data,
+		            success: function(resp){
+		                resp_json = JSON.parse(resp);
+
+		                if (resp_json['code'] == 200){
+		                    swal({
+									title: 'Success',
+    								text: 'Success Update Date to System',
+    								type: 'success',
+    								allowOutsideClick: true,
+    								html: true
+									},
+									function () {
+    									window.location= '{{ url_for('projectDoc') }}';
+								});
+		                }
+		            },
+		            error: function(resp){
+		                alert("Error Process")
+		            }
+		        })
+		    })
+		})
+
+
+
+
+        </script>
+{% endblock %}

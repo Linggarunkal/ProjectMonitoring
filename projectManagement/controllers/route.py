@@ -763,6 +763,41 @@ def projectDoc():
     return render_template('content/doc-project.html', getData=getData)
 
 
+# page approve project document
+@app.route("/project/document/approve/<docid>")
+def projectDocApprove(docid):
+    document = tasks()
+    getDetailData = document.getDocDetailProject(docid)
+    return render_template('content/approve-document-detail.html', getDetailData=getDetailData)
+
+
+# page post data approve document
+@app.route("/project/document/approve/data", methods=['POST'])
+def projectDocApproveData():
+    parse = reqparse.RequestParser()
+    parse.add_argument('doc_id', type=str, help='doc_id')
+    parse.add_argument('status', type=str, help='status')
+    args = parse.parse_args()
+
+    doc_id = args['doc_id']
+    status = args['status']
+
+    task = tasks()
+    UpDoc = task.documentUpdateApprove(doc_id, status)
+    if UpDoc:
+        response = {
+            'code': 200,
+            'message': 'Success Update to system'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 200,
+            'message': 'Success Update to system'
+        }
+        return json.dumps(response)
+
+
 # page task list
 @app.route("/project/task/all")
 def projectTaskList():
