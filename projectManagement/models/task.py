@@ -305,6 +305,20 @@ class tasks(object):
                     addNewAssign = conn.insert('task_assign', task_id=taskid, teamproject_id=data[start])
                     if addNewAssign == 0:
                         # send send email
+                        # get email
+                        condEmail = 'teamproject_id = %s'
+                        getEmail = conn.select('v_email_assign_project', condEmail, 'firstname, lastname, email, name, pid', teamproject_id=data[start])
+                        name = getEmail[0][0]+" "+getEmail[0][1]
+                        email = getEmail[0][2]
+                        project_name = getEmail[0][3]
+                        pid = getEmail[0][4]
+                        link = 'http://localhost:14045/dashboard'
+                        status = 'Assign Task'
+                        from email_sending import send_email
+
+                        mail = send_email(email)
+                        send = mail.nofitication(name, pid, project_name, status, link)
+
                         validate.append('success')
                     else:
                         validate.append('failed')
@@ -317,6 +331,19 @@ class tasks(object):
                 if getAssignExist == 1:
                     delAssign = conn.execquery("delete from task_assign where task_id = '"+taskid+"' and teamproject_id='"+data_unassign[count]+"'")
                     if delAssign == 1:
+
+                        condEmail = 'teamproject_id = %s'
+                        getEmail = conn.select('v_email_assign_project', condEmail,'firstname, lastname, email, name, pid', teamproject_id=data_unassign[count])
+                        name = getEmail[0][0] + " " + getEmail[0][1]
+                        email = getEmail[0][2]
+                        project_name = getEmail[0][3]
+                        pid = getEmail[0][4]
+                        link = 'http://localhost:14045/dashboard'
+                        status = 'Unassign Task'
+                        from email_sending import send_email
+
+                        mail = send_email(email)
+                        send = mail.nofitication(name, pid, project_name, status, link)
                         validate.append('success')
                     else:
                         validate.append('failed')

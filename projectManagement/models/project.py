@@ -1,6 +1,7 @@
 from projectManagement.library.connection import mysqlconnection
 from projectManagement.library.config import HOST, USERNAME, PASSWORD, DATABASE
 from datetime import datetime
+from email_sending import send_email
 
 
 class project_list(object):
@@ -438,3 +439,39 @@ class projectApp(object):
                 return False
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def mail_sending(self, project_id, employee_id):
+        conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+        cond = 'employee_id = %s'
+        getEmail = conn.select('employees', cond, 'employee_id, NIK, email, firstname, lastname', employee_id=employee_id)
+        condProject = 'project_id = %s'
+        getProject = conn.select('project', condProject, 'project_id, name, pid', project_id=project_id)
+        projectName = getProject[0][1]
+        pid = getProject[0][2]
+        email_address = getEmail[0][2]
+        name = getEmail[0][3] + " " + getEmail[0][4]
+        link = 'http://localhost:14045/dasboard'
+
+        print projectName, pid, email_address, name
+        mail = send_email(email_address)
+        # name_user, pid, project_name, status, link
+        mail.nofitication(name, pid, projectName, 'Assign Project', link)
+        return "tempe"
+
+    def mail_sending_remove(self, project_id, employee_id):
+        conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+        cond = 'employee_id = %s'
+        getEmail = conn.select('employees', cond, 'employee_id, NIK, email, firstname, lastname', employee_id=employee_id)
+        condProject = 'project_id = %s'
+        getProject = conn.select('project', condProject, 'project_id, name, pid', project_id=project_id)
+        projectName = getProject[0][1]
+        pid = getProject[0][2]
+        email_address = getEmail[0][2]
+        name = getEmail[0][3] + " " + getEmail[0][4]
+        link = 'http://localhost:14045/dasboard'
+
+        print projectName, pid, email_address, name
+        mail = send_email(email_address)
+        # name_user, pid, project_name, status, link
+        mail.nofitication(name, pid, projectName, 'Unassign Project', link)
+        return "tempe"

@@ -675,6 +675,7 @@ def removeTeamProject():
     project = projectApp()
     removeUser = project.removeTeam(project_id, employee_id)
     if removeUser == 0:
+        sendMail = project.mail_sending_remove(project_id, employee_id)
         return "Success"
     else:
         return "Failed"
@@ -690,10 +691,11 @@ def addTeamProject():
     args = parse.parse_args()
     project_id = args['project_id']
     employee_id = args['employee_id']
-    print project_id, employee_id
     project = projectApp()
     addUser = project.addTeam(project_id, employee_id)
+    print project_id, employee_id
     if addUser == 0:
+        sendMail = project.mail_sending(project_id, employee_id)
         return "Success"
     else:
         return "Failed"
