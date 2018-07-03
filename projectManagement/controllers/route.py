@@ -758,7 +758,9 @@ def projectApproveData():
 # page document project
 @app.route("/project/document")
 def projectDoc():
-    return render_template('content/doc-project.html')
+    project_doc = tasks()
+    getData = project_doc.getDocumentproject()
+    return render_template('content/doc-project.html', getData=getData)
 
 
 # page task list

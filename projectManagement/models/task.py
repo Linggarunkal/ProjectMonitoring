@@ -478,3 +478,23 @@ class tasks(object):
                 return False
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def getDocumentproject(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getData = conn.select('v_document_detail_project', None, 'document_no, name, document_name, pid, status, client_name')
+            print getData
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'document_no': list[0],
+                    'project_name': list[1],
+                    'document_name': list[2],
+                    'pid': list[3],
+                    'status': list[4],
+                    'client_name': list[5]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            return "Error Database: %s" % str(e)

@@ -74,35 +74,28 @@
 									<th>No</th>
                                     <th>Client Name</th>
                                     <th>Project Name</th>
-							    	<th>Task Name</th>
+							    	<th>Project ID</th>
 									<th>Document Number</th>
-								    <th>Document Description</th>
+								    <th>Document Name</th>
 									<th class="text-center">Status</th>
 									<th class="text-right">Actions</th>
 								</tr>
 							</thead>
 							<tbody>
+								{% for doc_project in getData %}
 								<tr>
-                                    <td>1</td>
-							    	<td>
-										<a class="avatar">X</a>
-										<h2><a href="#">Client XXXX </a></h2>
-									</td>
-									<td>Project PSAK 71</td>
-									<td>Project Kick Off</td>
-									<td>BV00001000-SRB</td>
-                                    <td>Doc presentation kick off meeting </td>
+                                    <td>{{ loop.index }}</td>
+							    	<td>{{ doc_project.client_name }}</td>
+									<td>{{ doc_project.project_name }}</td>
+									<td>{{ doc_project.pid }}</td>
+									<td>{{ doc_project.document_no }}</td>
+                                    <td>{{ doc_project.document_name }}</td>
 									<td class="text-center">
 										<div class="dropdown action-label">
 											<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-									    		<i class="fa fa-dot-circle-o text-purple"></i> New <i class="caret"></i>
+									    		<i class="fa fa-dot-circle-o text-purple"></i> {{ doc_project.status }}
 											</a>
-											<ul class="dropdown-menu pull-right">
-												<li><a href="#"><i class="fa fa-dot-circle-o text-purple"></i> New</a></li>
-												<li><a href="#"><i class="fa fa-dot-circle-o text-info"></i> Pending</a></li>
-												<li><a href="#"><i class="fa fa-dot-circle-o text-success"></i> Approved</a></li>
-												<li><a href="#"><i class="fa fa-dot-circle-o text-danger"></i> Declined</a></li>
-											</ul>
+
 										</div>
 									</td>
                                     <td class="text-right">
@@ -115,39 +108,7 @@
 												</div>
 											</td>
                                 </tr>
-								<tr>
-                                    <td>1</td>
-							    	<td>
-										<a class="avatar">Y</a>
-										<h2><a href="#">Client YYYY </a></h2>
-									</td>
-									<td>Project PSAK 71</td>
-									<td>Project System proposal</td>
-									<td>BV00001020-SRB</td>
-                                    <td>Doc system proposal ver 1.1 </td>
-									<td class="text-center">
-										<div class="dropdown action-label">
-											<a class="btn btn-white btn-sm rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
-									    		<i class="fa fa-dot-circle-o text-purple"></i> New <i class="caret"></i>
-											</a>
-											<ul class="dropdown-menu pull-right">
-												<li><a href="#"><i class="fa fa-dot-circle-o text-purple"></i> New</a></li>
-												<li><a href="#"><i class="fa fa-dot-circle-o text-info"></i> Pending</a></li>
-												<li><a href="#"><i class="fa fa-dot-circle-o text-success"></i> Approved</a></li>
-												<li><a href="#"><i class="fa fa-dot-circle-o text-danger"></i> Declined</a></li>
-											</ul>
-										</div>
-									</td>
-                                    <td class="text-right">
-												<div class="dropdown">
-													<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-													<ul class="dropdown-menu pull-right">
-														<li><a href="#" title="Edit" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-														<li><a href="#" title="Decline" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-													</ul>
-												</div>
-											</td>
-                                </tr>
+								{% endfor %}
 
                             </tbody>
                         </table>

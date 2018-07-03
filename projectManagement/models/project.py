@@ -475,3 +475,5 @@ class projectApp(object):
         # name_user, pid, project_name, status, link
         mail.nofitication(name, pid, projectName, 'Unassign Project', link)
         return "tempe"
+
+
