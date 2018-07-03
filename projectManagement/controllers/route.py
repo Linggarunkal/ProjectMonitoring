@@ -9,6 +9,7 @@ from projectManagement.models.project import project_list, projectApp
 from projectManagement.models.task import tasks
 from projectManagement.models.problem_log import problem_logs
 from projectManagement.models.uploaded import upload
+from projectManagement.models.report import reports
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
@@ -1208,31 +1209,41 @@ def problemEdit():
 # page report proyek
 @app.route("/project/report/all")
 def reportProject():
-    return render_template('content/report-proyek.html')
+    report = reports()
+    getReportProject = report.project()
+    return render_template('content/report-proyek.html', getReportProject=getReportProject)
 
 
 # page report task
 @app.route("/project/report/task")
 def reportTask():
-    return render_template('content/report-task.html')
+    report = reports()
+    getReportTask = report.task()
+    return render_template('content/report-task.html', getReportTask=getReportTask)
 
 
 # page report problem
 @app.route("/project/report/problem")
 def reportProblem():
-    return render_template('content/report-problem.html')
+    report = reports()
+    getReportProblem = report.problem()
+    return render_template('content/report-problem.html', getReportProblem=getReportProblem)
 
 
 # page report audit trail
 @app.route("/project/report/client")
 def reportClient():
-    return render_template('content/report-client.html')
+    report = reports()
+    getReportClient = report.client()
+    return render_template('content/report-client.html', getReportClient=getReportClient)
 
 
 # page report employee
 @app.route("/project/report/employee")
 def reportEmp():
-    return render_template('content/report-employee.html')
+    report = reports()
+    getReportEmployee = report.employee()
+    return render_template('content/report-employee.html', getReportEmployee=getReportEmployee)
 
 
 # problem page upload data
