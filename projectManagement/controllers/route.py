@@ -42,7 +42,13 @@ def registration():
 # login route logic
 @app.route("/dashboard")
 def dashboard():
-    return render_template('content/home.html')
+    home = reports()
+    getProject = home.homeProject()
+    getClient = home.homeClient()
+    getTask = home.homeTask()
+    getTaskPending = home.homeTaskPending()
+    getEmployee = home.homeEmployee()
+    return render_template('content/home.html', getProject=getProject, getClient=getClient, getTask=getTask, getTaskPending=getTaskPending, getEmployee=getEmployee)
 
 
 # forgot password route logic
@@ -534,8 +540,6 @@ def userUpdateClient():
             'message': 'Update Data Failed'
         }
         return json.dumps(response)
-
-    return "tempe"
 
 
 # page main client

@@ -114,3 +114,43 @@ class reports(object):
             return detail
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def homeProject(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getProject = conn.execquery('select * from project')
+            return getProject
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def homeClient(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getClient = conn.execquery('select * from client')
+            return getClient
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def homeTask(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getTask = conn.execquery('select * from task')
+            return getTask
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def homeTaskPending(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getTaskPending = conn.execquery('select * from task where taskstatus_id not in ("STAT00004")')
+            return getTaskPending
+        except Exception as e:
+            return "Error Database: %s" % str(e)
+
+    def homeEmployee(self):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            getEmployee = conn.execquery('select * from employees')
+            return getEmployee
+        except Exception as e:
+            return "Error Database: %s" % str(e)
