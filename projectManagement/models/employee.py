@@ -184,7 +184,8 @@ class employees(object):
     def all(self):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            getEmpAll = conn.select('v_employees_detail', None,  'Initial, firstname, lastname, division_name ,title_name, employee_id')
+            cond = 'status = %s'
+            getEmpAll = conn.select('v_employees_detail', cond,  'Initial, firstname, lastname, division_name ,title_name, employee_id', status='added')
             detEmpAll = []
             for index, list in enumerate(getEmpAll):
                 i = {
@@ -358,11 +359,11 @@ class employees(object):
             return "Error Database: %s" % str(e)
 
     def deleted(self, emp_id):
-        self.emp_id = emp_id
+        print emp_id
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            condDelEmp = 'employee_id = %s'
-            updEmp = conn.update('employees', condDelEmp, self.emp_id, status='deleted')
+            updEmp = conn.customquery('update employees set status = "deleted" where employee_id = "'+emp_id+'"')
+            print updEmp
             if updEmp:
                 return True
             else:   

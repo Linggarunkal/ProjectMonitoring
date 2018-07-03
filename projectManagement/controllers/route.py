@@ -215,8 +215,33 @@ def empUpdDetail():
 @app.route('/employees/detail/delete/<empid>')
 def empDelDet(empid):
     emp = employees()
-    getDetEmp = emp.detail(empid)
+    getDetEmp = emp.getEmployeeDetail(empid)
     return render_template('content/delete-employees.html', getDetEmp=getDetEmp)
+
+
+# Page to delete employee
+@app.route('/employees/delete', methods=['POST'])
+def employeeDelete():
+    parse = reqparse.RequestParser()
+    parse.add_argument('employee_id', type=str, help='employee_id')
+
+    args = parse.parse_args()
+    employee_id = args['employee_id']
+
+    emp = employees()
+    delDetailEmp = emp.deleted(employee_id)
+    if delDetailEmp:
+        response = {
+            'code': 200,
+            'message': "Success Update Data to System"
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': "Failed Update Data to System"
+        }
+        return json.dumps(response)
 
 
 # page update detail employees
