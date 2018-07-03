@@ -140,3 +140,15 @@ class clients(object):
             return detail
         except Exception as e:
             "Error Database: %s" % str(e)
+
+    def updateClientDetail(self, clientid, address, pic_name, pic_email, pic_number):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'client_id = %s'
+            updData = conn.update('client', cond, clientid, address=address, pic_name=pic_name, pic_email=pic_email, pic_number=pic_number)
+            if updData:
+                return True
+            else:
+                return False
+        except Exception as e:
+            return "Error Database: %s" % str(e)

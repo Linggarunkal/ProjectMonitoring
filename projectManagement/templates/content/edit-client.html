@@ -89,7 +89,41 @@
 			var pic_email = document.getElementById('pic_email').value;
 			var pic_number = document.getElementById('pic_number').value;
 
+			data = {
+				'client_id': client_id,
+				'address': address,
+				'pic_name': pic_name,
+				'pic_email': pic_email,
+				'pic_number': pic_number
+			}
 
+			json_data = JSON.stringify(data);
+
+			$.ajax({
+				type: 'POST',
+				url: '{{ url_for('userUpdateClient') }}',
+				contentType: 'application/json;charset=UTF-8',
+				data: json_data,
+				success: function(resp){
+					resp_json = JSON.parse(resp);
+					console.log()
+
+					if (resp_json['code'] == 200){
+							swal({
+    							title: 'Success',
+    							text: 'Update Data Success to System',
+    							type: 'success',
+    							allowOutsideClick: true,
+    							html: true
+								},
+								function () {
+    							window.location.href = "{{ url_for('userMainHomeList') }}"
+							});
+						}else{
+							alert('Error');
+						}
+				}
+			})
 
 
 		})

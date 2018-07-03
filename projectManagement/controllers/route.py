@@ -503,6 +503,41 @@ def userEditClient(clientid):
     return render_template('content/edit-client.html', getClientDetail=getClientDetail)
 
 
+# Page to edit client
+@app.route("/user/update/client", methods=['POST'])
+def userUpdateClient():
+    parse = reqparse.RequestParser()
+    parse.add_argument('client_id', type=str, help='client_id')
+    parse.add_argument('address', type=str, help='address')
+    parse.add_argument('pic_name', type=str, help='pic_name')
+    parse.add_argument('pic_email', type=str, help='pic_email')
+    parse.add_argument('pic_number', type=str, help='pic_number')
+
+    args = parse.parse_args()
+    client_id = args['client_id']
+    address = args['address']
+    pic_name = args['pic_name']
+    pic_email = args['pic_email']
+    pic_number = args['pic_number']
+
+    client = clients()
+    getUpdateClient = client.updateClientDetail(client_id, address, pic_name, pic_email, pic_number)
+    if getUpdateClient:
+        response = {
+            'code': 200,
+            'message': 'Update Data Success'
+        }
+        return json.dumps(response)
+    else:
+        response = {
+            'code': 500,
+            'message': 'Update Data Failed'
+        }
+        return json.dumps(response)
+
+    return "tempe"
+
+
 # page main client
 @app.route("/user/main/clientlist")
 def userMainHomeList():
