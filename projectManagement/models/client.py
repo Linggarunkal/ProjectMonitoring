@@ -118,3 +118,25 @@ class clients(object):
             return detAllProject
         except Exception as e:
             return "Error Database: %s" % str(e)
+
+    def getDetailClient(self, clientid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'client_id = %s'
+            getData = conn.select('client', cond, '*', client_id=clientid)
+            detail = []
+            for index, list in enumerate(getData):
+                i = {
+                    'client_id': list[0],
+                    'name': list[1],
+                    'email': list[2],
+                    'address': list[3],
+                    'pic_name': list[5],
+                    'pic_number': list[6],
+                    'pic_email': list[7],
+                    'client_code': list[13]
+                }
+                detail.append(i)
+            return detail
+        except Exception as e:
+            "Error Database: %s" % str(e)

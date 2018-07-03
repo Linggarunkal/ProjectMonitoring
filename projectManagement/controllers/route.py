@@ -496,9 +496,11 @@ def clientAddProject():
 
 
 # page edit client
-@app.route("/user/edit/client")
-def userEditClient():
-    return render_template('content/edit-client.html')
+@app.route("/user/edit/client/<clientid>")
+def userEditClient(clientid):
+    client = clients()
+    getClientDetail = client.getDetailClient(clientid)
+    return render_template('content/edit-client.html', getClientDetail=getClientDetail)
 
 
 # page main client

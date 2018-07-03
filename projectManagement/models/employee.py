@@ -362,7 +362,8 @@ class employees(object):
         print emp_id
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            updEmp = conn.customquery('update employees set status = "deleted" where employee_id = "'+emp_id+'"')
+            cond = 'employee_id = %s'
+            updEmp = conn.update('employees', cond, emp_id, status='deleted')
             print updEmp
             if updEmp:
                 return True

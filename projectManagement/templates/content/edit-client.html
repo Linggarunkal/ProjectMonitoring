@@ -15,72 +15,62 @@
             <a href="{{ url_for('userMainHome') }}"><button type="button" class="btn btn-primary">Back</button></a>
         </div>
         <div class="modal-body">
-
+			{% for client in getClientDetail %}
 		    <div class="m-b-30">
                 <form>
 					<div class="row">
 						<div class="col-md-6">
 				    		<div class="form-group">
-								<label class="control-label">First Name <span class="text-danger">*</span></label>
-								<input class="form-control" value="Barry" type="text">
+								<label class="control-label">Client Name</label>
+								<input class="form-control" type="text" value="{{ client.name }}" name="client_name" id="client_name" disabled>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label class="control-label">Last Name</label>
-								<input class="form-control" value="Cuda" type="text">
+								<label class="control-label">Email</label>
+								<input class="form-control" type="text" value="{{ client.email }}" name="email" id="email" disabled>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="form-group">
+								<label class="control-label">Address</label>
+								<input class="form-control" value="{{ client.address }}" type="text" name="address" id="address">
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label class="control-label">Username <span class="text-danger">*</span></label>
-								<input class="form-control" value="barrycuda" type="text">
+					    		<label class="control-label">PIC Name</label>
+								<input class="form-control floating" value="{{ client.pic_name }}" type="text" name="pic_name" id="pic_name">
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-					    		<label class="control-label">Email <span class="text-danger">*</span></label>
-								<input class="form-control floating" value="barrycuda@example.com" type="email">
+								<label class="control-label">PIC Email</label>
+								<input class="form-control" value="{{ client.pic_email }}" type="text" name="pic_email" id="pic_email">
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label class="control-label">Password</label>
-								<input class="form-control" value="barrycuda" type="password">
+								<label class="control-label">PIC Number</label>
+								<input class="form-control" value="{{ client.pic_email }}" type="text" name="pic_number" id="pic_number">
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
-								<label class="control-label">Confirm Password</label>
-								<input class="form-control" value="barrycuda" type="password">
+								<label class="control-label">Client Code</label>
+								<input class="form-control" value="{{ client.client_code }}" type="text" name="client_code" id="client_code" disabled>
 							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-						    	<label class="control-label">Client ID <span class="text-danger">*</span></label>
-								<input class="form-control floating" value="CLT-0001" type="text">
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label class="control-label">Phone </label>
-								<input class="form-control" value="9876543210" type="text">
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label class="control-label">Company Name</label>
-								<input class="form-control" type="text" value="Global Technologies">
-							</div>
-						</div>
 						</div>
 
+						</div>
+									<input type="hidden" value="{{ client.client_id }}" name="client_id" id="client_id">
 									<div class="m-t-20 text-center">
-										<button class="btn btn-primary">Save Client</button>
+										<button class="btn btn-primary" id="saveData">Save Client</button>
 									</div>
 								</form>
 							</div>
         </div>
+		{% endfor %}
     </div>
 </div>
 {% endblock %}
@@ -90,4 +80,19 @@
 <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery.slimscroll.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='assets/js/select2.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+<script>
+	$(document).ready(function(){
+		$('#saveData').click(function(){
+			var client_id = document.getElementById('saveData').value;
+			var address = document.getElementById('address').value;
+			var pic_name = document.getElementById('pic_name').value;
+			var pic_email = document.getElementById('pic_email').value;
+			var pic_number = document.getElementById('pic_number').value;
+
+
+
+
+		})
+	})
+</script>
 {% endblock %}
