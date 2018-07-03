@@ -482,7 +482,8 @@ class tasks(object):
     def getDocumentproject(self):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            getData = conn.select('v_document_detail_project', None, 'document_no, name, document_name, pid, status, client_name')
+            cond = 'status = %s'
+            getData = conn.select('v_document_detail_project', cond, 'document_no, name, document_name, pid, status, client_name', status='New')
             print getData
             detail = []
             for index, list in enumerate(getData):
