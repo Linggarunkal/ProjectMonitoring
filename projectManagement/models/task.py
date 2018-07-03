@@ -297,17 +297,20 @@ class tasks(object):
             data_unassign = json.loads(unassign)
             start = 0
             # for assign new task
+            # process assign new employee
             while start < len(data):
                 getRowExist = conn.execquery("select * from task_assign where task_id ='"+taskid+"' and teamproject_id = '" +data[start]+"'")
                 if getRowExist == 0:
                     # insert assign user
                     addNewAssign = conn.insert('task_assign', task_id=taskid, teamproject_id=data[start])
                     if addNewAssign == 0:
+                        # send send email
                         validate.append('success')
                     else:
                         validate.append('failed')
                 start += 1
             # for unassign user
+            # process unassign
             count = 0
             while count < len(data_unassign):
                 getAssignExist = conn.execquery("select * from task_assign where task_id ='"+taskid+"' and teamproject_id='"+data_unassign[count]+"'")

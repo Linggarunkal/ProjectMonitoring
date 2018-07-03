@@ -316,7 +316,7 @@ class projectApp(object):
                 x += 1
         except Exception:
             return 1
-
+    # ini process assign employee to project
     def addTeamProject(self, project_id, assign_user):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
