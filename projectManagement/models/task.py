@@ -536,3 +536,26 @@ class tasks(object):
                 return False
         except Exception as e:
             "Error Database: %s" % str(e)
+
+    def sendingCloseTask(self, taskid):
+        try:
+            conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+            cond = 'task_id = %s'
+            getEmail = conn.select('v_email_send_task', cond, 'email, firstname, lastname, name, pid', task_id=taskid)
+            start = 0
+            while (start < len(getEmail)):
+                email = getEmail[start]['email']
+                name = getEmail[start]['firstname']+" "+getEmail[start]['lastname']
+                project_name = getEmail[start]['name']
+                pid = getEmail[start]['pid']
+                status = 'Task Success Close By Admin'
+                link = 'http://localhost:14045/dasboard'
+
+                from email_sending import send_email
+                mail = send_email(email)
+                send = mail.nofitication(name, pid, project_name, status, link)
+
+                start += 1
+
+        except Exception as e:
+            return "Error Database: %s" % str(e)

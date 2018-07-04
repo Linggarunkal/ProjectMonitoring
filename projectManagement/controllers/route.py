@@ -1071,6 +1071,7 @@ def projectTaskUpdStatus():
     updateTask = task.updateTaskStatus(task_id, task_status, taskIncrement, project_id, master_task)
 
     if updateTask == 4:
+        task.sendingCloseTask(task_id)
         response = {
             'code': 200,
             'Message': "Success Update to System"
