@@ -8,4 +8,4 @@ DATABASE = 'project_management'
 SMTP_SERVER = "smtp.gmail.com: 587"
 MESSAGE_SUBJECT = "Project Management Notification"
 MESSAGE_FROM = "14linggar@gmail.com"
-SMTP_PASSWORD = "insya allah aku sukses"
+SMTP_PASSWORD = ""
