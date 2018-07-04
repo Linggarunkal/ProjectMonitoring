@@ -24,17 +24,17 @@
 							<div class="account-logo">
 								<a href="index.html"><img src="{{ url_for('static', filename='assets/img/logo2.png') }}" alt="Project Management"></a>
 							</div>
-							<form action="{{ url_for('dashboard') }}">
+							<form>
 								<div class="form-group form-focus">
-									<label class="control-label">Username or Email</label>
-									<input class="form-control floating" type="text">
+									<label class="control-label">NIK</label>
+									<input class="form-control floating" type="text" id="username" name="username">
 								</div>
 								<div class="form-group form-focus">
 									<label class="control-label">Password</label>
-									<input class="form-control floating" type="password">
+									<input class="form-control floating" type="password" id="password" name="password">
 								</div>
 								<div class="form-group text-center">
-									<button class="btn btn-primary btn-block account-btn" type="submit">Login</button>
+									<button class="btn btn-primary btn-block account-btn" type="button" id="login">Login</button>
 								</div>
 
 								<div class="text-center">
@@ -51,5 +51,52 @@
         <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-3.2.1.min.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='assets/js/app.js') }}"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet"/>
+		<script>
+			$(document).ready(function(){
+				$('#login').click(function(){
+					var username = document.getElementById('username').value;
+					var password = document.getElementById('password').value;
+
+					data = {
+						'username': username,
+						'password': password
+					}
+
+					data_json = JSON.stringify(data);
+
+					$.ajax({
+						type: 'POST',
+						url: '{{ url_for('loginCheck') }}',
+						contentType: 'application/json;charset=UTF-8',
+						data: data_json,
+						success: function(resp){
+							resp_json = JSON.parse(resp);
+
+							if (resp_json['code'] == 200){
+								swal({
+                                	title: "Success Login",
+                                	text: "Welcome to System Login Success",
+                                	type: "success",
+                                	allowOutsideClick: true,
+                                	html: true
+                              	},
+                              	function (){
+                                	window.location = '{{ url_for('dashboard') }}';
+								});
+							}else if (resp_json['code'] == 204){
+								swal("Warning", "Not Correct Password Input", "warning");
+							}else if (resp_json['code'] == 208){
+								swal("Error!!", "Username Not Exist in System", "error");
+							}
+						},
+						error: function(resp){
+							alert("error");
+						}
+					});
+				});
+			});
+		</script>
     </body>
 </html>

@@ -10,16 +10,24 @@ from projectManagement.models.task import tasks
 from projectManagement.models.problem_log import problem_logs
 from projectManagement.models.uploaded import upload
 from projectManagement.models.report import reports
+from projectManagement.models.auth import login_user
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
 from flask_restful import reqparse
 from passlib.hash import sha256_crypt
 
+globalvar = ''
+
 
 # generate password encrypt
 def generate_passwd(passwd):
     return sha256_crypt.encrypt(passwd)
+
+
+# verify password
+def verify_passwd(password, passwordHash):
+    return sha256_crypt.verify(password, passwordHash)
 
 
 @app.route('/')
@@ -31,6 +39,41 @@ def start():
 @app.route("/login")
 def login():
     return render_template('auth/login.html')
+
+
+# login post data
+@app.route("/login/check", methods=['POST'])
+def loginCheck():
+    parse = reqparse.RequestParser()
+    parse.add_argument('username', type=str, help='username')
+    parse.add_argument('password', type=str, help='password')
+
+    args = parse.parse_args()
+    username = args['username']
+    password = args['password']
+
+    entering = login_user()
+    checkUser = entering.verify_login(username, password)
+    if checkUser == 0:
+        global globalvar
+        globalvar = username
+        response = {
+            'code': 200,
+            'message': 'login success'
+        }
+        return json.dumps(response)
+    elif checkUser == 1:
+        response = {
+            'code': 204,
+            'message': 'Password not valid'
+        }
+        return json.dumps(response)
+    elif checkUser == 2:
+        response = {
+            'code': 208,
+            'message': 'User not found'
+        }
+        return json.dumps(response)
 
 
 # login route logic

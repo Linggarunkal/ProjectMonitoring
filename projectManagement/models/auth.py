@@ -1,88 +1,32 @@
-from pertaminaAPI.library.connection import mysqlconnection
-from pertaminaAPI.library.config import HOST, USERNAME, PASSWORD, DATABASE
-from pertaminaAPI.library.response_message import messages
+from projectManagement.library.connection import mysqlconnection
+from projectManagement.library.config import HOST, USERNAME, PASSWORD, DATABASE
 from passlib.hash import sha256_crypt
-from flask import jsonify
-import MySQLdb
 
 
-class signin(object):
-    def __init__(self, email, password):
-        self.email = email
-        self.password = password
-
-    def passwdVerify(self, secret, passwd):
-        return sha256_crypt.verify(secret, passwd)
-
-    def login(self):
+class login_user(object):
+    def verify_login(self, username, password):
         try:
-            __email = self.email
-            __password = self.password
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            cond_email = 'email = %s'
-            checkUser = conn.select('users', cond_email, 'email, password', email=__email)
-            if (len(checkUser) > 0):
-                verify = self.passwdVerify(__password, checkUser[0][1])
-                if verify:
-                    condUser = 'email = %s'
-                    getUserid = conn.select('users', condUser, '*', email=__email)
-
-                    userid = []
-                    for index, list in enumerate(getUserid):
-                        getid = (list[0])
-
-                        i = {
-                            "userid": getid
-                        }
-                        userid.append(i)
-
-                    message = messages(200)
-                    msg = message.resp(userid)
-                    return msg
+            usercheck = conn.execquery('select * from employees where nik="'+username+'"')
+            if usercheck == 0:
+                return 2
+            else:
+                checkPassword = conn.customquery('select nik, password from employees where nik = "'+username+'"')
+                passwordHash = checkPassword[0][1]
+                decryp = sha256_crypt.verify(password, passwordHash)
+                if decryp:
+                    return 0
                 else:
-                    message = messages(401)
-                    msg = message.resp(None)
-                    return msg
-            else:
-                message = messages(204)
-                msg = message.resp(None)
-                return msg
-
+                    return 1
         except Exception as e:
-            message = messages(500)
-            msg = message.resp(str(e))
-            return msg
+            return "Error Database: %s" % str(e)
 
-
-class signup(object):
-    def __init__(self, email, password, telp):
-        self.email = email
-        self.password = password
-        self.telp = telp
-
-
-
-    def registration(self):
+    def check_name(self, nik):
         try:
-            hashPasswd = passwdHash()
-            resHashPasswd = hashPasswd.passwdEncrypt(self.password)
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            reg = conn.insert('users', email=self.email, password=resHashPasswd, tlp=self.telp)
-            if reg == 0:
-                message = messages(200)
-                msg = message.resp(None)
-                return msg
-            else:
-                message = messages(500)
-                msg = message.resp(None)
-                return msg
-
+            cond = 'nik = %s'
+            getData = conn.select('employees', cond, 'firstname, lastname', nik=nik)
+            name_emp = getData[0][0]+" "+getData[0][1]
+            return name_emp
         except Exception as e:
-            message = messages(500)
-            msg = message.resp(str(e))
-            return msg
-
-
-class passwdHash(object):
-    def passwdEncrypt(self, passwd):
-        return sha256_crypt.encrypt(passwd)
+            return "Error Database: %s" % str(e)
