@@ -664,7 +664,7 @@ def upFile():
 
     print start_project, end_project
 
-    if files and allowed_file(files.filename) :
+    if files and allowed_file(files.filename):
         filename = secure_filename(files.filename)
         fileSplit = filename.split(".")
         nama_file = pid+"_NEW_PROJECT"
@@ -677,12 +677,26 @@ def upFile():
             addNewProject = project_list()
             newProject = addNewProject.addProject(client_name, project_name, mandays, project_start, project_end, pid, priority, project_manager, desc, fileUpload, file_size)
             if newProject == 0:
-                return "Success to Database"
+                response = {
+                    'code': 200,
+                    'message': 'Success Add to System'
+                }
+                return json.dumps(response)
             else:
                 os.remove(os.path.join(updir, fileUpload))
-                return "Failed to Database"
+                response = {
+                    'code': 500,
+                    'message': 'Failed Add to System'
+                }
+                return json.dumps(response)
+
     else:
-        return 'Format File Not Supported'
+        response = {
+            'code': 210,
+            'message': 'Format File Not Supported'
+        }
+        return json.dumps(response)
+
 
 
 # page edit project
