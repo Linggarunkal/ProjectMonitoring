@@ -677,6 +677,8 @@ def upFile():
             addNewProject = project_list()
             newProject = addNewProject.addProject(client_name, project_name, mandays, project_start, project_end, pid, priority, project_manager, desc, fileUpload, file_size)
             if newProject == 0:
+                pro = projectApp()
+                send_mail = pro.send_pm(pid, project_name, project_manager)
                 response = {
                     'code': 200,
                     'message': 'Success Add to System'

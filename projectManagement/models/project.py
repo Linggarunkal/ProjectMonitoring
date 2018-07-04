@@ -477,4 +477,17 @@ class projectApp(object):
         mail.nofitication(name, pid, projectName, 'Unassign Project', link)
         return "tempe"
 
+    def send_pm(self, pid, project_name, employee_id):
+        conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
+        cond = 'employee_id = %s'
+        getEmail = conn.select('employees', cond, 'employee_id, NIK, email, firstname, lastname', employee_id=employee_id)
+        email_address = getEmail[0][2]
+        name = getEmail[0][3] + " " + getEmail[0][4]
+        link = 'http://localhost:14045/dasboard'
+
+        mail = send_email(email_address)
+        # name_user, pid, project_name, status, link
+        mail.nofitication(name, pid, project_name, 'Project Manager Assign Project', link)
+        return "tempe"
+
 
