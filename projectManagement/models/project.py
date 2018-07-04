@@ -205,7 +205,8 @@ class project_list(object):
     def getAllTeamProject(self):
         try:
             conn = mysqlconnection(HOST, USERNAME, PASSWORD, DATABASE)
-            detail = conn.select('v_employee_team_project', None, 'employee_id, firstname, lastname, email, title_name, initial, assign_project_user, project_id')
+            cond = 'status = %s'
+            detail = conn.select('v_employee_team_project', cond, 'employee_id, firstname, lastname, email, title_name, initial, assign_project_user, project_id', status='added')
             getDetail = []
             for index, list in enumerate(detail):
                 i = {
